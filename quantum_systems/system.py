@@ -53,5 +53,5 @@ class QuantumSystem(metaclass=abc.ABCMeta):
     @property
     def spf(self):
         """Getter returning the single particle functions, i.e, the eigenstates
-        of the system"""
+        of the non-interacting Hamiltonian"""
         return self._spf
