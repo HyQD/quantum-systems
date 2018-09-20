@@ -22,6 +22,8 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         self._f = None
         self._u = None
 
+        self._spf = None
+
     @abc.abstractmethod
     def setup_system(self):
         raise NotImplementedError("Use a specific quantum system")
@@ -43,3 +45,7 @@ class QuantumSystem(metaclass=abc.ABCMeta):
     @property
     def u(self):
         return self._u
+
+    @property
+    def spf(self):
+        return self._spf
