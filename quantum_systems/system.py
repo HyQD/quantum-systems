@@ -32,7 +32,11 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         """Function setting up the Fock matrix"""
         o, v = (self.o, self.v)
 
-        self._f = np.einsum("piqi -> pq", self.u[:, o, :, o])
+        if self._f is None:
+            self._f = np.zeros(self._h.shape)
+
+        self._f.fill(0)
+        self._f += np.einsum("piqi -> pq", self.u[:, o, :, o])
         self._f += self.h
 
     @property
