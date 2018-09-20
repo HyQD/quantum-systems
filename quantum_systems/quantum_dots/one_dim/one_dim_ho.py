@@ -68,19 +68,23 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         grid_length,
         num_grid_points,
         omega=1,
-        laser_frequency=8,
         mass=1,
         a=0.25,
         alpha=1.0,
+        laser_frequency=8,
+        laser_strength=1,
     ):
 
         super().__init__(n, l)
 
         self.omega = omega
-        self.laser_frequency = laser_frequency
         self.mass = mass
         self.a = a
         self.alpha = alpha
+
+        self.laser_frequency = laser_frequency
+        self.laser_strength = laser_strength
+        self.laser_matrix = None
 
         self.grid_length = grid_length
         self.num_grid_points = num_grid_points
@@ -110,7 +114,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         self._h = get_antisymmetrized_one_body_elements(self.__h)
 
         inner_integral = _compute_inner_integral(
-            self.spf,
+            self._spf,
             self.l // 2,
             self.num_grid_points,
             self.grid,
@@ -119,8 +123,28 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         )
 
         self.__u = _compute_orbital_integrals(
-            self.spf, self.l // 2, inner_integral, self.grid
+            self._spf, self.l // 2, inner_integral, self.grid
         )
         self._u = get_antisymmetrized_two_body_elements(self.__u)
 
+        self.construct_laser_matrix()
+        self.construct_fock_matrix()
+
+    def construct_laser_matrix(self):
+        self.laser_matrix = np.zeros((self.l, self.l))
+
+        for p in range(self.l // 2):
+            for q in range(self.l // 2):
+                val = np.trapz(
+                    self._spf[p] * self.grid * self._spf[q], self.grid
+                )
+                self.laser_matrix[2 * p, 2 * q] = val
+                self.laser_matrix[2 * p + 1, 2 * q + 1] = val
+
+    def evolve_in_time(self, time):
+        self._h += (
+            self.laser_strength
+            * np.sin(self.laser_frequency * time)
+            * self.laser_matrix
+        )
         self.construct_fock_matrix()
