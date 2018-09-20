@@ -22,6 +22,10 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         self._f = None
         self._u = None
 
+    @abc.abstractmethod
+    def setup_system(self):
+        raise NotImplementedError("Use a specific quantum system")
+
     def construct_fock_matrix(self):
         o, v = (self.o, self.v)
 
