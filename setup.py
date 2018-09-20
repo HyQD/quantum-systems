@@ -13,12 +13,10 @@ os.environ["CFLAGS"] = "-std=c++11"
 base_path = ["quantum_systems"]
 
 source_files = {
-    "system_helper": [os.path.join(*base_path, "system_helper.pyx")],
+    "system_helper": [os.path.join(*base_path, "system_helper.pyx")]
 }
 
-include_dirs = {
-    "system_helper": [],
-}
+include_dirs = {"system_helper": []}
 
 for key in include_dirs:
     include_dirs[key] += [np.get_include()]
@@ -31,7 +29,7 @@ extensions = [
         include_dirs=include_dirs["system_helper"],
         extra_compile_args=["-fopenmp"],
         extra_link_args=["-fopenmp"],
-    ),
+    )
 ]
 
 setup(
