@@ -1,0 +1,5 @@
+# Swap files
+*.swp
+
+# Python cache
+__pycache__
