@@ -3,3 +3,8 @@
 
 # Python cache
 __pycache__
+
+# Cython build
+build
+*.so
+system_helper.cpp
