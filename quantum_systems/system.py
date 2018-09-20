@@ -29,6 +29,7 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         raise NotImplementedError("Use a specific quantum system")
 
     def construct_fock_matrix(self):
+        """Function setting up the Fock matrix"""
         o, v = (self.o, self.v)
 
         self._f = np.einsum("piqi -> pq", self.u[:, o, :, o])
@@ -36,16 +37,21 @@ class QuantumSystem(metaclass=abc.ABCMeta):
 
     @property
     def h(self):
+        """Getter returning one-body matrix"""
         return self._h
 
     @property
     def f(self):
+        """Getter returning one-body Fock matrix"""
         return self._f
 
     @property
     def u(self):
+        """Getter returning the antisymmetric two-body matrix"""
         return self._u
 
     @property
     def spf(self):
+        """Getter returning the single particle functions, i.e, the eigenstates
+        of the system"""
         return self._spf
