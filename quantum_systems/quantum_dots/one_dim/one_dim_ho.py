@@ -67,11 +67,11 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         l,
         grid_length,
         num_grid_points,
-        omega=1,
+        omega=0.25,
         mass=1,
         a=0.25,
         alpha=1.0,
-        laser_frequency=8,
+        laser_frequency=2,
         laser_strength=1,
     ):
 
