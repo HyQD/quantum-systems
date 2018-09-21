@@ -27,13 +27,13 @@ cdef int spin_delta(int p, int q) nogil:
 
 
 def get_antisymmetrized_one_body_elements(
-        np.ndarray[double, ndim=2] h
+        np.ndarray[np.complex128_t, ndim=2] h
 ):
     cdef int p, q, _p, _q, l
-    cdef np.ndarray[double, ndim=2] _h
+    cdef np.ndarray[np.complex128_t, ndim=2] _h
 
     l = len(h) * 2
-    _h = np.zeros((l, l))
+    _h = np.zeros((l, l), dtype=np.complex128)
 
     for p in range(l):
         _p = p // 2
@@ -46,15 +46,15 @@ def get_antisymmetrized_one_body_elements(
 
 
 def get_antisymmetrized_two_body_elements(
-        np.ndarray[double, ndim=4] orbital_integrals
+        np.ndarray[np.complex128_t, ndim=4] orbital_integrals
 ):
     cdef int p, q, r, s, l, _p, _q, _r, _s
-    cdef np.ndarray[double, ndim=4] u
-    cdef double u_pqrs, u_pqsr
+    cdef np.ndarray[np.complex128_t, ndim=4] u
+    cdef np.complex128_t u_pqrs, u_pqsr
 
     l = len(orbital_integrals) * 2
 
-    u = np.zeros((l, l, l, l))
+    u = np.zeros((l, l, l, l), dtype=np.complex128)
 
     with nogil, parallel():
         for p in prange(l, schedule="dynamic"):

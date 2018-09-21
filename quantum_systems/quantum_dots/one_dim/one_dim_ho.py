@@ -30,7 +30,7 @@ def _shielded_coulomb(x_1, x_2, alpha, a):
 
 @numba.njit(cache=True)
 def _compute_inner_integral(spf, l, num_grid_points, grid, alpha, a):
-    inner_integral = np.zeros((l, l, num_grid_points))
+    inner_integral = np.zeros((l, l, num_grid_points), dtype=np.complex128)
 
     for q in range(l):
         for s in range(l):
@@ -47,7 +47,7 @@ def _compute_inner_integral(spf, l, num_grid_points, grid, alpha, a):
 
 @numba.njit(cache=True)
 def _compute_orbital_integrals(spf, l, inner_integral, grid):
-    u = np.zeros((l, l, l, l))
+    u = np.zeros((l, l, l, l), dtype=np.complex128)
 
     for p in range(l):
         for q in range(l):
@@ -91,6 +91,9 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         self.grid = np.linspace(
             -self.grid_length, self.grid_length, self.num_grid_points
         )
+        self._spf = np.zeros(
+            (self.l // 2, self.num_grid_points), dtype=np.complex128
+        )
 
     def setup_system(self):
         dx = self.grid[1] - self.grid[0]
@@ -104,13 +107,12 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         H = sps.diags([h_diag, h_off_diag, h_off_diag], offsets=[0, -1, 1])
 
         eigen_energies, eigen_states = spsl.eigs(H, k=self.l // 2, which="SM")
-        eigen_energies = eigen_energies.real
-        eigen_states = eigen_states.real
+        eigen_energies = eigen_energies
+        eigen_states = eigen_states
 
-        self._spf = np.zeros((self.l // 2, self.num_grid_points))
         self._spf[:, 1:-1] = eigen_states.T / np.sqrt(dx)
 
-        self.__h = np.diag(eigen_energies)
+        self.__h = np.diag(eigen_energies).astype(np.complex128)
         self._h = get_antisymmetrized_one_body_elements(self.__h)
 
         inner_integral = _compute_inner_integral(
@@ -129,9 +131,10 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
 
         self.construct_laser_matrix()
         self.construct_fock_matrix()
+        self.cast_to_complex()
 
     def construct_laser_matrix(self):
-        self.laser_matrix = np.zeros((self.l, self.l))
+        self.laser_matrix = np.zeros((self.l, self.l), dtype=np.complex128)
 
         for p in range(self.l // 2):
             for q in range(self.l // 2):
