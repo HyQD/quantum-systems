@@ -132,6 +132,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         self.construct_laser_matrix()
         self.construct_fock_matrix()
         self.cast_to_complex()
+        self._h_0 = self._h.copy()
 
     def construct_laser_matrix(self):
         self.laser_matrix = np.zeros((self.l, self.l), dtype=np.complex128)
@@ -145,7 +146,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
                 self.laser_matrix[2 * p + 1, 2 * q + 1] = val
 
     def evolve_in_time(self, time):
-        self._h += (
+        self._h = self._h_0 + (
             self.laser_strength
             * np.sin(self.laser_frequency * time)
             * self.laser_matrix
