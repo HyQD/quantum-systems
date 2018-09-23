@@ -111,9 +111,15 @@ def _construct_coulomb_elements(l, n, length):
 
 class HomogeneousElectronGas(QuantumSystem):
     def __init__(
-        self, n, num_shells, length, num_grid_points=0, mass=1, num_dimensions=3
+        self,
+        n,
+        num_shells,
+        length=1,
+        num_grid_points=0,
+        mass=1,
+        num_dimensions=3,
     ):
-        assert num_shells > 0
+        assert num_shells >= 0
 
         self.num_dimensions = num_dimensions
         self.num_shells = num_shells
@@ -151,7 +157,7 @@ if __name__ == "__main__":
     cmap_args = dict(vmin=-1., vmax=1., cmap="seismic")
 
     heg = HomogeneousElectronGas(
-        2, num_shells=1, length=1.0, num_grid_points=1001, num_dimensions=3
+        2, num_shells=0, length=1.0, num_grid_points=1001, num_dimensions=3
     )
     print(heg.table)
     print(heg.table[heg.n_columns])
