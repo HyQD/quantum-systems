@@ -1,0 +1,22 @@
+os: linux
+dist: trusty
+sudo: false
+
+addons:
+        apt:
+                sources:
+                        - ubuntu-toolchain-r-test
+                packages:
+                        - gdb
+                        - gcc
+                        - python3-dbg
+
+language: python
+python:
+        - "3.6"
+before_install:
+        - pip install -r requirements.txt
+install:
+        - python3 setup.py build_ext
+script:
+        - pytest
