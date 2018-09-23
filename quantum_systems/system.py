@@ -36,8 +36,8 @@ class QuantumSystem(metaclass=abc.ABCMeta):
             self._f = np.zeros(self._h.shape, dtype=np.complex128)
 
         self._f.fill(0)
-        self._f += np.einsum("piqi -> pq", self.u[:, o, :, o])
-        self._f += self.h
+        self._f += np.einsum("piqi -> pq", self._u[:, o, :, o])
+        self._f += self._h
 
     def cast_to_complex(self):
         self._h = self._h.astype(np.complex128)
