@@ -84,10 +84,13 @@ cdef void _get_indices_nm(int p, int *n, int *m) nogil:
 def get_coulomb_elements(int num_orbitals):
     # NOTE: If we are to look at systems with complex numbers we need to change
     # the dtype of u.
-    cdef np.ndarray[double, ndim=4] u
+    cdef np.ndarray[np.complex128_t, ndim=4] u
     cdef int p, q, r, s, n_p, m_p, n_q, m_q, n_r, m_r, n_s, m_s
 
-    u = np.zeros((num_orbitals, num_orbitals, num_orbitals, num_orbitals))
+    u = np.zeros(
+        (num_orbitals, num_orbitals, num_orbitals, num_orbitals),
+        dtype=np.complex128
+    )
 
     with nogil, parallel():
         n_p, m_p = 0, 0
@@ -123,10 +126,10 @@ cdef double _get_shell_energy(int n, int m) nogil:
 
 
 def get_one_body_elements(int num_orbitals):
-    cdef np.ndarray[double, ndim=2] h
+    cdef np.ndarray[np.complex128_t, ndim=2] h
     cdef int p, n, m
 
-    h = np.zeros((num_orbitals, num_orbitals))
+    h = np.zeros((num_orbitals, num_orbitals), dtype=np.complex128)
 
     for p in range(num_orbitals):
         n, m = get_indices_nm(p)
