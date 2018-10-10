@@ -19,12 +19,12 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         self.mass = mass
 
     def setup_system(self):
-        self.__h = self.omega * get_one_body_elements(self.l).astype(
+        self.__h = self.omega * get_one_body_elements(self.l // 2).astype(
             np.complex128
         )
-        self.__u = np.sqrt(self.omega) * get_coulomb_elements(self.l).astype(
-            np.complex128
-        )
+        self.__u = np.sqrt(self.omega) * get_coulomb_elements(
+            self.l // 2
+        ).astype(np.complex128)
 
         self._h = get_antisymmetrized_one_body_elements(self.__h)
         self._u = get_antisymmetrized_two_body_elements(self.__u)
