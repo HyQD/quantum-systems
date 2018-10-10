@@ -82,8 +82,6 @@ cdef void _get_indices_nm(int p, int *n, int *m) nogil:
 
 
 def get_coulomb_elements(int num_orbitals):
-    # NOTE: If we are to look at systems with complex numbers we need to change
-    # the dtype of u.
     cdef np.ndarray[np.complex128_t, ndim=4] u
     cdef int p, q, r, s, n_p, m_p, n_q, m_q, n_r, m_r, n_s, m_s
 
