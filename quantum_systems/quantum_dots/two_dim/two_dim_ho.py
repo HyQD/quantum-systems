@@ -51,7 +51,9 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
 
         for p in range(self.l // 2):
             n, m = get_indices_nm(p)
-            self._spf[p, :] += self._spf_state(self.R, self.T, n, m, self.omega)
+            self._spf[p, :] += self._spf_state(
+                self.R, self.T, n, m, self.mass, self.omega
+            )
 
     def _spf_state(self, r, theta, n, m, omega):
         norm = np.sqrt(
@@ -59,7 +61,7 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
             / (np.pi * scipy.special.factorial(n + abs(m)))
         )
 
-        a = np.sqrt(omega)
+        a = np.sqrt(mass * omega)
         theta_dep = np.exp(1j * m * theta)
         lag = scipy.special.assoc_laguerre(a ** 2 * r ** 2, n, abs(m))
         rad_dep = np.exp(-a ** 2 * r ** 2 / 2.0)
