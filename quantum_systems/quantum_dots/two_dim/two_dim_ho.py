@@ -55,7 +55,7 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
                 self.R, self.T, n, m, self.mass, self.omega
             )
 
-    def _spf_state(self, r, theta, n, m, omega):
+    def _spf_state(self, r, theta, n, m, mass, omega):
         norm = np.sqrt(
             scipy.special.factorial(n)
             / (np.pi * scipy.special.factorial(n + abs(m)))
