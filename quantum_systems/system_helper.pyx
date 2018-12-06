@@ -13,6 +13,13 @@ cdef int _delta(int p, int q) nogil:
     return p == q
 
 
+def transform_one_body_elements(h, c):
+    _h = np.einsum("jq, ij -> iq", c, h)
+    _h = np.einsum("ip, iq -> pq", c.conj(), _h)
+
+    return _h
+
+
 def transform_two_body_elements(u, c):
     _u = np.einsum("ls, ijkl -> ijks", c, u)
     _u = np.einsum("kr, ijks -> ijrs", c, _u)
