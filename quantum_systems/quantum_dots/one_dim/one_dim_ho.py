@@ -145,6 +145,16 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
                 self.laser_matrix[2 * p, 2 * q] = val
                 self.laser_matrix[2 * p + 1, 2 * q + 1] = val
 
+    def h_t(self, time):
+        _h_t = self._h + (
+            self.laser_strength
+            * np.sin(self.laser_frequency * time)
+            * self.laser_matrix
+        )
+
+        return _h_t
+
+    # TODO: Replace the usage of this function by ht
     def evolve_in_time(self, time):
         self._h = self._h_0 + (
             self.laser_strength

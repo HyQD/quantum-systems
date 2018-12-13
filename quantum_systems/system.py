@@ -79,3 +79,9 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         """Getter returning the single particle functions, i.e, the eigenstates
         of the non-interacting Hamiltonian"""
         return self._spf
+
+    def h_t(self, current_time):
+        return self._h
+
+    def u_t(self, current_time):
+        return self._u
