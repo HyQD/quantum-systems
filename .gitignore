@@ -4,6 +4,7 @@
 # Python cache
 __pycache__
 .pytest_cache
+.cache
 
 # Cython build
 build
