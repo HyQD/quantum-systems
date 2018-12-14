@@ -23,10 +23,10 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         self._off_diag_f = None
         self._u = None
         self._s = None
+        self._dipole_moment = None
 
         self._spf = None
 
-    @abc.abstractmethod
     def setup_system(self):
         pass
 
@@ -79,6 +79,10 @@ class QuantumSystem(metaclass=abc.ABCMeta):
     def s(self):
         """Getter returning the overlap matrix of the atomic orbitals"""
         return self._s if self._s is not None else np.eye(*self._h.shape)
+
+    @property
+    def dipole_moment(self):
+        return self._dipole_moment
 
     @property
     def spf(self):
