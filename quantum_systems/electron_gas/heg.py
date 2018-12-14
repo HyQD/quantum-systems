@@ -3,9 +3,7 @@ import numba
 import pandas as pd
 
 from quantum_systems import QuantumSystem
-from quantum_systems.system_helper import (
-    add_spin_h,
-)
+from quantum_systems.system_helper import add_spin_h
 
 
 def _shell_level(max_n, num_dimensions):
@@ -147,7 +145,7 @@ class HomogeneousElectronGas(QuantumSystem):
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
-    cmap_args = dict(vmin=-1., vmax=1., cmap="seismic")
+    cmap_args = dict(vmin=-1.0, vmax=1.0, cmap="seismic")
 
     heg = HomogeneousElectronGas(
         2, num_shells=0, length=1.0, num_grid_points=1001, num_dimensions=3
