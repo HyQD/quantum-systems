@@ -6,9 +6,9 @@ import scipy.sparse.linalg as spsl
 from quantum_systems import QuantumSystem
 
 from quantum_systems.system_helper import (
-    add_spin_h,
-    add_spin_u,
-    antisymmetrize_u,
+    add_spin_one_body,
+    add_spin_two_body,
+    anti_symmetrize_u,
 )
 
 
@@ -114,7 +114,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         self._spf[:, 1:-1] = eigen_states.T / np.sqrt(dx)
 
         self.__h = np.diag(eigen_energies).astype(np.complex128)
-        self._h = add_spin_h(self.__h)
+        self._h = add_spin_one_body(self.__h)
 
         inner_integral = _compute_inner_integral(
             self._spf,
@@ -128,7 +128,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         self.__u = _compute_orbital_integrals(
             self._spf, self.l // 2, inner_integral, self.grid
         )
-        self._u = antisymmetrize_u(add_spin_u(self.__u))
+        self._u = anti_symmetrize_u(add_spin_two_body(self.__u))
 
         self.construct_laser_matrix()
         self.construct_fock_matrix()

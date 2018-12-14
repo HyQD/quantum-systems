@@ -3,7 +3,7 @@ import numba
 import pandas as pd
 
 from quantum_systems import QuantumSystem
-from quantum_systems.system_helper import add_spin_h
+from quantum_systems.system_helper import add_spin_one_body
 
 
 def _shell_level(max_n, num_dimensions):
@@ -132,7 +132,7 @@ class HomogeneousElectronGas(QuantumSystem):
                 self.table[self.table.index == p].shell, self.length, self.mass
             )
 
-        self._h = add_spin_h(__h)
+        self._h = add_spin_one_body(__h)
         self._u = _construct_coulomb_elements(
             self.l,
             self.table[self.n_columns].values.astype(np.int),

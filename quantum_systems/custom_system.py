@@ -2,9 +2,9 @@ import numpy as np
 
 from quantum_systems.system import QuantumSystem
 from quantum_systems.system_helper import (
-    add_spin_h,
-    add_spin_u,
-    antisymmetrize_u,
+    add_spin_one_body,
+    add_spin_two_body,
+    anti_symmetrize_u,
 )
 
 
@@ -20,22 +20,22 @@ class CustomSystem(QuantumSystem):
 
     def set_h(self, h, add_spin=False):
         if add_spin:
-            h = add_spin_h(h)
+            h = add_spin_one_body(h)
 
         self._h = h
 
     def set_u(self, u, add_spin=False, anti_symmetrize=False):
         if add_spin:
-            u = add_spin_u(u)
+            u = add_spin_two_body(u)
 
         if anti_symmetrize:
-            u = antisymmetrize_u(u)
+            u = anti_symmetrize_u(u)
 
         self._u = u
 
     def set_s(self, s, add_spin=False):
         if add_spin:
-            s = add_spin_h(s)
+            s = add_spin_one_body(s)
 
         self._s = s
 
@@ -50,4 +50,4 @@ class CustomSystem(QuantumSystem):
         new_shape = tuple(map(lambda x: x * 2, dipole_moment.shape))
         self._dipole_moment = np.zeros(new_shape)
         for i in range(len(dipole_moment)):
-            self._dipole_moment[i] = add_spin_h(dipole_moment[i])
+            self._dipole_moment[i] = add_spin_one_body(dipole_moment[i])
