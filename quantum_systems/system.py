@@ -24,6 +24,7 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         self._u = None
         self._s = None
         self._dipole_moment = None
+        self._polarization_vector = None
 
         self._spf = None
 
@@ -83,6 +84,10 @@ class QuantumSystem(metaclass=abc.ABCMeta):
     @property
     def dipole_moment(self):
         return self._dipole_moment
+
+    @property
+    def polarization_vector(self):
+        return self._polarization_vector
 
     @property
     def spf(self):
