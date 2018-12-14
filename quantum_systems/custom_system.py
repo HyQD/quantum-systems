@@ -47,8 +47,9 @@ class CustomSystem(QuantumSystem):
             self._dipole_moment = dipole_moment
             return
 
-        new_shape = tuple(map(lambda x: x * 2, dipole_moment.shape))
-        self._dipole_moment = np.zeros(new_shape)
+        new_shape = [self.dipole_moment.shape[0]]
+        new_shape.extend(list(map(lambda x: x * 2, dipole_moment.shape[1:])))
+        self._dipole_moment = np.zeros(tuple(new_shape))
         for i in range(len(dipole_moment)):
             self._dipole_moment[i] = add_spin_one_body(dipole_moment[i])
 
