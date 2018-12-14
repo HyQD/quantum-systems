@@ -25,6 +25,7 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         self._s = None
         self._dipole_moment = None
         self._polarization_vector = None
+        self._envelope = lambda t: 0
 
         self._spf = None
 
@@ -96,7 +97,10 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         return self._spf
 
     def h_t(self, current_time):
-        return self._h
+        # TODO: Figure out a way to include different time evolving systems
+        return self._h + self._envelope(current_time) * np.dot(
+            self._polarization_vector, self._dipole_moment
+        )
 
     def u_t(self, current_time):
         return self._u
