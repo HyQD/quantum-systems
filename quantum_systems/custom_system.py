@@ -43,8 +43,11 @@ class CustomSystem(QuantumSystem):
         if len(dipole_moment.shape) < 3:
             dipole_moment = np.array([dipole_moment])
 
-        if add_spin:
-            for i in range(len(dipole_moment)):
-                dipole_moment[i] = add_spin_h(dipole_moment[i])
+        if not add_spin:
+            self._dipole_moment = dipole_moment
+            return
 
-        self._dipole_moment = dipole_moment
+        new_shape = tuple(map(lambda x: x * 2, dipole_moment.shape))
+        self._dipole_moment = np.zeros(new_shape)
+        for i in range(len(dipole_moment)):
+            self._dipole_moment[i] = add_spin_h(dipole_moment[i])
