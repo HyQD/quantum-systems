@@ -22,6 +22,7 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         self._f = None
         self._off_diag_f = None
         self._u = None
+        self._s = None
 
         self._spf = None
 
@@ -73,6 +74,11 @@ class QuantumSystem(metaclass=abc.ABCMeta):
     def u(self):
         """Getter returning the antisymmetric two-body matrix"""
         return self._u
+
+    @property
+    def s(self):
+        """Getter returning the overlap matrix of the atomic orbitals"""
+        return self._s if self._s is not None else np.eye(self._h.shape)
 
     @property
     def spf(self):
