@@ -96,6 +96,12 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         of the non-interacting Hamiltonian"""
         return self._spf
 
+    def set_envelope(self, envelope):
+        if not callable(envelope):
+            envelope = lambda t: envelope
+
+        self._envelope = envelope
+
     def h_t(self, current_time):
         # TODO: Figure out a way to include different time evolving systems
         return self._h + self._envelope(current_time) * np.dot(
