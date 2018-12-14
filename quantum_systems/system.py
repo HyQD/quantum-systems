@@ -104,8 +104,8 @@ class QuantumSystem(metaclass=abc.ABCMeta):
 
     def h_t(self, current_time):
         # TODO: Figure out a way to include different time evolving systems
-        return self._h + self._envelope(current_time) * np.dot(
-            self._polarization_vector, self._dipole_moment
+        return self._h + self._envelope(current_time) * np.tensordot(
+            self._polarization_vector, self._dipole_moment, axes=(0, 0)
         )
 
     def u_t(self, current_time):
