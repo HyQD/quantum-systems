@@ -8,8 +8,9 @@ from quantum_systems.quantum_dots.two_dim.two_dim_interface import (
     get_indices_nm,
 )
 from quantum_systems.system_helper import (
-    get_antisymmetrized_one_body_elements,
-    get_antisymmetrized_two_body_elements,
+    add_spin_h,
+    add_spin_u,
+    antisymmetrize_u,
 )
 
 
@@ -39,8 +40,8 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
             self.l // 2
         ).astype(np.complex128)
 
-        self._h = get_antisymmetrized_one_body_elements(self.__h)
-        self._u = get_antisymmetrized_two_body_elements(self.__u)
+        self._h = add_spin_h(self.__h)
+        self._u = antisymmetrize_u(add_spin_u(self.__u))
         self.construct_fock_matrix()
         self.cast_to_complex()
 

@@ -18,7 +18,6 @@ two_dim_qd_path = quantum_dot_path + ["two_dim"]
 two_dim_qd_source_path = two_dim_qd_path + ["src"]
 
 source_files = {
-    "system_helper": [os.path.join(*base_path, "system_helper.pyx")],
     "two_dim_interface": [
         *glob.glob(os.path.join(*two_dim_qd_path, "*.pyx")),
         *glob.glob(os.path.join(*two_dim_qd_source_path, "*.cpp")),
@@ -27,21 +26,12 @@ source_files = {
 
 include_dirs = {
     "two_dim_interface": [os.path.join(*two_dim_qd_source_path)],
-    "system_helper": [],
 }
 
 for key in include_dirs:
     include_dirs[key] += [np.get_include()]
 
 extensions = [
-    Extension(
-        name="quantum_systems.system_helper",
-        sources=source_files["system_helper"],
-        language="c++",
-        include_dirs=include_dirs["system_helper"],
-        extra_compile_args=["-fopenmp"],
-        extra_link_args=["-fopenmp"],
-    ),
     Extension(
         name="quantum_systems.quantum_dots.two_dim.two_dim_interface",
         sources=source_files["two_dim_interface"],

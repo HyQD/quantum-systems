@@ -9,8 +9,9 @@ from quantum_systems.quantum_dots.two_dim.two_dim_interface import (
 )
 
 from quantum_systems.system_helper import (
-    get_antisymmetrized_one_body_elements,
-    get_antisymmetrized_two_body_elements,
+    add_spin_h,
+    add_spin_u,
+    antisymmetrize_u,
 )
 
 
@@ -33,7 +34,7 @@ def test_one_body_elements(hi):
 
 def test_antisymmetric_one_body_elements(h):
     l = pytest.l
-    _h = get_antisymmetrized_one_body_elements(get_one_body_elements(l // 2))
+    _h = add_spin_h(get_one_body_elements(l // 2))
 
     np.testing.assert_allclose(h, _h, atol=1e-6, rtol=1e-6)
 
@@ -47,6 +48,6 @@ def test_two_body_elements(orbital_integrals):
 
 def test_antisymmetric_two_body_elements(u):
     l = pytest.l
-    _u = get_antisymmetrized_two_body_elements(get_coulomb_elements(l // 2))
+    _u = antisymmetrize_u(add_spin_u(get_coulomb_elements(l // 2)))
 
     np.testing.assert_allclose(u, _u, atol=1e-6, rtol=1e-6)

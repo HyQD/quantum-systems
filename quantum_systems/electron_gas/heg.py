@@ -4,8 +4,7 @@ import pandas as pd
 
 from quantum_systems import QuantumSystem
 from quantum_systems.system_helper import (
-    get_antisymmetrized_one_body_elements,
-    get_antisymmetrized_two_body_elements,
+    add_spin_h,
 )
 
 
@@ -80,8 +79,6 @@ def _construct_coulomb_elements(l, n, length):
                         and spin_delta(q, s)
                         and not _delta_momentum(n[_p], n[_r])
                     ):
-                        if np.abs(np.sum((n[_r] - n[_p]) ** 2)) < 1e-10:
-                            print("YOLO")
                         val += (length / (2 * np.pi)) ** 2 / np.sum(
                             (n[_r] - n[_p]) ** 2
                         )
@@ -91,10 +88,6 @@ def _construct_coulomb_elements(l, n, length):
                         and spin_delta(q, r)
                         and not _delta_momentum(n[_p], n[_s])
                     ):
-                        if np.abs(np.sum((n[_s] - n[_p]) ** 2)) < 1e-10:
-                            print(s, p, _s, _p)
-                            print(n[_s], n[_p])
-                            print("YOLO2")
                         val -= (length / (2 * np.pi)) ** 2 / np.sum(
                             (n[_s] - n[_p]) ** 2
                         )
@@ -141,7 +134,7 @@ class HomogeneousElectronGas(QuantumSystem):
                 self.table[self.table.index == p].shell, self.length, self.mass
             )
 
-        self._h = get_antisymmetrized_one_body_elements(__h)
+        self._h = add_spin_h(__h)
         self._u = _construct_coulomb_elements(
             self.l,
             self.table[self.n_columns].values.astype(np.int),
