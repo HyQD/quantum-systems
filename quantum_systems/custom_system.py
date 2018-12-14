@@ -24,16 +24,19 @@ class CustomSystem(QuantumSystem):
 
         self._h = h
 
-    def set_u(self, u, add_spin=False, antisymmetrize=False):
+    def set_u(self, u, add_spin=False, anti_symmetrize=False):
         if add_spin:
             u = add_spin_u(u)
 
-        if antisymmetrize:
+        if anti_symmetrize:
             u = antisymmetrize_u(u)
 
         self._u = u
 
-    def set_s(self, s):
+    def set_s(self, s, add_spin=False):
+        if add_spin:
+            s = add_spin_h(s)
+
         self._s = s
 
     def set_dipole_moment(self, dipole_moment, add_spin=False):
