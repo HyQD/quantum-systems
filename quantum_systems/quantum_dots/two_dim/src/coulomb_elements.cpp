@@ -8,10 +8,12 @@
  *
  * Anisimovas, Matulis. J. Pys.: Condens. Matter 10, 601 (1998)
  *
+ * Note that Anisimovas uses the convention that <pq|u|rs> is in fact <pg|u|sr>
+ * in the standard way. That is, the two latter indices are interchanged.
  * */
 
-double coulomb_ho(int ni, int mi, int nj, int mj, int nk, int mk, int nl,
-        int ml)
+double coulomb_ho(int ni, int mi, int nj, int mj, int nl, int ml, int nk,
+        int mk)
 {
     double element = 0.0;
 
@@ -21,23 +23,23 @@ double coulomb_ho(int ni, int mi, int nj, int mj, int nk, int mk, int nl,
 
     for (int j1 = 0; j1 <= ni; ++j1) {
         for (int j2 = 0; j2 <= nj; ++j2) {
-            for (int j3 = 0; j3 <= nl; ++j3) {
-                for (int j4 = 0; j4 <= nk; ++j4) {
+            for (int j3 = 0; j3 <= nk; ++j3) {
+                for (int j4 = 0; j4 <= nl; ++j4) {
 
                     int g1 = int(
                         j1 + j4 + 0.5 * (std::abs(mi) + mi)
-                        + 0.5 * (std::abs(mk) - mk)
+                        + 0.5 * (std::abs(ml) - ml)
                     );
                     int g2 = int(
                         j2 + j3 + 0.5 * (std::abs(mj) + mj)
-                        + 0.5 * (std::abs(ml) - ml)
+                        + 0.5 * (std::abs(mk) - mk)
                     );
                     int g3 = int(
-                        j3 + j2 + 0.5 * (std::abs(ml) + ml)
+                        j3 + j2 + 0.5 * (std::abs(mk) + mk)
                         + 0.5*(std::abs(mj) - mj)
                     );
                     int g4 = int(
-                        j4 + j1 + 0.5 * (std::abs(mk) + mk)
+                        j4 + j1 + 0.5 * (std::abs(ml) + ml)
                         + 0.5*(std::abs(mi) - mi)
                     );
 
@@ -45,7 +47,7 @@ double coulomb_ho(int ni, int mi, int nj, int mj, int nk, int mk, int nl,
 
                     double ratio_1 = log_ratio_1(j1, j2, j3, j4);
                     double prod_2 = log_product_2(
-                        ni, mi, nj, mj, nl, ml, nk, mk, j1, j2, j3, j4
+                        ni, mi, nj, mj, nk, mk, nl, ml, j1, j2, j3, j4
                     );
 
                     double ratio_2 = log_ratio_2(G);
@@ -64,27 +66,27 @@ double coulomb_ho(int ni, int mi, int nj, int mj, int nk, int mk, int nl,
                                     int L = l1 + l2 + l3 + l4;
 
                                     temp += (
-                                        (-2 * ((g2 + g3 - l2 - l3) & 0x1) + 1)
-                                        * std::exp(
+                                        -2 * ((g2 + g3 - l2 - l3) & 0x1) + 1
+                                    ) * std::exp(
                                             log_product_3(
                                                 l1, l2, l3, l4, g1, g2, g3, g4
                                             )
                                             + std::lgamma(1.0 + 0.5*L)
                                             + std::lgamma(0.5*(G - L + 1.0))
-                                        )
                                     );
                                 }
                             }
                         }
                     }
-                    element += (-2 * ((j1 + j2 + j3 + j4) & 0x1) + 1)
-                        * std::exp(ratio_1 + prod_2 + ratio_2) * temp;
+                    element += (
+                        -2 * ((j1 + j2 + j3 + j4) & 0x1) + 1
+                    ) * std::exp(ratio_1 + prod_2 + ratio_2) * temp;
                 }
             }
         }
     }
 
-    element *= log_product_1(ni, mi, nj, mj, nl, ml, nk, mk);
+    element *= log_product_1(ni, mi, nj, mj, nk, mk, nl, ml);
 
     return element;
 }
@@ -109,7 +111,7 @@ double log_ratio_1(int int1, int int2, int int3, int int4)
 
 double log_ratio_2(int G)
 {
-    return -0.5 * (G + 1) * log(2);
+    return -0.5 * (G + 1) * std::log(2);
 }
 
 double log_product_1(int n1, int m1, int n2, int m2, int n3, int m3,
@@ -125,9 +127,8 @@ double log_product_1(int n1, int m1, int n2, int m2, int n3, int m3,
 
     prod -= log_factorial(arg1) + log_factorial(arg2) + log_factorial(arg3)
         + log_factorial(arg4);
-    prod *= 0.5;
 
-    return std::exp(prod);
+    return std::exp(0.5 * prod);
 }
 
 double log_product_2(int n1, int m1, int n2, int m2, int n3, int m3,
