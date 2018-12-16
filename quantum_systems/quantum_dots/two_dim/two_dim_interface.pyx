@@ -7,6 +7,20 @@ cimport numpy as np
 from libc.math cimport fabs, floor
 
 
+
+def get_coulomb_element(
+        int n_i, int m_i,
+        int n_j, int m_j,
+        int n_k, int m_k,
+        int n_l, int m_l
+):
+    return coulomb_ho(
+        n_i, m_i,
+        n_j, m_j,
+        n_k, m_k,
+        n_l, m_l
+    )
+
 def get_index_p(int n, int m):
     return _get_index_p(n, m)
 
