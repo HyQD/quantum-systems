@@ -4,7 +4,7 @@ import numba
 
 
 @numba.njit(cache=True, nogil=True)
-def coulomb_ho(n_i, m_i, n_j, m_j, n_k, m_k, n_l, m_l):
+def new_coulomb_ho(n_i, m_i, n_j, m_j, n_k, m_k, n_l, m_l):
     element = 0
 
     if m_i + m_j != m_k + m_l:
@@ -22,25 +22,25 @@ def coulomb_ho(n_i, m_i, n_j, m_j, n_k, m_k, n_l, m_l):
     M_l = 0.5 * (abs(m_l) + m_l)
     dm_l = 0.5 * (abs(m_l) - m_l)
 
-    n = np.array([n_i, n_j, n_k, n_l])
-    m = np.array([m_i, m_j, m_k, m_l])
-    j = np.array([0, 0, 0, 0])
-    l = np.array([0, 0, 0, 0])
-    g = np.array([0, 0, 0, 0])
+    n = np.array([n_i, n_j, n_k, n_l], dtype=np.int64)
+    m = np.array([m_i, m_j, m_k, m_l], dtype=np.int64)
+    j = np.array([0, 0, 0, 0], dtype=np.int64)
+    l = np.array([0, 0, 0, 0], dtype=np.int64)
+    g = np.array([0, 0, 0, 0], dtype=np.int64)
 
-    for j_1 in range(n_i):
+    for j_1 in range(n_i + 1):
         j[0] = j_1
-        for j_2 in range(n_j):
+        for j_2 in range(n_j + 1):
             j[1] = j_2
-            for j_3 in range(n_l):
+            for j_3 in range(n_k + 1):
                 j[2] = j_3
-                for j_4 in range(n_k):
+                for j_4 in range(n_l + 1):
                     j[3] = j_4
 
-                    g[0] = j_1 + j_4 + M_i + dm_k
-                    g[1] = j_2 + j_3 + M_j + dm_l
-                    g[2] = j_3 + j_2 + M_l + dm_j
-                    g[3] = j_4 + j_1 + M_k + dm_i
+                    g[0] = j_1 + j_4 + M_i + dm_l
+                    g[1] = j_2 + j_3 + M_j + dm_k
+                    g[2] = j_3 + j_2 + M_k + dm_j
+                    g[3] = j_4 + j_1 + M_l + dm_i
 
                     G = np.sum(g)
                     ratio_1 = log_ratio_1(j)
@@ -48,13 +48,13 @@ def coulomb_ho(n_i, m_i, n_j, m_j, n_k, m_k, n_l, m_l):
                     ratio_2 = log_ratio_2(G)
 
                     temp = 0
-                    for l_1 in range(g[0]):
+                    for l_1 in range(g[0] + 1):
                         l[0] = l_1
-                        for l_2 in range(g[1]):
+                        for l_2 in range(g[1] + 1):
                             l[1] = l_2
-                            for l_3 in range(g[2]):
+                            for l_3 in range(g[2] + 1):
                                 l[2] = l_3
-                                for l_4 in range(g[3]):
+                                for l_4 in range(g[3] + 1):
                                     l[3] = l_4
 
                                     if l_1 + l_2 != l_3 + l_4:
@@ -63,7 +63,9 @@ def coulomb_ho(n_i, m_i, n_j, m_j, n_k, m_k, n_l, m_l):
                                     L = np.sum(l)
 
                                     temp += (
-                                        -2 * ((g[1] + g[2] - l[1] - l[2]) & 0x1) + 1
+                                        -2
+                                        * (int(g[1] + g[2] - l[1] - l[2]) & 0x1)
+                                        + 1
                                     ) * np.exp(
                                         log_product_3(l, g)
                                         + math.lgamma(1.0 + 0.5 * L)
@@ -71,8 +73,10 @@ def coulomb_ho(n_i, m_i, n_j, m_j, n_k, m_k, n_l, m_l):
                                     )
 
                     element += (
-                        -2 * (np.sum(j) & 0x1) + 1
-                    ) * np.exp(ratio_1 + prod_2 + ratio_2) * temp
+                        (-2 * (int(np.sum(j)) & 0x1) + 1)
+                        * np.exp(ratio_1 + prod_2 + ratio_2)
+                        * temp
+                    )
 
     element *= log_product_1(n, m)
 
