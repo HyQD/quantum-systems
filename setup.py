@@ -21,12 +21,10 @@ source_files = {
     "two_dim_interface": [
         *glob.glob(os.path.join(*two_dim_qd_path, "*.pyx")),
         *glob.glob(os.path.join(*two_dim_qd_source_path, "*.cpp")),
-    ],
+    ]
 }
 
-include_dirs = {
-    "two_dim_interface": [os.path.join(*two_dim_qd_source_path)],
-}
+include_dirs = {"two_dim_interface": [os.path.join(*two_dim_qd_source_path)]}
 
 for key in include_dirs:
     include_dirs[key] += [np.get_include()]
@@ -39,7 +37,7 @@ extensions = [
         include_dirs=include_dirs["two_dim_interface"],
         extra_compile_args=["-fopenmp"],
         extra_link_args=["-fopenmp"],
-    ),
+    )
 ]
 
 setup(
