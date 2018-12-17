@@ -80,7 +80,10 @@ class QuantumSystem(metaclass=abc.ABCMeta):
     @property
     def s(self):
         """Getter returning the overlap matrix of the atomic orbitals"""
-        return self._s if self._s is not None else np.eye(*self._h.shape)
+        if self._s is None:
+            self._s = np.eye(*self._h.shape)
+
+        return self._s
 
     @property
     def dipole_moment(self):
