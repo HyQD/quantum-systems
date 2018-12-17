@@ -3,8 +3,17 @@ import math
 import numba
 
 
-@numba.njit(cache=True, nogil=True)
-def new_coulomb_ho(n_i, m_i, n_j, m_j, n_k, m_k, n_l, m_l):
+@numba.njit(fastmath=True, cache=True, nogil=True)
+def new_coulomb_ho(n_i, m_i, n_j, m_j, n_l, m_l, n_k, m_k):
+    """Implementation of two-body matrix elements for the two-dimensional
+    quantum dots.
+
+    Anisimovas, Matulis. J. Pys.: Condens. Matter 10, 601 (1998)
+
+    Note that Anisimovas uses the convention that <ij|u|lk> is in fact
+    <ij|u|kl> in the standard way. That is, the last two indices are
+    interchanged."""
+
     element = 0
 
     if m_i + m_j != m_k + m_l:
@@ -83,7 +92,7 @@ def new_coulomb_ho(n_i, m_i, n_j, m_j, n_k, m_k, n_l, m_l):
     return element
 
 
-@numba.njit(cache=True, nogil=True)
+@numba.njit(fastmath=True, cache=True, nogil=True)
 def log_factorial(n):
     fac = 0
 
@@ -93,7 +102,7 @@ def log_factorial(n):
     return fac
 
 
-@numba.njit(cache=True, nogil=True)
+@numba.njit(fastmath=True, cache=True, nogil=True)
 def log_ratio_1(n_arr):
     ratio = 0
 
@@ -103,12 +112,12 @@ def log_ratio_1(n_arr):
     return ratio
 
 
-@numba.njit(cache=True, nogil=True)
+@numba.njit(fastmath=True, cache=True, nogil=True)
 def log_ratio_2(G):
     return -0.5 * (G + 1) * np.log(2)
 
 
-@numba.njit(cache=True, nogil=True)
+@numba.njit(fastmath=True, cache=True, nogil=True)
 def log_product_1(n, m):
     prod = 0
 
@@ -119,7 +128,7 @@ def log_product_1(n, m):
     return np.exp(0.5 * prod)
 
 
-@numba.njit(cache=True, nogil=True)
+@numba.njit(fastmath=True, cache=True, nogil=True)
 def log_product_2(n, m, j):
     prod = 0
 
@@ -131,7 +140,7 @@ def log_product_2(n, m, j):
     return prod
 
 
-@numba.njit(cache=True, nogil=True)
+@numba.njit(fastmath=True, cache=True, nogil=True)
 def log_product_3(l, g):
     prod = 0
 
