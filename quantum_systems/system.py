@@ -56,6 +56,20 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         self._off_diag_f = self._off_diag_f.astype(np.complex128)
         self._u = self._u.astype(np.complex128)
 
+    def change_basis(self,C):
+        self._h = np.einsum(
+                "ap,bq,ab->pq", C.conj(), C, self._h, optimize=True
+            )
+        self._u = np.einsum(
+                "ap,bq,gr,ds,abgd->pqrs",
+                C.conj(),
+                C.conj(),
+                C,
+                C,
+                self._u,
+                optimize=True,
+            )
+
     @property
     def h(self):
         """Getter returning one-body matrix"""
