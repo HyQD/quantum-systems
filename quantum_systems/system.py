@@ -2,6 +2,11 @@ import abc
 
 import numpy as np
 
+from quantum_systems.system_helper import (
+    transform_one_body_elements,
+    transform_two_body_elements,
+)
+
 
 class QuantumSystem(metaclass=abc.ABCMeta):
     """Abstract base class defining some of the common methods used by all
@@ -56,19 +61,9 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         self._off_diag_f = self._off_diag_f.astype(np.complex128)
         self._u = self._u.astype(np.complex128)
 
-    def change_basis(self,C):
-        self._h = np.einsum(
-                "ap,bq,ab->pq", C.conj(), C, self._h, optimize=True
-            )
-        self._u = np.einsum(
-                "ap,bq,gr,ds,abgd->pqrs",
-                C.conj(),
-                C.conj(),
-                C,
-                C,
-                self._u,
-                optimize=True,
-            )
+    def change_basis(self, c):
+        self._h = transform_one_body_elements(self._h, c)
+        self._u = transform_two_body_elements(self._u, c)
 
     @property
     def h(self):
