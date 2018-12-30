@@ -5,7 +5,7 @@ from quantum_systems.quantum_dots.two_dim.two_dim_interface import (
 )
 from quantum_systems.quantum_dots.two_dim.coulomb_elements import new_coulomb_ho
 from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
-    new_get_coulomb_elements
+    new_get_coulomb_elements,
 )
 
 import time
