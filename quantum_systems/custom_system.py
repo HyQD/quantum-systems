@@ -15,9 +15,6 @@ class CustomSystem(QuantumSystem):
     elements.
     """
 
-    def __init__(self, n, l):
-        super().__init__(n, l)
-
     def set_h(self, h, add_spin=False):
         if add_spin:
             h = add_spin_one_body(h)
@@ -50,6 +47,7 @@ class CustomSystem(QuantumSystem):
         new_shape = [dipole_moment.shape[0]]
         new_shape.extend(list(map(lambda x: x * 2, dipole_moment.shape[1:])))
         self._dipole_moment = np.zeros(tuple(new_shape))
+
         for i in range(len(dipole_moment)):
             self._dipole_moment[i] = add_spin_one_body(dipole_moment[i])
 
