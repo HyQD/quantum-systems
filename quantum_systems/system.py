@@ -1,5 +1,3 @@
-import abc
-
 import numpy as np
 
 from quantum_systems.system_helper import (
@@ -8,9 +6,9 @@ from quantum_systems.system_helper import (
 )
 
 
-class QuantumSystem(metaclass=abc.ABCMeta):
-    """Abstract base class defining some of the common methods used by all
-    the different quantum systems.
+class QuantumSystem:
+    """Base class defining some of the common methods used by all the different
+    quantum systems.
     """
 
     def __init__(self, n, l):
