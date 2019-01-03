@@ -110,9 +110,11 @@ class QuantumSystem:
         of the non-interacting Hamiltonian"""
         return self._spf
 
-    def set_envelope(self, envelope):
-        if not callable(envelope):
-            envelope = lambda t: envelope
+    def get_transformed_h(self, c):
+        return transform_one_body_elements(self._h, c)
+
+    def get_transformed_u(self, c):
+        return transform_two_body_elements(self._u, c)
 
     def set_time_propagator(self, propagator):
         self._propagator = propagator
