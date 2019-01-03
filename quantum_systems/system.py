@@ -5,6 +5,8 @@ from quantum_systems.system_helper import (
     transform_two_body_elements,
 )
 
+from quantum_systems.time_propagators import Propagator
+
 
 class QuantumSystem:
     """Base class defining some of the common methods used by all the different
@@ -28,6 +30,8 @@ class QuantumSystem:
         self._s = None
         self._dipole_moment = None
         self._polarization_vector = None
+
+        self._propagator = None
         self._envelope = lambda t: 0
 
         self._spf = None
@@ -110,13 +114,18 @@ class QuantumSystem:
         if not callable(envelope):
             envelope = lambda t: envelope
 
-        self._envelope = envelope
+    def set_time_propagator(self, propagator):
+        self._propagator = propagator
+        self._propagator.set_system(self)
 
     def h_t(self, current_time):
-        # TODO: Figure out a way to include different time evolving systems
-        return self._h + self._envelope(current_time) * np.tensordot(
-            self._polarization_vector, self._dipole_moment, axes=(0, 0)
-        )
+        if self._propagator is None:
+            return self._h
+
+        return self._propagator.h_t(current_time)
 
     def u_t(self, current_time):
-        return self._u
+        if self._propagator is None:
+            return self._u
+
+        return self._propagator.u_t(current_time)
