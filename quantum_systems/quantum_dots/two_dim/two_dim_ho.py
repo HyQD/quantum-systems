@@ -2,7 +2,7 @@ import numpy as np
 import scipy
 
 from quantum_systems import QuantumSystem
-from quantum_systems.quantum_dots.two_dim.two_dim_interface import (
+from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
     get_coulomb_elements,
     get_one_body_elements,
     get_indices_nm,

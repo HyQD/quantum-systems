@@ -2,11 +2,11 @@ import numpy as np
 import numba
 import math
 
-from quantum_systems.quantum_dots.two_dim.coulomb_elements import new_coulomb_ho
+from quantum_systems.quantum_dots.two_dim.coulomb_elements import coulomb_ho
 
 
 @numba.njit(cache=True, nogil=True)
-def new_get_index_p(n, m):
+def get_index_p(n, m):
     num_shells = 2 * n + abs(m) + 1
 
     previous_shell = 0
@@ -31,7 +31,7 @@ def new_get_index_p(n, m):
 
 
 @numba.njit(cache=True, nogil=True)
-def new_get_indices_nm(p):
+def get_indices_nm(p):
     n, m = 0, 0
     previous_shell = 0
     current_shell = 1
@@ -64,37 +64,37 @@ def new_get_indices_nm(p):
 
 
 @numba.njit(cache=True, nogil=True)
-def new_get_shell_energy(n, m):
+def get_shell_energy(n, m):
     return 2 * n + abs(m) + 1
 
 
 @numba.njit(cache=True, nogil=True)
-def new_get_one_body_elements(num_orbitals, dtype=np.float64):
+def get_one_body_elements(num_orbitals, dtype=np.float64):
     h = np.zeros((num_orbitals, num_orbitals), dtype=dtype)
 
     for p in range(num_orbitals):
-        n, m = new_get_indices_nm(p)
-        h[p, p] = new_get_shell_energy(n, m)
+        n, m = get_indices_nm(p)
+        h[p, p] = get_shell_energy(n, m)
 
     return h
 
 
 @numba.njit(fastmath=True, nogil=True, parallel=True)
-def new_get_coulomb_elements(num_orbitals, dtype=np.float64):
+def get_coulomb_elements(num_orbitals, dtype=np.float64):
 
     shape = (num_orbitals, num_orbitals, num_orbitals, num_orbitals)
     u = np.zeros(shape, dtype=dtype)
 
     for p in numba.prange(num_orbitals):
-        n_p, m_p = new_get_indices_nm(p)
+        n_p, m_p = get_indices_nm(p)
         for q in range(num_orbitals):
-            n_q, m_q = new_get_indices_nm(q)
+            n_q, m_q = get_indices_nm(q)
             for r in range(num_orbitals):
-                n_r, m_r = new_get_indices_nm(r)
+                n_r, m_r = get_indices_nm(r)
                 for s in range(num_orbitals):
-                    n_s, m_s = new_get_indices_nm(s)
+                    n_s, m_s = get_indices_nm(s)
 
-                    u[p, q, r, s] = new_coulomb_ho(
+                    u[p, q, r, s] = coulomb_ho(
                         n_p, m_p, n_q, m_q, n_r, m_r, n_s, m_s
                     )
 

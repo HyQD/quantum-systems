@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from quantum_systems.quantum_dots.two_dim.two_dim_interface import (
+from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
     get_index_p,
     get_indices_nm,
     get_one_body_elements,

@@ -4,7 +4,7 @@ import numba
 
 
 @numba.njit(fastmath=True, cache=True, nogil=True)
-def new_coulomb_ho(n_i, m_i, n_j, m_j, n_l, m_l, n_k, m_k):
+def coulomb_ho(n_i, m_i, n_j, m_j, n_l, m_l, n_k, m_k):
     """Implementation of two-body matrix elements for the two-dimensional
     quantum dots.
 
