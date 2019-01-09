@@ -5,8 +5,6 @@ from quantum_systems.system_helper import (
     transform_two_body_elements,
 )
 
-from quantum_systems.time_propagators import Propagator
-
 
 class QuantumSystem:
     """Base class defining some of the common methods used by all the different
