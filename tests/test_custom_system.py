@@ -1,6 +1,6 @@
 import numpy as np
 
-from quantum_systems import CustomSystem
+from quantum_systems import CustomSystem, construct_psi4_system
 
 
 def change_basis_h(h, c):
@@ -60,3 +60,15 @@ def test_change_of_basis():
 
     np.testing.assert_allclose(h_cs, cs.h, atol=1e-12, rtol=1e-12)
     np.testing.assert_allclose(u_cs, cs.u, atol=1e-12, rtol=1e-12)
+
+
+def test_psi4_construction():
+    He = """
+        He 0.0 0.0 0.0
+        symmetry c1
+    """
+
+    options = {"basis": "cc-pVDZ", "scf_type": "pk", "e_convergence": 1e-8}
+
+    system = construct_psi4_system(He, options)
+    assert True

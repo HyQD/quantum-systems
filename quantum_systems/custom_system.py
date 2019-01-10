@@ -53,3 +53,40 @@ class CustomSystem(QuantumSystem):
 
     def set_polarization_vector(self, polarization_vector):
         self._polarization_vector = polarization_vector
+
+
+def construct_psi4_system(molecule, options):
+    import psi4
+
+    psi4.core.be_quiet()
+    psi4.set_options(options)
+
+    mol = psi4.geometry(molecule)
+
+    wavefunction = psi4.core.Wavefunction.build(
+        mol, psi4.core.get_global_option("BASIS")
+    )
+
+    molecular_integrals = psi4.core.MintsHelper(wavefunction.basisset())
+
+    kinetic = np.asarray(molecular_integrals.ao_kinetic())
+    potential = np.asarray(molecular_integrals.ao_potential())
+    h = kinetic + potential
+
+    u = np.asarray(molecular_integrals.ao_eri()).transpose(0, 2, 1, 3)
+    overlap = np.asarray(molecular_integrals.ao_overlap())
+
+    n = wavefunction.nalpha() + wavefunction.nbeta()
+    l = 2 * wavefunction.nmo()
+
+    dipole_integrals = np.array(
+        [np.array(mu) for mu in molecular_integrals.ao_dipole()]
+    )
+
+    system = CustomSystem(n, l)
+    system.set_h(h, add_spin=True)
+    system.set_u(u, add_spin=True, anti_symmetrize=True)
+    system.set_s(overlap, add_spin=True)
+    system.set_dipole_moment(dipole_integrals, add_spin=True)
+
+    return system

@@ -1,5 +1,5 @@
 from .system import QuantumSystem
-from .custom_system import CustomSystem
+from .custom_system import CustomSystem, construct_psi4_system
 from quantum_systems.quantum_dots.one_dim.one_dim_ho import (
     OneDimensionalHarmonicOscillator,
 )
