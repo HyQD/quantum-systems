@@ -14,3 +14,6 @@ two_dim_interface.cpp
 
 # Resources
 .nfs*
+
+# Data files
+*.dat
