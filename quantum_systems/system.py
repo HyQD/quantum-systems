@@ -29,7 +29,7 @@ class QuantumSystem:
         self._dipole_moment = None
         self._polarization_vector = None
 
-        self._propagator = None
+        self._time_evolution_operator = None
         self._envelope = lambda t: 0
 
         self._spf = None
@@ -114,18 +114,18 @@ class QuantumSystem:
     def get_transformed_u(self, c):
         return transform_two_body_elements(self._u, c)
 
-    def set_time_propagator(self, propagator):
-        self._propagator = propagator
-        self._propagator.set_system(self)
+    def set_time_evolution_operator(self, time_evolution_operator):
+        self._time_evolution_operator = time_evolution_operator
+        self._time_evolution_operator.set_system(self)
 
     def h_t(self, current_time):
-        if self._propagator is None:
+        if self._time_evolution_operator is None:
             return self._h
 
-        return self._propagator.h_t(current_time)
+        return self._time_evolution_operator.h_t(current_time)
 
     def u_t(self, current_time):
-        if self._propagator is None:
+        if self._time_evolution_operator is None:
             return self._u
 
-        return self._propagator.u_t(current_time)
+        return self._time_evolution_operator.u_t(current_time)

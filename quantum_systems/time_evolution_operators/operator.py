@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class Propagator:
+class TimeEvolutionOperator:
     def set_system(self, system):
         self._system = system
 
@@ -12,7 +12,7 @@ class Propagator:
         return self._system.u
 
 
-class LaserField(Propagator):
+class LaserField(TimeEvolutionOperator):
     def __init__(self, laser_pulse):
         if not callable(laser_pulse):
             laser_pulse = lambda t: laser_pulse
