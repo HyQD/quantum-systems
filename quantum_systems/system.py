@@ -23,7 +23,6 @@ class QuantumSystem:
 
         self._h = None
         self._f = None
-        self._off_diag_f = None
         self._u = None
         self._s = None
         self._dipole_moment = None
@@ -48,17 +47,9 @@ class QuantumSystem:
         self._f += np.einsum("piqi -> pq", self._u[:, o, :, o])
         self._f += self._h
 
-        if self._off_diag_f is None:
-            self._off_diag_f = np.zeros(self._h.shape, dtype=np.complex128)
-
-        self._off_diag_f.fill(0)
-        self._off_diag_f += self._f
-        np.fill_diagonal(self._off_diag_f, 0)
-
     def cast_to_complex(self):
         self._h = self._h.astype(np.complex128)
         self._f = self._f.astype(np.complex128)
-        self._off_diag_f = self._off_diag_f.astype(np.complex128)
         self._u = self._u.astype(np.complex128)
 
     def change_basis(self, c):
@@ -74,12 +65,6 @@ class QuantumSystem:
     def f(self):
         """Getter returning one-body Fock matrix"""
         return self._f
-
-    @property
-    def off_diag_f(self):
-        """Getter returning the one-body Fock matrix without the diagonal
-        elements"""
-        return self._off_diag_f
 
     @property
     def u(self):
