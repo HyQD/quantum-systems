@@ -42,7 +42,7 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
 
         self._h = add_spin_one_body(self.__h)
         self._u = anti_symmetrize_u(add_spin_two_body(self.__u))
-        self.construct_fock_matrix()
+        self._f = self.construct_fock_matrix(self._h, self._u)
         self.cast_to_complex()
 
         self._setup_spf()

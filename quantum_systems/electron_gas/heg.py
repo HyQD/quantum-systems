@@ -139,7 +139,7 @@ class HomogeneousElectronGas(QuantumSystem):
             self.length,
         )
 
-        self.construct_fock_matrix()
+        self._f = self.construct_fock_matrix(self._h, self._u)
 
 
 if __name__ == "__main__":

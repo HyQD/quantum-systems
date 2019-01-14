@@ -36,25 +36,30 @@ class QuantumSystem:
     def setup_system(self):
         pass
 
-    def construct_fock_matrix(self):
+    def construct_fock_matrix(self, h, u, f=None):
         """Function setting up the Fock matrix"""
         o, v = (self.o, self.v)
 
-        if self._f is None:
-            self._f = np.zeros(self._h.shape, dtype=np.complex128)
+        if f is None:
+            f = np.zeros_like(h)
 
-        self._f.fill(0)
-        self._f += np.einsum("piqi -> pq", self._u[:, o, :, o])
-        self._f += self._h
+        f.fill(0)
+        f += np.einsum("piqi -> pq", u[:, o, :, o])
+        f += h
+
+        return f
 
     def cast_to_complex(self):
         self._h = self._h.astype(np.complex128)
-        self._f = self._f.astype(np.complex128)
         self._u = self._u.astype(np.complex128)
+
+        if self._f is not None:
+            self._f = self._f.astype(np.complex128)
 
     def change_basis(self, c):
         self._h = transform_one_body_elements(self._h, c)
         self._u = transform_two_body_elements(self._u, c)
+        self._f = self.construct_fock_matrix(self._h, self._u)
 
     @property
     def h(self):

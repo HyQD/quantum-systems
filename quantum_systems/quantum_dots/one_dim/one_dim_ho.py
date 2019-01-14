@@ -131,7 +131,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         self._u = anti_symmetrize_u(add_spin_two_body(self.__u))
 
         self.construct_laser_matrix()
-        self.construct_fock_matrix()
+        self._f = self.construct_fock_matrix(self._h, self._u)
         self.cast_to_complex()
         self._h_0 = self._h.copy()
 
@@ -154,12 +154,3 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         )
 
         return _h_t
-
-    # TODO: Replace the usage of this function by ht
-    def evolve_in_time(self, time):
-        self._h = self._h_0 + (
-            self.laser_strength
-            * np.sin(self.laser_frequency * time)
-            * self.laser_matrix
-        )
-        self.construct_fock_matrix()
