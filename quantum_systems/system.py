@@ -71,6 +71,10 @@ class QuantumSystem:
         """Getter returning one-body Fock matrix"""
         return self._f
 
+    @f.setter
+    def f(self, f):
+        self._f = f
+
     @property
     def u(self):
         """Getter returning the antisymmetric two-body matrix"""
