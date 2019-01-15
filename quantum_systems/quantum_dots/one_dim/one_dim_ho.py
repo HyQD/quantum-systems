@@ -72,8 +72,6 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         mass=1,
         a=0.25,
         alpha=1.0,
-        laser_frequency=2,
-        laser_strength=1,
     ):
 
         super().__init__(n, l)
@@ -82,10 +80,6 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         self.mass = mass
         self.a = a
         self.alpha = alpha
-
-        self.laser_frequency = laser_frequency
-        self.laser_strength = laser_strength
-        self.laser_matrix = None
 
         self.grid_length = grid_length
         self.num_grid_points = num_grid_points
@@ -130,27 +124,21 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         )
         self._u = anti_symmetrize_u(add_spin_two_body(self.__u))
 
-        self.construct_laser_matrix()
+        self.construct_dipole_moment()
         self._f = self.construct_fock_matrix(self._h, self._u)
         self.cast_to_complex()
         self._h_0 = self._h.copy()
 
-    def construct_laser_matrix(self):
-        self.laser_matrix = np.zeros((self.l, self.l), dtype=np.complex128)
+    def construct_dipole_moment(self):
+        dipole_moment = np.zeros(
+            (self.l // 2, self.l // 2), dtype=self._spf.dtype
+        )
 
         for p in range(self.l // 2):
             for q in range(self.l // 2):
-                val = np.trapz(
-                    self._spf[p] * self.grid * self._spf[q], self.grid
+                dipole_moment[p, q] = np.trapz(
+                    self._spf[p].conj() * self.grid * self._spf[q], self.grid
                 )
-                self.laser_matrix[2 * p, 2 * q] = val
-                self.laser_matrix[2 * p + 1, 2 * q + 1] = val
 
-    def h_t(self, time):
-        _h_t = self._h + (
-            self.laser_strength
-            * np.sin(self.laser_frequency * time)
-            * self.laser_matrix
-        )
-
-        return _h_t
+        self._dipole_moment = np.array([add_spin_one_body(dipole_moment)])
+        self._polarization_vector = np.array([1])
