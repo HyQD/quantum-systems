@@ -84,6 +84,8 @@ def test_spin_two_body():
 def test_anti_symmetrize_u():
     l_half = 10
     u = np.random.random((l_half, l_half, l_half, l_half))
+    # Make u symmetric
+    u = u + u.transpose(1, 0, 3, 2)
     l = l_half * 2
     u_spin = np.zeros((l, l, l, l))
 
