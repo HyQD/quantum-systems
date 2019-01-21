@@ -1,5 +1,6 @@
 import numpy as np
 from quantum_systems.system_helper import (
+    add_spin_one_body,
     add_spin_two_body,
     spin_delta,
     anti_symmetrize_u,
@@ -12,6 +13,19 @@ def test_spin_delta():
     for p in range(n):
         for q in range(n):
             assert spin_delta(p, q) == ((p % 2) == (q % 2))
+
+
+def test_add_spin_one_body():
+    l_half = 10
+    h = np.random.random((l_half, l_half))
+    l = l_half * 2
+    h_spin = np.zeros((l, l))
+
+    for p in range(l):
+        for q in range(l):
+            h_spin[p, q] = spin_delta(p, q) * h[p // 2, q // 2]
+
+    np.testing.assert_allclose(h_spin, add_spin_one_body(h), atol=1e-10)
 
 
 def test_spin_two_body():
