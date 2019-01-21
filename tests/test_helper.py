@@ -107,3 +107,15 @@ def test_anti_symmetrize_u():
     np.testing.assert_allclose(
         u_spin, anti_symmetrize_u(add_spin_two_body(u)), atol=1e-10
     )
+
+
+def test_anti_symmetric_properties():
+    l_half = 10
+    u = np.random.random((l_half, l_half, l_half, l_half))
+    # Make u symmetric
+    u = u + u.transpose(1, 0, 3, 2)
+    u = anti_symmetrize_u(add_spin_two_body(u))
+
+    np.testing.assert_allclose(u, -u.transpose(0, 1, 3, 2), atol=1e-10)
+    np.testing.assert_allclose(u, -u.transpose(1, 0, 2, 3), atol=1e-10)
+    np.testing.assert_allclose(u, u.transpose(1, 0, 3, 2), atol=1e-10)
