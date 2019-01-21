@@ -19,13 +19,33 @@ def test_spin_delta():
 
 def test_transform_one_body_elements():
     l = 10
-    h = np.random.random((l, l)).astype(np.complex128)
-    c = np.random.random((l, l)).astype(np.complex128)
+    h = np.random.random((l, l)) + 1j * np.random.random((l, l))
+    c = np.random.random((l, l)) + 1j * np.random.random((l, l))
 
     h_transformed = np.einsum("ip, jq, ij", c.conj(), c, h, optimize=True)
 
     np.testing.assert_allclose(
         h_transformed, transform_one_body_elements(h, c), atol=1e-10
+    )
+
+
+def test_transform_two_body_elements():
+    l = 10
+    u = np.random.random((l, l, l, l)) + 1j * np.random.random((l, l, l, l))
+    c = np.random.random((l, l)) + 1j * np.random.random((l, l))
+
+    u_transformed = np.einsum(
+        "ls, kr, jq, ip, ijkl -> pqrs",
+        c,
+        c,
+        c.conj(),
+        c.conj(),
+        u,
+        optimize=True,
+    )
+
+    np.testing.assert_allclose(
+        u_transformed, transform_two_body_elements(u, c), atol=1e-10
     )
 
 
