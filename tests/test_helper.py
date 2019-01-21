@@ -4,6 +4,8 @@ from quantum_systems.system_helper import (
     add_spin_two_body,
     spin_delta,
     anti_symmetrize_u,
+    transform_one_body_elements,
+    transform_two_body_elements,
 )
 
 
@@ -13,6 +15,18 @@ def test_spin_delta():
     for p in range(n):
         for q in range(n):
             assert spin_delta(p, q) == ((p % 2) == (q % 2))
+
+
+def test_transform_one_body_elements():
+    l = 10
+    h = np.random.random((l, l)).astype(np.complex128)
+    c = np.random.random((l, l)).astype(np.complex128)
+
+    h_transformed = np.einsum("ip, jq, ij", c.conj(), c, h, optimize=True)
+
+    np.testing.assert_allclose(
+        h_transformed, transform_one_body_elements(h, c), atol=1e-10
+    )
 
 
 def test_add_spin_one_body():
