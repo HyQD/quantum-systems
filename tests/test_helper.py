@@ -6,6 +6,14 @@ from quantum_systems.system_helper import (
 )
 
 
+def test_spin_delta():
+    n = 100
+
+    for p in range(n):
+        for q in range(n):
+            assert spin_delta(p, q) == ((p % 2) == (q % 2))
+
+
 def test_spin_two_body():
     l_half = 10
     u = np.random.random((l_half, l_half, l_half, l_half))
