@@ -12,10 +12,6 @@ filename_two_body = os.path.join(
 )
 
 
-def pytest_namespace():
-    return {"l": l}
-
-
 @numba.njit(cache=True)
 def spin_delta(p, q):
     return ((p & 0x1) ^ (q & 0x1)) ^ 0x1

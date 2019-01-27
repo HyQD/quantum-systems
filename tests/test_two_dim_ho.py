@@ -26,28 +26,28 @@ def test_nm_indices(index_map):
 
 
 def test_one_body_elements(hi):
-    l = pytest.l // 2
+    l = len(hi)
     _hi = get_one_body_elements(l)
 
     np.testing.assert_allclose(hi, _hi, atol=1e-6, rtol=1e-6)
 
 
 def test_antisymmetric_one_body_elements(h):
-    l = pytest.l
+    l = len(h)
     _h = add_spin_one_body(get_one_body_elements(l // 2))
 
     np.testing.assert_allclose(h, _h, atol=1e-6, rtol=1e-6)
 
 
 def test_two_body_elements(orbital_integrals):
-    l = pytest.l // 2
+    l = len(orbital_integrals)
     oi = get_coulomb_elements(l)
 
     np.testing.assert_allclose(orbital_integrals, oi, atol=1e-6, rtol=1e-6)
 
 
 def test_antisymmetric_two_body_elements(u):
-    l = pytest.l
+    l = len(u)
     _u = anti_symmetrize_u(add_spin_two_body(get_coulomb_elements(l // 2)))
 
     np.testing.assert_allclose(u, _u, atol=1e-6, rtol=1e-6)
