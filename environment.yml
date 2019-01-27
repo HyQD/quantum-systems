@@ -1,0 +1,11 @@
+name: quantum-systems
+channels:
+    - psi4
+    - anaconda
+dependencies:
+    - python
+    - psi4
+    - pip
+    - pip:
+        - -r requirements.txt
+        - .
