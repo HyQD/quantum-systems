@@ -82,11 +82,12 @@ def construct_psi4_system(molecule, options, np=None):
     n = wavefunction.nalpha() + wavefunction.nbeta()
     l = 2 * wavefunction.nmo()
 
-    dipole_integrals = np.array(
-        [np.array(mu) for mu in molecular_integrals.ao_dipole()]
-    )
+    dipole_integrals = [
+        np.asarray(mu) for mu in molecular_integrals.ao_dipole()
+    ]
+    dipole_integrals = np.stack(dipole_integrals)
 
-    system = CustomSystem(n, l)
+    system = CustomSystem(n, l, np=np)
     system.set_h(h, add_spin=True)
     system.set_u(u, add_spin=True, anti_symmetrize=True)
     system.set_s(overlap, add_spin=True)
