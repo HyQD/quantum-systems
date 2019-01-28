@@ -58,6 +58,7 @@ class QuantumSystem:
 
     def change_basis(self, c):
         self._h = transform_one_body_elements(self._h, c)
+        self._dipole_moment = transform_one_body_elements(self._dipole_moment, c)
         self._u = transform_two_body_elements(self._u, c)
         self._f = self.construct_fock_matrix(self._h, self._u)
 
