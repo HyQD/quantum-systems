@@ -122,12 +122,18 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         self.__u = _compute_orbital_integrals(
             self._spf, self.l // 2, inner_integral, self.grid
         )
-        self._u = anti_symmetrize_u(add_spin_two_body(self.__u))
+        self._u = anti_symmetrize_u(add_spin_two_body(self.__u, np=np))
 
         self.construct_dipole_moment()
         self._f = self.construct_fock_matrix(self._h, self._u)
         self.cast_to_complex()
-        self._h_0 = self._h.copy()
+
+        if np is not self.np:
+            self._h = self.np.asarray(self._h)
+            self._u = self.np.asarray(self._u)
+            self._f = self.np.asarray(self._f)
+            self._spf = self.np.asarray(self._spf)
+            self._dipole_moment = self.np.asarray(self._dipole_moment)
 
     def construct_dipole_moment(self):
         dipole_moment = np.zeros(
@@ -140,5 +146,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
                     self._spf[p].conj() * self.grid * self._spf[q], self.grid
                 )
 
-        self._dipole_moment = np.array([add_spin_one_body(dipole_moment)])
+        self._dipole_moment = np.array(
+            [add_spin_one_body(dipole_moment, np=np)]
+        )
         self._polarization_vector = np.array([1])

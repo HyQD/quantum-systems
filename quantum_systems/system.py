@@ -1,5 +1,3 @@
-import numpy as np
-
 from quantum_systems.system_helper import (
     transform_one_body_elements,
     transform_two_body_elements,
@@ -11,8 +9,13 @@ class QuantumSystem:
     quantum systems.
     """
 
-    def __init__(self, n, l):
+    def __init__(self, n, l, np=None):
         assert n <= l
+
+        if np is None:
+            import numpy as np
+
+        self.np = np
 
         self.n = n
         self.l = l
@@ -38,6 +41,7 @@ class QuantumSystem:
 
     def construct_fock_matrix(self, h, u, f=None):
         """Function setting up the Fock matrix"""
+        np = self.np
         o, v = (self.o, self.v)
 
         if f is None:
@@ -50,6 +54,8 @@ class QuantumSystem:
         return f
 
     def cast_to_complex(self):
+        np = self.np
+
         self._h = self._h.astype(np.complex128)
         self._u = self._u.astype(np.complex128)
 
@@ -57,12 +63,12 @@ class QuantumSystem:
             self._f = self._f.astype(np.complex128)
 
     def change_basis(self, c):
-        self._h = transform_one_body_elements(self._h, c)
+        self._h = transform_one_body_elements(self._h, c, np=self.np)
         for i in range(self._dipole_moment.shape[0]):
             self._dipole_moment[i] = transform_one_body_elements(
-                self._dipole_moment[i], c
+                self._dipole_moment[i], c, np=self.np
             )
-        self._u = transform_two_body_elements(self._u, c)
+        self._u = transform_two_body_elements(self._u, c, np=self.np)
         self._f = self.construct_fock_matrix(self._h, self._u)
 
     @property
@@ -87,6 +93,8 @@ class QuantumSystem:
     @property
     def s(self):
         """Getter returning the overlap matrix of the atomic orbitals"""
+        np = self.np
+
         if self._s is None:
             self._s = np.eye(*self._h.shape)
 
@@ -107,10 +115,10 @@ class QuantumSystem:
         return self._spf
 
     def get_transformed_h(self, c):
-        return transform_one_body_elements(self._h, c)
+        return transform_one_body_elements(self._h, c, np=self.np)
 
     def get_transformed_u(self, c):
-        return transform_two_body_elements(self._u, c)
+        return transform_two_body_elements(self._u, c, np=self.np)
 
     def set_time_evolution_operator(self, time_evolution_operator):
         self._time_evolution_operator = time_evolution_operator

@@ -40,12 +40,19 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
             self.l // 2
         ).astype(np.complex128)
 
-        self._h = add_spin_one_body(self.__h)
-        self._u = anti_symmetrize_u(add_spin_two_body(self.__u))
+        self._h = add_spin_one_body(self.__h, np=np)
+        self._u = anti_symmetrize_u(add_spin_two_body(self.__u, np=np))
         self._f = self.construct_fock_matrix(self._h, self._u)
+
         self.cast_to_complex()
 
         self._setup_spf()
+
+        if np is not self.np:
+            self._h = self.np.asarray(self._h)
+            self._u = self.np.asarray(self._u)
+            self._f = self.np.asarray(self._f)
+            self._spf = self.np.asarray(self._spf)
 
     def _setup_spf(self):
         self.R, self.T = np.meshgrid(self.radius, self.theta)

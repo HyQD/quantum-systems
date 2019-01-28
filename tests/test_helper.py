@@ -25,7 +25,7 @@ def test_transform_one_body_elements():
     h_transformed = np.einsum("ip, jq, ij", c.conj(), c, h, optimize=True)
 
     np.testing.assert_allclose(
-        h_transformed, transform_one_body_elements(h, c), atol=1e-10
+        h_transformed, transform_one_body_elements(h, c, np=np), atol=1e-10
     )
 
 
@@ -45,7 +45,7 @@ def test_transform_two_body_elements():
     )
 
     np.testing.assert_allclose(
-        u_transformed, transform_two_body_elements(u, c), atol=1e-10
+        u_transformed, transform_two_body_elements(u, c, np=np), atol=1e-10
     )
 
 
@@ -59,7 +59,7 @@ def test_add_spin_one_body():
         for q in range(l):
             h_spin[p, q] = spin_delta(p, q) * h[p // 2, q // 2]
 
-    np.testing.assert_allclose(h_spin, add_spin_one_body(h), atol=1e-10)
+    np.testing.assert_allclose(h_spin, add_spin_one_body(h, np=np), atol=1e-10)
 
 
 def test_spin_two_body():
@@ -78,7 +78,7 @@ def test_spin_two_body():
                         * u[p // 2, q // 2, r // 2, s // 2]
                     )
 
-    np.testing.assert_allclose(u_spin, add_spin_two_body(u), atol=1e-10)
+    np.testing.assert_allclose(u_spin, add_spin_two_body(u, np=np), atol=1e-10)
 
 
 def test_anti_symmetrize_u():
@@ -105,7 +105,7 @@ def test_anti_symmetrize_u():
                     )
 
     np.testing.assert_allclose(
-        u_spin, anti_symmetrize_u(add_spin_two_body(u)), atol=1e-10
+        u_spin, anti_symmetrize_u(add_spin_two_body(u, np=np)), atol=1e-10
     )
 
 
@@ -114,7 +114,7 @@ def test_anti_symmetric_properties():
     u = np.random.random((l_half, l_half, l_half, l_half))
     # Make u symmetric
     u = u + u.transpose(1, 0, 3, 2)
-    u = anti_symmetrize_u(add_spin_two_body(u))
+    u = anti_symmetrize_u(add_spin_two_body(u, np=np))
 
     np.testing.assert_allclose(u, -u.transpose(0, 1, 3, 2), atol=1e-10)
     np.testing.assert_allclose(u, -u.transpose(1, 0, 2, 3), atol=1e-10)

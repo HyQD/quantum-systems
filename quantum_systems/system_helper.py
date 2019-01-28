@@ -1,4 +1,3 @@
-import numpy as np
 import numba
 
 
@@ -12,14 +11,14 @@ def spin_delta(p, q):
     return ((p & 0x1) ^ (q & 0x1)) ^ 0x1
 
 
-def transform_one_body_elements(h, c):
+def transform_one_body_elements(h, c, np):
     _h = np.dot(h, c)
     _h = np.dot(c.conj().T, _h)
 
     return _h
 
 
-def transform_two_body_elements(u, c):
+def transform_two_body_elements(u, c, np):
     _u = np.dot(u, c)
     _u = np.tensordot(_u, c, axes=(2, 0)).transpose(0, 1, 3, 2)
     _u = np.tensordot(_u, c.conj(), axes=(1, 0)).transpose(0, 3, 1, 2)
@@ -28,11 +27,11 @@ def transform_two_body_elements(u, c):
     return _u
 
 
-def add_spin_one_body(h):
+def add_spin_one_body(h, np):
     return np.kron(h, np.eye(2))
 
 
-def add_spin_two_body(_u):
+def add_spin_two_body(_u, np):
     u = _u.transpose(1, 3, 0, 2)
     u = np.kron(u, np.eye(2))
     u = u.transpose(2, 3, 0, 1)

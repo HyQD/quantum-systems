@@ -1,6 +1,3 @@
-import numpy as np
-
-
 class TimeEvolutionOperator:
     def set_system(self, system):
         self._system = system
@@ -20,6 +17,8 @@ class LaserField(TimeEvolutionOperator):
         self._laser_pulse = laser_pulse
 
     def h_t(self, current_time):
+        np = self._system.np
+
         return self._system.h + self._laser_pulse(current_time) * np.tensordot(
             self._system.polarization_vector,
             self._system.dipole_moment,
