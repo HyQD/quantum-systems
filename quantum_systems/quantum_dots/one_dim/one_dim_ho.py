@@ -114,6 +114,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         eigen_states = eigen_states[:, : self.l // 2]
 
         self._spf[:, 1:-1] = eigen_states.T / np.sqrt(dx)
+        self.eigen_energies = eigen_energies
 
         self.__h = np.diag(eigen_energies).astype(np.complex128)
         self._h = add_spin_one_body(self.__h, np=np)
