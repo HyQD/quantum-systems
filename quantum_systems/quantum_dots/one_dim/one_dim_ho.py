@@ -11,6 +11,8 @@ from quantum_systems.system_helper import (
     anti_symmetrize_u,
 )
 
+from quantum_systems.quantum_dots.one_dim.one_dim_potentials import HOPotenial
+
 
 @numba.njit(cache=True)
 def _trapz(f, x):
@@ -90,20 +92,26 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
             (self.l // 2, self.num_grid_points), dtype=np.complex128
         )
 
-    def setup_system(self):
+    def setup_system(self, potential=None):
+        if potential is None:
+            potential = HOPotenial(self.mass, self.omega)
+
+        self.potential = potential
+
         dx = self.grid[1] - self.grid[0]
 
-        h_diag = (
-            1.0 / (dx ** 2)
-            + 0.5 * self.mass * self.omega ** 2 * self.grid[1:-1] ** 2
-        )
+        h_diag = 1.0 / (dx ** 2) + potential(self.grid[1:-1])
         h_off_diag = -1.0 / (2 * dx ** 2) * np.ones(self.num_grid_points - 3)
 
-        H = sps.diags([h_diag, h_off_diag, h_off_diag], offsets=[0, -1, 1])
+        H = (
+            np.diag(h_diag)
+            + np.diag(h_off_diag, k=-1)
+            + np.diag(h_off_diag, k=1)
+        )
 
-        eigen_energies, eigen_states = spsl.eigs(H, k=self.l // 2, which="SM")
-        eigen_energies = eigen_energies
-        eigen_states = eigen_states
+        eigen_energies, eigen_states = np.linalg.eigh(H)
+        eigen_energies = eigen_energies[: self.l // 2]
+        eigen_states = eigen_states[:, : self.l // 2]
 
         self._spf[:, 1:-1] = eigen_states.T / np.sqrt(dx)
 
