@@ -25,3 +25,16 @@ class DWPotential(HOPotenial):
         return super().__call__(x) + 0.5 * self.mass * self.omega ** 2 * (
             0.25 * self.l ** 2 - self.l * abs(x)
         )
+
+
+class GaussianPotential(OneDimPotential):
+    def __init__(self, weight, center, deviation, np):
+        self.weight = weight
+        self.center = center
+        self.deviation = deviation
+        self.np = np
+
+    def __call__(self, x):
+        return -self.weight * self.np.exp(
+            -(x - self.center) ** 2 / (2.0 * self.deviation ** 2)
+        )
