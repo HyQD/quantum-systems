@@ -1,6 +1,7 @@
 # Quantum systems
 
 [![Build Status](https://travis-ci.com/Schoyen/quantum-systems.svg?token=MvgH7xLNL8iVfczJpp8Q&branch=master)](https://travis-ci.com/Schoyen/quantum-systems)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 ## Installation
 This project can be installed by running:
