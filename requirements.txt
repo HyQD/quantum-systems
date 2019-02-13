@@ -1,5 +1,29 @@
+# Install progress bar
+tqdm
+
+# Install numpy
 numpy
-pandas
-pytest
+
+# Install scipy
 scipy
+
+# Install pandas
+pandas
+
+# Install pytest
+pytest
+
+# Install numba
 numba
+
+# Install sympy for symbolic expressions
+sympy
+
+# Install matplotlib for plotting of scripts
+matplotlib
+
+# Install pre-commit
+pre-commit
+
+# Install black
+black
