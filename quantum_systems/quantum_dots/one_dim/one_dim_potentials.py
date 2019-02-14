@@ -31,7 +31,7 @@ class DWPotential_smooth(OneDimPotential):
     This is the double-well potential used by J. Kryvi and S. Bøe in theirs 
     thesis work. See Eq. [13.11] in Bøe: https://www.duo.uio.no/handle/10852/37170
     """
-    def __init__(self,a):
+    def __init__(self,a=4):
         self.a = a
 
     def __call__(self,x):
