@@ -26,6 +26,17 @@ class DWPotential(HOPotenial):
             0.25 * self.l ** 2 - self.l * abs(x)
         )
 
+class DWPotential_smooth(OneDimPotential):
+    """
+    This is the double-well potential used by J. Kryvi and S. Bøe in theirs 
+    thesis work. See Eq. [13.11] in Bøe: https://www.duo.uio.no/handle/10852/37170
+    """
+    def __init__(self,a):
+        self.a = a
+
+    def __call__(self,x):
+        return (1.0/(2*self.a**2))*(x+0.5*self.a)**2*(x-0.5*self.a)**2
+
 
 class GaussianPotential(OneDimPotential):
     def __init__(self, weight, center, deviation, np):
