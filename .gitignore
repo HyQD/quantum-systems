@@ -17,3 +17,6 @@ two_dim_interface.cpp
 
 # Data files
 *.dat
+
+# Travis miniconda
+miniconda.sh
