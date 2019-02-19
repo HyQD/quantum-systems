@@ -150,3 +150,19 @@ def orbital_integrals():
 @pytest.fixture
 def u():
     return _u
+
+
+@pytest.fixture
+def spf_2dho():
+    n = 2
+    l = 30
+    radius = 4
+    num_grid_points = 101
+
+    spf = []
+
+    for p in range(l // 2):
+        filename = os.path.join("tests", "dat", f"2d-ho-qd-spf-p={p}.dat")
+        spf.append(np.loadtxt(filename).view(complex))
+
+    return n, l, radius, num_grid_points, np.asarray(spf)

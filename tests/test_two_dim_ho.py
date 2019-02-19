@@ -14,6 +14,8 @@ from quantum_systems.system_helper import (
     anti_symmetrize_u,
 )
 
+from quantum_systems import TwoDimensionalHarmonicOscillator
+
 
 def test_p_index(index_map):
     for p, (n, m) in enumerate(index_map):
@@ -53,3 +55,13 @@ def test_antisymmetric_two_body_elements(u):
     )
 
     np.testing.assert_allclose(u, _u, atol=1e-6, rtol=1e-6)
+
+
+def test_spf(spf_2dho):
+    n, l, radius, num_grid_points, spf_test = spf_2dho
+
+    tdho = TwoDimensionalHarmonicOscillator(n, l, radius, num_grid_points)
+    tdho._setup_spf()
+
+    for p in range(l // 2):
+        np.testing.assert_allclose(spf_test[p], tdho.spf[p])
