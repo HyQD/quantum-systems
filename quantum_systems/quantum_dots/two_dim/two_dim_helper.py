@@ -1,5 +1,6 @@
 import numpy as np
 import scipy
+import sympy
 import numba
 import math
 
@@ -40,6 +41,46 @@ def spf_radial(r, n, m, mass, omega):
     radial_dep = np.exp(-a ** 2 * r ** 2 / 2.0)
 
     return (a * r) ** abs(m) * laguerre * radial_dep
+
+
+def spf_radial_function(n, m, mass, omega):
+    a = sympy.Float(bohr_radius(mass, omega))
+
+    radial_function = (
+        lambda r: (a * r) ** abs(m)
+        * sympy.assoc_laguerre(n, abs(m), a ** 2 * r ** 2)
+        * sympy.exp(-a ** 2 * r ** 2 / 2.0)
+    )
+
+    return radial_function
+
+
+def radial_integral(r_p, r_q):
+    r = sympy.Symbol("r")
+
+    return sympy.integrate(
+        r ** 2 * r_p(r).conjugate() * r_q(r), (r, 0, sympy.oo)
+    )
+
+
+def theta_1_integral(m_p, m_q):
+    if abs(m_p - m_q) == 1:
+        return np.pi
+
+    integral = -1j * (-1 + np.exp(2 * 1j * np.pi * (m_q - m_p))) * (m_q - m_p)
+    integral /= (m_q - m_p) ** 2 - 1
+
+    return integral
+
+
+def theta_2_integral(m_p, m_q):
+    if abs(m_p - m_q) == 1:
+        return 1j * np.pi
+
+    integral = -1 + np.exp(2 * 1j * np.pi * (m_q - m_p))
+    integral /= (m_q - m_p) ** 2 - 1
+
+    return integral
 
 
 @numba.njit(cache=True, nogil=True)

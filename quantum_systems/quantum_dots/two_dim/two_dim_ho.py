@@ -5,6 +5,11 @@ from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
     get_one_body_elements,
     get_indices_nm,
     spf_state,
+    spf_norm,
+    spf_radial_function,
+    radial_integral,
+    theta_1_integral,
+    theta_2_integral,
 )
 from quantum_systems.system_helper import (
     add_spin_one_body,
@@ -46,6 +51,7 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         self.cast_to_complex()
 
         self.setup_spf()
+        self.construct_dipole_moment()
 
         if np is not self.np:
             self._h = self.np.asarray(self._h)
@@ -61,4 +67,29 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
                 self.R, self.T, p, self.mass, self.omega
             )
 
+    def construct_dipole_moment(self):
+        self._dipole_moment = np.zeros(
+            (2, self.l // 2, self.l // 2), dtype=self._spf.dtype
+        )
 
+        for p in range(self.l // 2):
+            n_p, m_p = get_indices_nm(p)
+
+            norm_p = spf_norm(n_p, m_p)
+            r_p = spf_radial_function(n_p, m_p, self.mass, self.omega)
+
+            for q in range(self.l // 2):
+                n_q, m_q = get_indices_nm(q)
+
+                norm_q = spf_norm(n_q, m_q)
+                r_q = spf_radial_function(n_q, m_q, self.mass, self.omega)
+
+                norm = norm_p.conjugate() * norm_q
+                I_r = radial_integral(r_p, r_q)
+                I_theta_1 = theta_1_integral(m_p, m_q)
+                I_theta_2 = theta_2_integral(m_p, m_q)
+
+                # x-direction
+                self._dipole_moment[0, p, q] = norm * I_r * I_theta_1
+                # y-direction
+                self._dipole_moment[1, p, q] = norm * I_r * I_theta_2
