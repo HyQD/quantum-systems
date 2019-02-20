@@ -57,9 +57,8 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         self.R, self.T = np.meshgrid(self.radius, self.theta)
 
         for p in range(self.l // 2):
-            n, m = get_indices_nm(p)
             self._spf[p, :] += spf_state(
-                self.R, self.T, n, m, self.mass, self.omega
+                self.R, self.T, p, self.mass, self.omega
             )
 
 

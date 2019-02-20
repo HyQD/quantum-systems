@@ -6,7 +6,9 @@ import math
 from quantum_systems.quantum_dots.two_dim.coulomb_elements import coulomb_ho
 
 
-def spf_state(r, theta, n, m, mass, omega):
+def spf_state(r, theta, p, mass, omega):
+    n, m = get_indices_nm(p)
+
     norm = spf_norm(n, m)
     theta_dep = spf_theta(theta, m)
     radial_dep = spf_radial(r, n, m, mass, omega)
