@@ -13,7 +13,7 @@ radius_length = 4
 num_grid_points = 101
 
 tdho = TwoDimensionalHarmonicOscillator(n, l, radius_length, num_grid_points)
-tdho._setup_spf()
+tdho.setup_spf()
 
 
 fig = plt.figure(figsize=(16, 12))

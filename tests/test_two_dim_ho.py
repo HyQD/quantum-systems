@@ -61,7 +61,7 @@ def test_spf(spf_2dho):
     n, l, radius, num_grid_points, spf_test = spf_2dho
 
     tdho = TwoDimensionalHarmonicOscillator(n, l, radius, num_grid_points)
-    tdho._setup_spf()
+    tdho.setup_spf()
 
     for p in range(l // 2):
         np.testing.assert_allclose(spf_test[p], tdho.spf[p])
