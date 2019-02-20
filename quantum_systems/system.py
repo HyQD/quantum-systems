@@ -126,6 +126,9 @@ class QuantumSystem:
         self._time_evolution_operator = time_evolution_operator
         self._time_evolution_operator.set_system(self)
 
+    def set_polarization_vector(self, polarization_vector):
+        self._polarization_vector = polarization_vector
+
     def h_t(self, current_time):
         if self._time_evolution_operator is None:
             return self._h

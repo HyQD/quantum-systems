@@ -51,9 +51,6 @@ class CustomSystem(QuantumSystem):
         for i in range(len(dipole_moment)):
             self._dipole_moment[i] = add_spin_one_body(dipole_moment[i], np=np)
 
-    def set_polarization_vector(self, polarization_vector):
-        self._polarization_vector = polarization_vector
-
 
 def construct_psi4_system(molecule, options, np=None):
     import psi4
