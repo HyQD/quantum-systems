@@ -68,7 +68,7 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
             )
 
     def construct_dipole_moment(self):
-        self._dipole_moment = np.zeros(
+        dipole_moment = np.zeros(
             (2, self.l // 2, self.l // 2), dtype=self._spf.dtype
         )
 
@@ -90,6 +90,10 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
                 I_theta_2 = theta_2_integral(m_p, m_q)
 
                 # x-direction
-                self._dipole_moment[0, p, q] = norm * I_r * I_theta_1
+                dipole_moment[0, p, q] = norm * I_r * I_theta_1
                 # y-direction
-                self._dipole_moment[1, p, q] = norm * I_r * I_theta_2
+                dipole_moment[1, p, q] = norm * I_r * I_theta_2
+
+        self._dipole_moment = np.array(
+            [add_spin_one_body(dipole_moment[i], np=np) for i in range(2)]
+        )
