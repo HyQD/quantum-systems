@@ -74,6 +74,13 @@ class QuantumSystem:
         self._u = transform_two_body_elements(self._u, c, np=self.np)
         self._f = self.construct_fock_matrix(self._h, self._u)
 
+        if self._spf is not None:
+            # Note: We assume restricted spin-orbitals
+            # Consider using full spf-arrays
+            self._spf = self.np.tensordot(
+                c[::2, ::2], self._spf, axes=((0), (0))
+            )
+
     @property
     def h(self):
         """Getter returning one-body matrix"""
