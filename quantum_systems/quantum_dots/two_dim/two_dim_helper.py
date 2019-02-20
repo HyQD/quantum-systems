@@ -1,8 +1,43 @@
 import numpy as np
+import scipy
 import numba
 import math
 
 from quantum_systems.quantum_dots.two_dim.coulomb_elements import coulomb_ho
+
+
+def spf_state(r, theta, n, m, mass, omega):
+    norm = spf_norm(n, m)
+    theta_dep = spf_theta(theta, m)
+    radial_dep = spf_radial(r, n, m, mass, omega)
+
+    return norm * theta_dep * radial_dep
+
+
+def spf_norm(n, m):
+    norm = np.sqrt(
+        scipy.special.factorial(n)
+        / (np.pi * scipy.special.factorial(n + abs(m)))
+    )
+
+    return norm
+
+
+def bohr_radius(mass, omega):
+    return np.sqrt(mass * omega)
+
+
+def spf_theta(theta, m):
+    return np.exp(1j * m * theta)
+
+
+def spf_radial(r, n, m, mass, omega):
+    a = bohr_radius(mass, omega)
+
+    laguerre = scipy.special.assoc_laguerre(a ** 2 * r ** 2, n, abs(m))
+    radial_dep = np.exp(-a ** 2 * r ** 2 / 2.0)
+
+    return (a * r) ** abs(m) * laguerre * radial_dep
 
 
 @numba.njit(cache=True, nogil=True)

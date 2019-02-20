@@ -1,11 +1,10 @@
 import numpy as np
-import scipy
-
 from quantum_systems import QuantumSystem
 from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
     get_coulomb_elements,
     get_one_body_elements,
     get_indices_nm,
+    spf_state,
 )
 from quantum_systems.system_helper import (
     add_spin_one_body,
@@ -46,7 +45,7 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
 
         self.cast_to_complex()
 
-        self._setup_spf()
+        self.setup_spf()
 
         if np is not self.np:
             self._h = self.np.asarray(self._h)
@@ -54,24 +53,13 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
             self._f = self.np.asarray(self._f)
             self._spf = self.np.asarray(self._spf)
 
-    def _setup_spf(self):
+    def setup_spf(self):
         self.R, self.T = np.meshgrid(self.radius, self.theta)
 
         for p in range(self.l // 2):
             n, m = get_indices_nm(p)
-            self._spf[p, :] += self._spf_state(
+            self._spf[p, :] += spf_state(
                 self.R, self.T, n, m, self.mass, self.omega
             )
 
-    def _spf_state(self, r, theta, n, m, mass, omega):
-        norm = np.sqrt(
-            scipy.special.factorial(n)
-            / (np.pi * scipy.special.factorial(n + abs(m)))
-        )
 
-        a = np.sqrt(mass * omega)
-        theta_dep = np.exp(1j * m * theta)
-        lag = scipy.special.assoc_laguerre(a ** 2 * r ** 2, n, abs(m))
-        rad_dep = np.exp(-a ** 2 * r ** 2 / 2.0)
-
-        return a * theta_dep * norm * (a * r) ** abs(m) * lag * rad_dep
