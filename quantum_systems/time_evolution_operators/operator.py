@@ -11,28 +11,26 @@ class TimeEvolutionOperator:
 
 class LaserField(TimeEvolutionOperator):
     def __init__(self, laser_pulse, polarization_vector=None):
-        if not callable(laser_pulse):
-            laser_pulse = lambda t: laser_pulse
-
-        self._laser_pulse = laser_pulse
-        self._polarization_vector = polarization_vector
-
-    def h_t(self, current_time):
         np = self._system.np
 
-        if self._polarization_vector is None:
+        self._laser_pulse = (
+            laser_pulse if callable(laser_pulse) else lambda t: laser_pulse
+        )
+
+        if polarization_vector is None:
             # Set default polarization fully along x-axis
-            self._polarization_vector = np.zeros(
-                self._system.dipole_moment.shape[0]
-            )
-            self._polarization_vector[0] = 1
+            polarization_vector = np.zeros(self._system.dipole_moment.shape[0])
+            polarization_vector[0] = 1
 
-        if not callable(self._polarization_vector):
-            # Make polarization vector callable
-            self._polarization_vector = lambda t: self._polarization_vector
+        self._polarization = (
+            polarization_vector
+            if callable(polarization_vector)
+            else lambda t: polarization_vector
+        )
 
+    def h_t(self, current_time):
         return self._system.h + self._laser_pulse(current_time) * np.tensordot(
-            self._polarization_vector(current_time),
+            self._polarization(current_time),
             self._system.dipole_moment,
             axes=(0, 0),
         )
