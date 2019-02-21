@@ -29,7 +29,6 @@ class QuantumSystem:
         self._u = None
         self._s = None
         self._dipole_moment = None
-        self._polarization_vector = None
 
         self._time_evolution_operator = None
         self._envelope = lambda t: 0
@@ -115,10 +114,6 @@ class QuantumSystem:
         return self._dipole_moment
 
     @property
-    def polarization_vector(self):
-        return self._polarization_vector
-
-    @property
     def spf(self):
         """Getter returning the single particle functions, i.e, the eigenstates
         of the non-interacting Hamiltonian"""
@@ -133,9 +128,6 @@ class QuantumSystem:
     def set_time_evolution_operator(self, time_evolution_operator):
         self._time_evolution_operator = time_evolution_operator
         self._time_evolution_operator.set_system(self)
-
-    def set_polarization_vector(self, polarization_vector):
-        self._polarization_vector = polarization_vector
 
     def h_t(self, current_time):
         if self._time_evolution_operator is None:

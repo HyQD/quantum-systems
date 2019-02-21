@@ -158,4 +158,3 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         self._dipole_moment = np.array(
             [add_spin_one_body(dipole_moment, np=np)]
         )
-        self._polarization_vector = np.array([1])
