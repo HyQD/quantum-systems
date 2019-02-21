@@ -27,8 +27,12 @@ class LaserField(TimeEvolutionOperator):
             )
             self._polarization_vector[0] = 1
 
+        if not callable(self._polarization_vector):
+            # Make polarization vector callable
+            self._polarization_vector = lambda t: self._polarization_vector
+
         return self._system.h + self._laser_pulse(current_time) * np.tensordot(
-            self._system.polarization_vector,
+            self._polarization_vector(current_time),
             self._system.dipole_moment,
             axes=(0, 0),
         )
