@@ -18,9 +18,9 @@ def spf_state(r, theta, p, mass, omega):
 
 
 def spf_norm(n, m, mass, omega):
-    
+
     a = bohr_radius(mass, omega)
-    norm = a*np.sqrt(
+    norm = a * np.sqrt(
         scipy.special.factorial(n)
         / (np.pi * scipy.special.factorial(n + abs(m)))
     )
