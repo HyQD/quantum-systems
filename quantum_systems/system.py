@@ -31,7 +31,6 @@ class QuantumSystem:
         self._dipole_moment = None
 
         self._time_evolution_operator = None
-        self._envelope = lambda t: 0
 
         self._spf = None
 
