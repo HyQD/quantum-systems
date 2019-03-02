@@ -76,13 +76,13 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         for p in range(self.l // 2):
             n_p, m_p = get_indices_nm(p)
 
-            norm_p = spf_norm(n_p, m_p)
+            norm_p = spf_norm(n_p, m_p, self.mass, self.omega)
             r_p = spf_radial_function(n_p, m_p, self.mass, self.omega)
 
             for q in range(self.l // 2):
                 n_q, m_q = get_indices_nm(q)
 
-                norm_q = spf_norm(n_q, m_q)
+                norm_q = spf_norm(n_q, m_q, self.mass, self.omega)
                 r_q = spf_radial_function(n_q, m_q, self.mass, self.omega)
 
                 norm = norm_p.conjugate() * norm_q

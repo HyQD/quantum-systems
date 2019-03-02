@@ -10,15 +10,17 @@ from quantum_systems.quantum_dots.two_dim.coulomb_elements import coulomb_ho
 def spf_state(r, theta, p, mass, omega):
     n, m = get_indices_nm(p)
 
-    norm = spf_norm(n, m)
+    norm = spf_norm(n, m, mass, omega)
     theta_dep = spf_theta(theta, m)
     radial_dep = spf_radial(r, n, m, mass, omega)
 
     return norm * theta_dep * radial_dep
 
 
-def spf_norm(n, m):
-    norm = np.sqrt(
+def spf_norm(n, m, mass, omega):
+    a = bohr_radius(mass, omega)
+
+    norm = a * np.sqrt(
         scipy.special.factorial(n)
         / (np.pi * scipy.special.factorial(n + abs(m)))
     )
