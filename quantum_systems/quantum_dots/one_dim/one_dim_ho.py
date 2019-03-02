@@ -89,7 +89,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
             -self.grid_length, self.grid_length, self.num_grid_points
         )
         self._spf = np.zeros(
-            (self.l // 2, self.num_grid_points), dtype=np.complex128
+            (self.l, self.num_grid_points), dtype=np.complex128
         )
 
     def setup_system(self, potential=None):
@@ -113,14 +113,15 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         eigen_energies = eigen_energies[: self.l // 2]
         eigen_states = eigen_states[:, : self.l // 2]
 
-        self._spf[:, 1:-1] = eigen_states.T / np.sqrt(dx)
+        self._spf[::2, 1:-1] = eigen_states.T / np.sqrt(dx)
+        self._spf[1::2, 1:-1] = eigen_states.T / np.sqrt(dx)
         self.eigen_energies = eigen_energies
 
         self.__h = np.diag(eigen_energies).astype(np.complex128)
         self._h = add_spin_one_body(self.__h, np=np)
 
         inner_integral = _compute_inner_integral(
-            self._spf,
+            self._spf[::2],
             self.l // 2,
             self.num_grid_points,
             self.grid,
@@ -129,7 +130,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         )
 
         self.__u = _compute_orbital_integrals(
-            self._spf, self.l // 2, inner_integral, self.grid
+            self._spf[::2], self.l // 2, inner_integral, self.grid
         )
         self._u = anti_symmetrize_u(add_spin_two_body(self.__u, np=np))
 
@@ -152,7 +153,8 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         for p in range(self.l // 2):
             for q in range(self.l // 2):
                 dipole_moment[p, q] = np.trapz(
-                    self._spf[p].conj() * self.grid * self._spf[q], self.grid
+                    self._spf[2 * p].conj() * self.grid * self._spf[2 * q],
+                    self.grid,
                 )
 
         self._dipole_moment = np.array(

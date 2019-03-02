@@ -76,9 +76,7 @@ class QuantumSystem:
         if self._spf is not None:
             # Note: We assume restricted spin-orbitals
             # Consider using full spf-arrays
-            self._spf = self.np.tensordot(
-                c[::2, ::2], self._spf, axes=((0), (0))
-            )
+            self._spf = self.np.tensordot(c, self._spf, axes=((0), (0)))
 
     @property
     def h(self):

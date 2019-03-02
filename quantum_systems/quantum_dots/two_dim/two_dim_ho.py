@@ -32,7 +32,7 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         self.theta = np.linspace(0, 2 * np.pi, self.num_grid_points)
 
         self._spf = np.zeros(
-            (self.l // 2, self.num_grid_points, self.num_grid_points),
+            (self.l, self.num_grid_points, self.num_grid_points),
             dtype=np.complex128,
         )
 
@@ -63,9 +63,10 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         self.R, self.T = np.meshgrid(self.radius, self.theta)
 
         for p in range(self.l // 2):
-            self._spf[p, :] += spf_state(
+            self._spf[2 * p, :] += spf_state(
                 self.R, self.T, p, self.mass, self.omega
             )
+            self._spf[2 * p + 1, :] += self._spf[2 * p, :]
 
     def construct_dipole_moment(self):
         dipole_moment = np.zeros(

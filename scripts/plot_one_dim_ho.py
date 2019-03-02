@@ -13,7 +13,7 @@ def plot_one_body_system(system):
     for i in range(system.l // 2):
         plt.plot(
             system.grid,
-            system.spf[i].real ** 2 + system.eigen_energies[i],
+            system.spf[2 * i].real ** 2 + system.eigen_energies[i],
             label=fr"$\psi_{i}(x)$",
         )
 
