@@ -28,6 +28,14 @@ def test_transform_one_body_elements():
         h_transformed, transform_one_body_elements(h, c, np=np), atol=1e-10
     )
 
+    _h = np.dot(h, c)
+    _h = np.dot(c.conj().T, _h)
+
+    np.testing.assert_allclose(_h, transform_one_body_elements(h, c, np))
+    np.testing.assert_allclose(
+        _h, transform_one_body_elements(h, c, np, c_tilde=c.conj().T)
+    )
+
 
 def test_transform_two_body_elements():
     l = 10
@@ -46,6 +54,16 @@ def test_transform_two_body_elements():
 
     np.testing.assert_allclose(
         u_transformed, transform_two_body_elements(u, c, np=np), atol=1e-10
+    )
+
+    _u = np.dot(u, c)
+    _u = np.tensordot(_u, c, axes=(2, 0)).transpose(0, 1, 3, 2)
+    _u = np.tensordot(_u, c.conj(), axes=(1, 0)).transpose(0, 3, 1, 2)
+    _u = np.tensordot(c.conj().T, _u, axes=(1, 0))
+
+    np.testing.assert_allclose(_u, transform_two_body_elements(u, c, np))
+    np.testing.assert_allclose(
+        _u, transform_two_body_elements(u, c, np, c_tilde=c.conj().T)
     )
 
 

@@ -11,18 +11,25 @@ def spin_delta(p, q):
     return ((p & 0x1) ^ (q & 0x1)) ^ 0x1
 
 
-def transform_one_body_elements(h, c, np):
-    _h = np.dot(h, c)
-    _h = np.dot(c.conj().T, _h)
+def transform_one_body_elements(h, c, np, c_tilde=None):
+    if c_tilde is None:
+        c_tilde = c.conj().T
 
-    return _h
+    return c_tilde @ h @ c
 
 
-def transform_two_body_elements(u, c, np):
-    _u = np.dot(u, c)
+def transform_two_body_elements(u, c, np, c_tilde=None):
+    if c_tilde is None:
+        c_tilde = c.conj().T
+
+    # abcd, ds -> abcs
+    _u = np.tensordot(u, c, axes=(3, 0))
+    # abcs, cr -> absr -> abrs
     _u = np.tensordot(_u, c, axes=(2, 0)).transpose(0, 1, 3, 2)
-    _u = np.tensordot(_u, c.conj(), axes=(1, 0)).transpose(0, 3, 1, 2)
-    _u = np.tensordot(c.conj().T, _u, axes=(1, 0))
+    # abrs, qb -> arsq -> aqrs
+    _u = np.tensordot(_u, c_tilde, axes=(1, 1)).transpose(0, 3, 1, 2)
+    # pa, aqrs -> pqrs
+    _u = np.tensordot(c_tilde, _u, axes=(1, 0))
 
     return _u
 
