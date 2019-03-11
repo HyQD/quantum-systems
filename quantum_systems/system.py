@@ -33,6 +33,7 @@ class QuantumSystem:
         self._time_evolution_operator = None
 
         self._spf = None
+        self._bra_spf = None
 
     def setup_system(self):
         pass
@@ -81,7 +82,11 @@ class QuantumSystem:
                 # In case of bi-orthogonal basis sets, we create an extra set
                 # of single-particle functions for the bra-side
                 self._bra_spf = self.np.tensordot(
-                    c_tilde, self._spf.conj(), axes=((1), (0))
+                    c_tilde,
+                    self._spf.conj()
+                    if self._bra_spf is None
+                    else self._bra_spf,
+                    axes=((1), (0)),
                 )
 
             self._spf = self.np.tensordot(c, self._spf, axes=((0), (0)))
@@ -131,6 +136,12 @@ class QuantumSystem:
         """Getter returning the single particle functions, i.e, the eigenstates
         of the non-interacting Hamiltonian"""
         return self._spf
+
+    @property
+    def bra_spf(self):
+        """Getter returning the conjugate  single particle functions. This is
+        None, unless we are working with a bi-variational basis."""
+        return self._bra_spf
 
     def get_transformed_h(self, c):
         return transform_one_body_elements(self._h, c, np=self.np)
