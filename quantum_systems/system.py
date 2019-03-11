@@ -75,6 +75,13 @@ class QuantumSystem:
         if self._spf is not None:
             self._spf = self.np.tensordot(c, self._spf, axes=((0), (0)))
 
+    def change_to_hf_basis(self, *args, verbose=False, **kwargs):
+        from tdhf import HartreeFock
+
+        hf = HartreeFock(system=self, verbose=verbose, np=self.np)
+        c = hf.scf(*args, **kwargs)
+        self.change_basis(c)
+
     @property
     def h(self):
         """Getter returning one-body matrix"""
