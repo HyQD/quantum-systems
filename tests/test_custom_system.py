@@ -62,6 +62,18 @@ def test_change_of_basis():
     np.testing.assert_allclose(h_cs, cs.h, atol=1e-12, rtol=1e-12)
     np.testing.assert_allclose(u_cs, cs.u, atol=1e-12, rtol=1e-12)
 
+    cs = CustomSystem(n, l)
+
+    cs.set_h(h, add_spin=True)
+    cs.set_u(u, add_spin=True, anti_symmetrize=True)
+    cs.set_s(s, add_spin=True)
+    cs.set_dipole_moment(dipole_moment, add_spin=True)
+
+    cs.change_basis(c, c_tilde=c.conj().T)
+
+    np.testing.assert_allclose(h_cs, cs.h, atol=1e-12, rtol=1e-12)
+    np.testing.assert_allclose(u_cs, cs.u, atol=1e-12, rtol=1e-12)
+
 
 def test_psi4_construction():
     He = """
