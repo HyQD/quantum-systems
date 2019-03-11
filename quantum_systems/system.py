@@ -77,6 +77,13 @@ class QuantumSystem:
         self._f = self.construct_fock_matrix(self._h, self._u)
 
         if self._spf is not None:
+            if c_tilde is not None:
+                # In case of bi-orthogonal basis sets, we create an extra set
+                # of single-particle functions for the bra-side
+                self._bra_spf = self.np.tensordot(
+                    c_tilde, self._spf.conj(), axes=((1), (0))
+                )
+
             self._spf = self.np.tensordot(c, self._spf, axes=((0), (0)))
 
     def change_to_hf_basis(self, *args, verbose=False, **kwargs):
