@@ -141,6 +141,9 @@ class QuantumSystem:
     def bra_spf(self):
         """Getter returning the conjugate  single particle functions. This is
         None, unless we are working with a bi-variational basis."""
+        if self._bra_spf is None:
+            self._bra_spf = self._spf.conj()
+
         return self._bra_spf
 
     def get_transformed_h(self, c):
