@@ -67,7 +67,6 @@ def construct_psi4_system(molecule, options, np=None):
 
     mol = psi4.geometry(molecule)
     Enuc = mol.nuclear_repulsion_energy()
-    print("Enuc: %g" % Enuc)
 
     wavefunction = psi4.core.Wavefunction.build(
         mol, psi4.core.get_global_option("BASIS")
