@@ -5,11 +5,21 @@
 
 ## Installation
 This project can be installed by running:
-
 ```bash
+# From Github
 pip install git+https://github.com/Schoyen/quantum-systems.git
+# From repo quantum-systems
+pip install .
+```
+To update the current version of `quantum-systems` run:
+```bash
+# From Github
+pip install git+https://github.com/Schoyen/quantum-systems.git -U
+# From repo quantum-systems
+pip install . -U
 ```
 
+### Environment
 During development it is a good idea to create a _conda environment_ such that all dependencies gets installed correctly. This is easiest done by executing:
 
 ```bash
