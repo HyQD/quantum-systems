@@ -35,6 +35,8 @@ class QuantumSystem:
         self._spf = None
         self._bra_spf = None
 
+        self._nuclear_repulsion_energy = None
+
     def setup_system(self):
         pass
 
@@ -145,6 +147,10 @@ class QuantumSystem:
             self._bra_spf = self._spf.conj()
 
         return self._bra_spf
+
+    @propery
+    def nuclear_repulsion_energy(self):
+        return self._nuclear_repulsion_energy
 
     def get_transformed_h(self, c):
         return transform_one_body_elements(self._h, c, np=self.np)
