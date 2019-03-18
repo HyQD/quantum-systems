@@ -148,7 +148,7 @@ class QuantumSystem:
 
         return self._bra_spf
 
-    @propery
+    @property
     def nuclear_repulsion_energy(self):
         return self._nuclear_repulsion_energy
 
