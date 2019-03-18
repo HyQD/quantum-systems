@@ -51,8 +51,8 @@ class CustomSystem(QuantumSystem):
         for i in range(len(dipole_moment)):
             self._dipole_moment[i] = add_spin_one_body(dipole_moment[i], np=np)
 
-    def set_nuclear_repulsion_energy(self, Enuc):
-        self.Enuc = Enuc
+    def set_nuclear_repulsion_energy(self, nuclear_repulsion_energy):
+        self._nuclear_repulsion_energy = nuclear_repulsion_energy
 
 
 def construct_psi4_system(molecule, options, np=None):
@@ -65,7 +65,7 @@ def construct_psi4_system(molecule, options, np=None):
     psi4.set_options(options)
 
     mol = psi4.geometry(molecule)
-    Enuc = mol.nuclear_repulsion_energy()
+    nuclear_repulsion_energy = mol.nuclear_repulsion_energy()
 
     wavefunction = psi4.core.Wavefunction.build(
         mol, psi4.core.get_global_option("BASIS")
@@ -93,6 +93,6 @@ def construct_psi4_system(molecule, options, np=None):
     system.set_u(u, add_spin=True, anti_symmetrize=True)
     system.set_s(overlap, add_spin=True)
     system.set_dipole_moment(dipole_integrals, add_spin=True)
-    system.set_nuclear_repulsion_energy(Enuc)
+    system.set_nuclear_repulsion_energy(nuclear_repulsion_energy)
 
     return system
