@@ -51,9 +51,8 @@ class CustomSystem(QuantumSystem):
         for i in range(len(dipole_moment)):
             self._dipole_moment[i] = add_spin_one_body(dipole_moment[i], np=np)
 
-    def set_nuclear_repulsion_energy(self,Enuc):
+    def set_nuclear_repulsion_energy(self, Enuc):
         self.Enuc = Enuc
-
 
 
 def construct_psi4_system(molecule, options, np=None):
