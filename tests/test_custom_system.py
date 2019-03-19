@@ -27,7 +27,7 @@ def test_setters():
     s = np.random.random((l, l))
     dipole_moment = np.random.random((3, l, l))
 
-    cs = CustomSystem(n, l)
+    cs = CustomSystem(n, 2 * l)
 
     cs.set_h(h, add_spin=True)
     cs.set_u(u, add_spin=True, anti_symmetrize=True)
@@ -47,7 +47,7 @@ def test_change_of_basis():
     c = np.random.random((l * 2, l * 2))
     dipole_moment = np.random.random((3, l, l))
 
-    cs = CustomSystem(n, l)
+    cs = CustomSystem(n, 2 * l)
 
     cs.set_h(h, add_spin=True)
     cs.set_u(u, add_spin=True, anti_symmetrize=True)
@@ -62,7 +62,7 @@ def test_change_of_basis():
     np.testing.assert_allclose(h_cs, cs.h, atol=1e-12, rtol=1e-12)
     np.testing.assert_allclose(u_cs, cs.u, atol=1e-12, rtol=1e-12)
 
-    cs = CustomSystem(n, l)
+    cs = CustomSystem(n, 2 * l)
 
     cs.set_h(h, add_spin=True)
     cs.set_u(u, add_spin=True, anti_symmetrize=True)
