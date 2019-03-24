@@ -6,6 +6,7 @@ from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
     HOPotenial,
     DWPotential,
     GaussianPotential,
+    DWPotentialSmooth,
 )
 
 
@@ -24,7 +25,7 @@ def plot_one_body_system(system):
 
 n = 2
 l = 20
-grid_length = 40
+grid_length = 5
 num_grid_points = 1001
 mass = 1
 omega = 1
@@ -39,7 +40,7 @@ plot_one_body_system(odho)
 length_of_dw = 5
 
 dw = OneDimensionalHarmonicOscillator(
-    n, l, grid_length, num_grid_points, mass=mass, omega=omega
+    n, l, 6, num_grid_points, mass=mass, omega=omega
 )
 dw.setup_system(potential=DWPotential(mass, omega, length_of_dw))
 plot_one_body_system(dw)
@@ -49,7 +50,7 @@ center = 0
 deviation = 2.5
 
 gauss = OneDimensionalHarmonicOscillator(
-    n, l, grid_length, num_grid_points, mass=mass, omega=omega
+    n, l, 20, num_grid_points, mass=mass, omega=omega
 )
 gauss.setup_system(
     potential=GaussianPotential(weight, center, deviation, np=np)
@@ -63,7 +64,14 @@ tw_gauss_potential = lambda x: (
 )
 
 tw_gauss = OneDimensionalHarmonicOscillator(
-    n, l, grid_length, num_grid_points, mass=mass, omega=omega
+    n, l, 30, num_grid_points, mass=mass, omega=omega
 )
 tw_gauss.setup_system(potential=tw_gauss_potential)
 plot_one_body_system(tw_gauss)
+
+
+dw_smooth = OneDimensionalHarmonicOscillator(
+    n, l, grid_length, num_grid_points, mass=mass, omega=omega
+)
+dw_smooth.setup_system(potential=DWPotentialSmooth(a=5))
+plot_one_body_system(dw_smooth)
