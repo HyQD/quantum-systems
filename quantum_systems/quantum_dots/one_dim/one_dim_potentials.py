@@ -27,7 +27,7 @@ class DWPotential(HOPotenial):
         )
 
 
-class DWPotential_smooth(OneDimPotential):
+class DWPotentialSmooth(OneDimPotential):
     """
     This is the double-well potential used by J. Kryvi and S. Bøe in theirs 
     thesis work. See Eq. [13.11] in Bøe: https://www.duo.uio.no/handle/10852/37170
