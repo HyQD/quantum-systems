@@ -7,7 +7,7 @@ from quantum_systems.quantum_dots.two_dim.coulomb_elements import coulomb_ho
 
 
 def get_shell_energy(n, m, omega_c=0, omega=1):
-    return omega * (2 * n, abs(m) + 1) - (omega_c * m) / 2
+    return omega * (2 * n + abs(m) + 1) - (omega_c * m) / 2
 
 
 def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
@@ -17,7 +17,8 @@ def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
         for m in m_array:
             df.loc[i, "n"] = n
             df.loc[i, "m"] = m
-            df.loc[i, "E"] = get_shell_energy(n, m, omega_c)
+            energy = get_shell_energy(n, m, omega_c=omega_c, omega=omega)
+            df.loc[i, "E"] = get_shell_energy(n, m, omega_c=omega_c, omega=omega)
             i += 1
 
     df = df.sort_values("E").reset_index().drop("index", axis=1)
@@ -34,10 +35,11 @@ def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
 
 def get_one_body_elements(num_orbitals, dtype=np.float64, df=None, omega_c=0):
 
-    if df == None:
-        n_array = np.arange(num_orbitals)
-        m_array = np.arange(-num_orbitals, num_orbitals + 1)
-        df = construct_dataframe(n_array, m_array, omega_c=omega_c)
+    # This does note work if DataFrame is not None
+    # if df == None:
+    #     n_array = np.arange(num_orbitals)
+    #     m_array = np.arange(-num_orbitals, num_orbitals + 1)
+    #     df = construct_dataframe(n_array, m_array, omega_c=omega_c)
 
     h = np.zeros((num_orbitals, num_orbitals), dtype=dtype)
 
@@ -49,10 +51,11 @@ def get_one_body_elements(num_orbitals, dtype=np.float64, df=None, omega_c=0):
 
 def get_coulomb_elements(num_orbitals, dtype=np.float64, df=None, omega_c=0):
 
-    if df == None:
-        n_array = np.arange(num_orbitals)
-        m_array = np.arange(-num_orbitals, num_orbitals + 1)
-        df = construct_dataframe(n_array, m_array, omega_c=omega_c)
+    # This does not work if DataFrame is not None
+    # if df == None:
+    #     n_array = np.arange(num_orbitals)
+    #     m_array = np.arange(-num_orbitals, num_orbitals + 1)
+    #     df = construct_dataframe(n_array, m_array, omega_c=omega_c)
 
     shape = tuple([num_orbitals] * 4)
     u = np.zeros(shape, dtype=dtype)
