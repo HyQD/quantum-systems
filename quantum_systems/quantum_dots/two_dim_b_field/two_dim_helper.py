@@ -18,7 +18,9 @@ def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
             df.loc[i, "n"] = n
             df.loc[i, "m"] = m
             energy = get_shell_energy(n, m, omega_c=omega_c, omega=omega)
-            df.loc[i, "E"] = get_shell_energy(n, m, omega_c=omega_c, omega=omega)
+            df.loc[i, "E"] = get_shell_energy(
+                n, m, omega_c=omega_c, omega=omega
+            )
             i += 1
 
     df = df.sort_values("E").reset_index().drop("index", axis=1)
