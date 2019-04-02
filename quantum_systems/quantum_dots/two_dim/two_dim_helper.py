@@ -85,6 +85,36 @@ def theta_2_integral(m_p, m_q):
     return integral
 
 
+def theta_1_tilde_integral(m_p, m_q):
+    if abs(m_p - m_q) == 1:
+        return 0
+
+    integral = (
+        -1j
+        * (
+            m_q
+            + m_p
+            + (m_q - m_p) * np.exp(1j * np.pi * (m_q - m_p))
+            - 2 * 1j * np.exp(1j * np.pi * (m_q - m_p) / 2)
+        )
+        * (1 + np.exp(1j * np.pi * (m_q - m_p)))
+        / ((m_q - m_p) ** 2 + 1)
+    )
+
+    return integral
+
+
+def theta_2_tilde_integral(m_p, m_q):
+    if abs(m_p - m_q) == 1:
+        return 0
+
+    integral = -(1 + np.exp(1j * np.pi * (m_q - m_p))) ** 2 / (
+        (m_q - m_p) ** 2 + 1
+    )
+
+    return integral
+
+
 @numba.njit(cache=True, nogil=True)
 def get_index_p(n, m):
     num_shells = 2 * n + abs(m) + 1
@@ -179,3 +209,38 @@ def get_coulomb_elements(num_orbitals, dtype=np.float64):
                     )
 
     return u
+
+
+def get_double_well_one_body_elements(
+    num_orbitals, omega, mass, barrier_strength, dtype=np.float64, axis=0
+):
+    h = np.zeros((num_orbitals, num_orbitals), dtype=dtype)
+
+    for p in range(num_orbitals):
+        n_p, m_p = get_indices_nm(p)
+        r_p = spf_radial_function(n_p, m_p, mass, omega)
+
+        h[p, p] += (
+            omega * get_shell_energy(n_p, m_p)
+            + omega ** 2 * barrier_strength ** 2 / 8.0
+        )
+
+        for q in range(num_orbitals):
+            n_q, m_q = get_indices_nm(q)
+            r_q = spf_radial_function(n_q, m_q, mass, omega)
+
+            h[p, q] -= (
+                0.5
+                * omega ** 2
+                * barrier_strength
+                * spf_norm(n_p, m_p, mass, omega)
+                * spf_norm(n_q, m_q, mass, omega)
+                * radial_integral(r_p, r_q)
+                * (
+                    theta_1_tilde_integral(m_p, m_q)
+                    if axis == 0
+                    else theta_2_tilde_integral(m_p, m_q)
+                )
+            )
+
+    return h
