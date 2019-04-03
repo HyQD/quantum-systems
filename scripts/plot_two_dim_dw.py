@@ -5,11 +5,11 @@ from quantum_systems import TwoDimensionalDoubleWell
 
 n = 2
 l = 30
-radius = 10
+radius = 8
 num_grid_points = 401
 l_ho_factor = 1
-barrier_strength = 2
-omega = 1
+barrier_strength = 3
+omega = 0.8
 
 tddw = TwoDimensionalDoubleWell(
     n,
