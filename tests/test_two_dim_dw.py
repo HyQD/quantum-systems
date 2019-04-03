@@ -38,9 +38,16 @@ def test_spf_energies():
     radius = 10
     num_grid_points = 401
 
+    # Test barrier in x-direction
+    tddw = TwoDimensionalDoubleWell(
+        n, l, radius, num_grid_points, l_ho_factor=2, barrier_strength=2
+    )
+    tddw.setup_system(axis=0)
+    np.testing.assert_allclose(tddw.epsilon, test_energies)
+
+    # Test barrier in y-direction
     tddw = TwoDimensionalDoubleWell(
         n, l, radius, num_grid_points, l_ho_factor=2, barrier_strength=2
     )
     tddw.setup_system(axis=1)
-
     np.testing.assert_allclose(tddw.epsilon, test_energies)
