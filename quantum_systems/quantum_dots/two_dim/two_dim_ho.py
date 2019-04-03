@@ -58,6 +58,7 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
             self._u = self.np.asarray(self._u)
             self._f = self.np.asarray(self._f)
             self._spf = self.np.asarray(self._spf)
+            self._dipole_moment = self.np.asarray(self._dipole_moment)
 
     def setup_spf(self):
         self.R, self.T = np.meshgrid(self.radius, self.theta)
