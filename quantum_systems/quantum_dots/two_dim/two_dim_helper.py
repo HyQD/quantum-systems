@@ -92,13 +92,13 @@ def theta_1_tilde_integral(m_p, m_q):
     integral = (
         -1j
         * (
-            m_q
+            -m_q
             + m_p
             + (m_q - m_p) * np.exp(1j * np.pi * (m_q - m_p))
             - 2 * 1j * np.exp(1j * np.pi * (m_q - m_p) / 2)
         )
         * (1 + np.exp(1j * np.pi * (m_q - m_p)))
-        / ((m_q - m_p) ** 2 + 1)
+        / ((m_q - m_p) ** 2 - 1)
     )
 
     return integral
@@ -109,7 +109,7 @@ def theta_2_tilde_integral(m_p, m_q):
         return 0
 
     integral = -(1 + np.exp(1j * np.pi * (m_q - m_p))) ** 2 / (
-        (m_q - m_p) ** 2 + 1
+        (m_q - m_p) ** 2 - 1
     )
 
     return integral
