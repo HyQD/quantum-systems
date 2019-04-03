@@ -126,6 +126,14 @@ class TwoDimensionalDoubleWell(QuantumSystem):
         self._spf[::2] += _spf_dw
         self._spf[1::2] += _spf_dw
 
+        self.cast_to_complex()
+
+        if np is not self.np:
+            self._h = self.np.asarray(self._h)
+            self._u = self.np.asarray(self._u)
+            self._f = self.np.asarray(self._f)
+            self._spf = self.np.asarray(self._spf)
+
     def setup_spf(self):
         self.R, self.T = np.meshgrid(self.radius, self.theta)
         spf = np.zeros((self.l_ho // 2, *self.R.shape), dtype=np.complex128)
