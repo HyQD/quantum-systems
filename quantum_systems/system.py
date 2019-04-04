@@ -135,7 +135,10 @@ class QuantumSystem:
 
     @property
     def s(self):
-        """Getter returning the overlap matrix of the atomic orbitals"""
+        """Getter returning the overlap matrix of the atomic orbitals. If the
+        overlap elements don't yet exist, we assume that the overlap is the
+        identity.
+        """
         np = self.np
 
         if self._s is None:
