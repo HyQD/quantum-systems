@@ -17,12 +17,7 @@ class QuantumSystem:
 
         self.np = np
 
-        self.n = n
-        self.l = l
-        self.m = self.l - self.n
-
-        self.o = slice(0, self.n)
-        self.v = slice(self.n, self.l)
+        self.set_system_size(n, l)
 
         self._h = None
         self._f = None
@@ -36,6 +31,14 @@ class QuantumSystem:
         self._bra_spf = None
 
         self._nuclear_repulsion_energy = None
+
+    def set_system_size(self, n, l):
+        self.n = n
+        self.l = l
+        self.m = self.l - self.n
+
+        self.o = slice(0, self.n)
+        self.v = slice(self.n, self.l)
 
     def setup_system(self):
         pass
