@@ -198,6 +198,8 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
         self.change_basis_dipole_moment(C_dw)
         self.change_basis_spf(C_dw)
 
+        self.set_system_size(self.n, self.l_dw)
+
         self.cast_to_complex()
 
         self._f = self.construct_fock_matrix(self._h, self._u)
