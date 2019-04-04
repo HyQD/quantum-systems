@@ -1,8 +1,11 @@
 import numpy as np
+import math
+
 from quantum_systems import QuantumSystem
 from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
     get_coulomb_elements,
     get_one_body_elements,
+    get_double_well_one_body_elements,
     get_indices_nm,
     spf_state,
     spf_norm,
@@ -99,3 +102,108 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         self._dipole_moment = np.array(
             [add_spin_one_body(dipole_moment[i], np=np) for i in range(2)]
         )
+
+
+class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
+    """System constructing two-dimensional quantum dots with a double well
+    potential barrier.
+
+    Parameters
+    ----------
+    n : int
+        Number of occupied spin-orbitals.
+    l : int
+        Number of spin-orbitals.
+    radius : float
+        Length of radial coordinate.
+    num_grid_points : int
+        Discretization of spatial coordinates. This includes both the radial and
+        the angular part of the room.
+    barrier_strength: float
+        Barrier strength in the double well potential.
+    l_ho_factor : float
+        Factor of harmonic oscillator basis functions compared to the number of
+        double-well functions. Note that l_ho_factor >= 1, as we need more
+        harmonic oscillator basis functions than double-well functions in
+        order to get a good representation of the basis elements.
+    omega: float
+        Frequency of the oscillator potential.
+    mass: float
+        Mass of the particles.
+
+    Returns
+    -------
+    None
+    """
+
+    def __init__(
+        self,
+        n,
+        l,
+        radius,
+        num_grid_points,
+        barrier_strength=1,
+        l_ho_factor=1.0,
+        omega=1,
+        mass=1,
+    ):
+        assert l_ho_factor >= 1, (
+            "Number of harmonic oscillator functions must be higher than the"
+            + " number of double-well basis functions"
+        )
+
+        l_ho = math.floor(l * l_ho_factor)
+        super().__init__(
+            n, l_ho, radius, num_grid_points, omega=omega, mass=mass
+        )
+
+        self.l_dw = l
+        self.barrier_strength = barrier_strength
+
+    def setup_system(self, axis=0):
+        """Function setting up the one- and two-body elements, the
+        single-particle functions, dipole moments and other quantities used by
+        second quantization methods.
+        Parameters
+        ----------
+        axis : int
+            Specifies which axis the barrier should be set to. For axis == 0
+            this corresponds to the x-axis and axis == 1 the y-axis. That is,
+                axis == 0 -> <p||x||q>,
+                axis == 1 -> <p||y||q>.
+
+        Returns
+        -------
+        None
+        """
+
+        super().setup_system()
+
+        h_dw = get_double_well_one_body_elements(
+            self.l // 2,
+            self.omega,
+            self.mass,
+            self.barrier_strength,
+            dtype=np.complex128,
+            axis=axis,
+        )
+
+        self.epsilon, C = np.linalg.eigh(h_dw)
+        self._h = add_spin_one_body(
+            np.diagflat(self.epsilon[: self.l_dw // 2]), np=np
+        )
+
+        C_dw = add_spin_one_body(C, np=np)[:, : self.l_dw]
+        self.change_basis_two_body_elements(C_dw)
+        self.change_basis_dipole_moment(C_dw)
+        self.change_basis_spf(C_dw)
+
+        self.cast_to_complex()
+
+        self._f = self.construct_fock_matrix(self._h, self._u)
+
+        if np is not self.np:
+            self._h = self.np.asarray(self._h)
+            self._u = self.np.asarray(self._u)
+            self._f = self.np.asarray(self._f)
+            self._spf = self.np.asarray(self._spf)
