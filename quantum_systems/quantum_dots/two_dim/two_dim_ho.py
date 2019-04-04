@@ -40,15 +40,15 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         )
 
     def setup_system(self):
-        self.__h = self.omega * get_one_body_elements(
+        _h = self.omega * get_one_body_elements(
             self.l // 2, dtype=np.complex128
         )
-        self.__u = np.sqrt(self.omega) * get_coulomb_elements(
+        _u = np.sqrt(self.omega) * get_coulomb_elements(
             self.l // 2, dtype=np.complex128
         )
 
-        self._h = add_spin_one_body(self.__h, np=np)
-        self._u = anti_symmetrize_u(add_spin_two_body(self.__u, np=np))
+        self._h = add_spin_one_body(_h, np=np)
+        self._u = anti_symmetrize_u(add_spin_two_body(_u, np=np))
         self._f = self.construct_fock_matrix(self._h, self._u)
 
         self.cast_to_complex()
