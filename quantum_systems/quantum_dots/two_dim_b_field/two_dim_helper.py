@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import numba
 
 # TODO: Numba
 
@@ -57,6 +58,8 @@ def get_one_body_elements(num_orbitals, dtype=np.float64, df=None, omega_c=0):
     return h
 
 
+# TODO: Work-around DataFrame to enable njit-usage
+@numba.jit(fastmath=True, nogil=True, parallel=True)
 def get_coulomb_elements(num_orbitals, dtype=np.float64, df=None, omega_c=0):
 
     # This does not work if DataFrame is not None
@@ -65,10 +68,10 @@ def get_coulomb_elements(num_orbitals, dtype=np.float64, df=None, omega_c=0):
     #     m_array = np.arange(-num_orbitals, num_orbitals + 1)
     #     df = construct_dataframe(n_array, m_array, omega_c=omega_c)
 
-    shape = tuple([num_orbitals] * 4)
+    shape = (num_orbitals, num_orbitals, num_orbitals, num_orbitals)
     u = np.zeros(shape, dtype=dtype)
 
-    for p in range(num_orbitals):
+    for p in numba.prange(num_orbitals):
         n_p, m_p = df.loc[p, ["n", "m"]].values
         for q in range(num_orbitals):
             n_q, m_q = df.loc[q, ["n", "m"]].values
