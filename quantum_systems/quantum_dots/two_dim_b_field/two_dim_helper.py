@@ -32,6 +32,12 @@ def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
         energy_position = np.where(np.abs(df["E"] - energy) < 1e-6)[0]
         df.loc[energy_position, "level"] = i
 
+    # Computing degenracy. Not sure if this is necessary,
+    # but perhaps helpful later
+    df["level"] = df["level"].astype(int)
+    df["degeneracy"] = df["level"].map(df["level"].value_counts().to_dict())
+    # That's some amazing python one-liner action right there
+
     return df
 
 
