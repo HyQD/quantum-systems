@@ -46,7 +46,7 @@ class TwoDimHarmonicOscB(QuantumSystem):
 
         num_orbitals = self.l // 2
         n_array = np.arange(num_orbitals)
-        m_array = np.arange(-num_orbitals, num_orbitals + 1)
+        m_array = np.arange(-num_orbitals - 5, num_orbitals + 6)
         self.df = construct_dataframe(
             n_array, m_array, omega_c=self.omega_c, omega=self.omega
         )
@@ -89,13 +89,19 @@ class TwoDimHarmonicOscB(QuantumSystem):
         )
 
         for p in range(self.l // 2):
+            # It is important that these are not floats
+            # assoc_laguerre is picky
             n_p, m_p = self.df.loc[p, ["n", "m"]].values
+            n_p = int(n_p)
+            m_p = int(m_p)
 
             norm_p = spf_norm(n_p, m_p, self.mass, self.omega)
             r_p = spf_radial_function(n_p, m_p, self.mass, self.omega)
 
             for q in range(self.l // 2):
                 n_q, m_q = self.df.loc[q, ["n", "m"]].values
+                n_q = int(n_q)
+                m_q = int(m_q)
 
                 norm_q = spf_norm(n_q, m_q, self.mass, self.omega)
                 r_q = spf_radial_function(n_q, m_q, self.mass, self.omega)
