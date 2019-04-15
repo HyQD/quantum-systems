@@ -38,14 +38,14 @@ def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
     df["degeneracy"] = df["level"].map(df["level"].value_counts().to_dict())
 
     # Capping size of basis set.
-    min_num_states = len(n_array)*(len(n_array) - 1) // 2
+    min_num_states = len(n_array) * (len(n_array) - 1) // 2
     level_of_orbital_cap = df.iloc[min_num_states]["level"]
     while df.iloc[min_num_states]["level"] == level_of_orbital_cap:
         min_num_states += 1
 
     df["n"] = df["n"].astype(int)
     df["m"] = df["m"].astype(int)
-    
+
     return df.iloc[:min_num_states]
 
 
