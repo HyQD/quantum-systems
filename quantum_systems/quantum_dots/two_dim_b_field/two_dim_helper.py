@@ -18,7 +18,7 @@ def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
         for m in m_array:
             df.loc[i, "n"] = n
             df.loc[i, "m"] = m
-            energy = get_shell_energy(n, m, omega_c=omega_c, omega=omega)
+            # energy = get_shell_energy(n, m, omega_c=omega_c, omega=omega)
             df.loc[i, "E"] = get_shell_energy(
                 n, m, omega_c=omega_c, omega=omega
             )

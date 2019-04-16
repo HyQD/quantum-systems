@@ -51,7 +51,7 @@ class TwoDimHarmonicOscB(QuantumSystem):
             n_array, m_array, omega_c=self.omega_c, omega=self.omega
         )
 
-        self.__h = self.omega * get_one_body_elements(
+        self.__h = get_one_body_elements(
             num_orbitals, df=self.df
         ).astype(np.complex128)
         self.__u = np.sqrt(self.omega) * get_coulomb_elements(
