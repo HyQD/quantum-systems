@@ -249,8 +249,6 @@ def get_coulomb_elements_B(num_orbitals, dtype=np.float64, df=None, omega_c=0):
     return u
 
 
-
-
 def get_double_well_one_body_elements(
     num_orbitals, omega, mass, barrier_strength, dtype=np.float64, axis=0
 ):
@@ -288,6 +286,7 @@ def get_double_well_one_body_elements(
 
     return h
 
+
 def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
     df = pd.DataFrame()
     i = 0
@@ -324,5 +323,3 @@ def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
     df["m"] = df["m"].astype(int)
 
     return df.iloc[:min_num_states]
-
-

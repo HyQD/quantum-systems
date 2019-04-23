@@ -214,26 +214,16 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
             self._spf = self.np.asarray(self._spf)
 
 
-class TwoDimHarmonicOscB(QuantumSystem):
+class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
     def __init__(
         self, n, l, radius_length, num_grid_points, omega_0=1, mass=1, omega_c=0
     ):
-        super().__init__(n, l)
+        super().__init__(
+            n, l, radius_length, num_grid_points, omega=omega_0, mass=mass
+        )
 
         self.omega_c = omega_c
         self.omega = np.sqrt(omega_0 * omega_0 + omega_c * omega_c / 4)
-        self.mass = mass
-
-        self.radius_length = radius_length
-        self.num_grid_points = num_grid_points
-
-        self.radius = np.linspace(0, self.radius_length, self.num_grid_points)
-        self.theta = np.linspace(0, 2 * np.pi, self.num_grid_points)
-
-        self._spf = np.zeros(
-            (self.l, self.num_grid_points, self.num_grid_points),
-            dtype=np.complex128,
-        )
 
     def setup_system(self):
 
@@ -244,16 +234,16 @@ class TwoDimHarmonicOscB(QuantumSystem):
             n_array, m_array, omega_c=self.omega_c, omega=self.omega
         )
 
-        self.__h = get_one_body_elements_B(num_orbitals, df=self.df).astype(
+        _h = get_one_body_elements_B(num_orbitals, df=self.df).astype(
             np.complex128
         )
-        self.__u = np.sqrt(self.omega) * get_coulomb_elements_B(
+        _u = np.sqrt(self.omega) * get_coulomb_elements_B(
             num_orbitals, df=self.df
         ).astype(np.complex128)
 
-        self._h = add_spin_one_body(self.__h, np=np)
-        self._u = anti_symmetrize_u(add_spin_two_body(self.__u, np=np))
-        self._f = self.construct_fock_matrix(self.__h, self.__u)
+        self._h = add_spin_one_body(_h, np=np)
+        self._u = anti_symmetrize_u(add_spin_two_body(_u, np=np))
+        self._f = self.construct_fock_matrix(_h, _u)
 
         self.cast_to_complex()
 
@@ -266,15 +256,6 @@ class TwoDimHarmonicOscB(QuantumSystem):
             self._u = self.np.asarray(self._u)
             self._f = self.np.asarray(self._f)
             self._spf = self.np.asarray(self._spf)
-
-    def setup_spf(self):
-        self.R, self.T = np.meshgrid(self.radius, self.theta)
-
-        for p in range(self.l // 2):
-            self._spf[2 * p, :] += spf_state(
-                self.R, self.T, p, self.mass, self.omega
-            )
-            self._spf[2 * p + 1, :] += self._spf[2 * p, :]
 
     def construct_dipole_moment(self):
         dipole_moment = np.zeros(
