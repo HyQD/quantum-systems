@@ -3,6 +3,7 @@ import scipy
 import sympy
 import numba
 import math
+import pandas as pd
 
 from quantum_systems.quantum_dots.two_dim.coulomb_elements import coulomb_ho
 
@@ -211,6 +212,45 @@ def get_coulomb_elements(num_orbitals, dtype=np.float64):
     return u
 
 
+def get_shell_energy_B(n, m, omega_c=0, omega=1):
+    return omega * (2 * n + abs(m) + 1) - (omega_c * m) / 2
+
+
+def get_one_body_elements_B(num_orbitals, dtype=np.float64, df=None, omega_c=0):
+
+    h = np.zeros((num_orbitals, num_orbitals), dtype=dtype)
+
+    for p in range(num_orbitals):
+        h[p, p] = df.loc[p, "E"]
+
+    return h
+
+
+# TODO: Work-around DataFrame to enable njit-usage
+@numba.jit(fastmath=True, nogil=True, parallel=True)
+def get_coulomb_elements_B(num_orbitals, dtype=np.float64, df=None, omega_c=0):
+
+    shape = (num_orbitals, num_orbitals, num_orbitals, num_orbitals)
+    u = np.zeros(shape, dtype=dtype)
+
+    for p in numba.prange(num_orbitals):
+        n_p, m_p = df.loc[p, ["n", "m"]].values
+        for q in range(num_orbitals):
+            n_q, m_q = df.loc[q, ["n", "m"]].values
+            for r in range(num_orbitals):
+                n_r, m_r = df.loc[r, ["n", "m"]].values
+                for s in range(num_orbitals):
+                    n_s, m_s = df.loc[s, ["n", "m"]].values
+
+                    u[p, q, r, s] = coulomb_ho(
+                        n_p, m_p, n_q, m_q, n_r, m_r, n_s, m_s
+                    )
+
+    return u
+
+
+
+
 def get_double_well_one_body_elements(
     num_orbitals, omega, mass, barrier_strength, dtype=np.float64, axis=0
 ):
@@ -247,3 +287,42 @@ def get_double_well_one_body_elements(
             )
 
     return h
+
+def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
+    df = pd.DataFrame()
+    i = 0
+    for n in n_array:
+        for m in m_array:
+            df.loc[i, "n"] = n
+            df.loc[i, "m"] = m
+            # energy = get_shell_energy(n, m, omega_c=omega_c, omega=omega)
+            df.loc[i, "E"] = get_shell_energy_B(
+                n, m, omega_c=omega_c, omega=omega
+            )
+            i += 1
+
+    df = df.sort_values("E").reset_index().drop("index", axis=1)
+
+    df["level"] = 0
+    energies = df["E"].round(decimals=8).unique()
+
+    for i, energy in enumerate(energies):
+        energy_position = np.where(np.abs(df["E"] - energy) < 1e-6)[0]
+        df.loc[energy_position, "level"] = i
+
+    # Computing degenracy.
+    df["level"] = df["level"].astype(int)
+    df["degeneracy"] = df["level"].map(df["level"].value_counts().to_dict())
+
+    # Capping size of basis set.
+    min_num_states = len(n_array) * (len(n_array) - 1) // 2
+    level_of_orbital_cap = df.iloc[min_num_states]["level"]
+    while df.iloc[min_num_states]["level"] == level_of_orbital_cap:
+        min_num_states += 1
+
+    df["n"] = df["n"].astype(int)
+    df["m"] = df["m"].astype(int)
+
+    return df.iloc[:min_num_states]
+
+
