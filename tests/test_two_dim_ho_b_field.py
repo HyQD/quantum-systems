@@ -1,8 +1,6 @@
 import numpy as np
 from quantum_systems.quantum_dots.two_dim.two_dim_ho import (
     TwoDimensionalHarmonicOscillator as tdho,
-)
-from quantum_systems.quantum_dots.two_dim_b_field.two_dim_ho import (
     TwoDimHarmonicOscB as tdho_b,
 )
 
