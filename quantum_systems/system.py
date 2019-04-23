@@ -17,12 +17,7 @@ class QuantumSystem:
 
         self.np = np
 
-        self.n = n
-        self.l = l
-        self.m = self.l - self.n
-
-        self.o = slice(0, self.n)
-        self.v = slice(self.n, self.l)
+        self.set_system_size(n, l)
 
         self._h = None
         self._f = None
@@ -36,6 +31,14 @@ class QuantumSystem:
         self._bra_spf = None
 
         self._nuclear_repulsion_energy = None
+
+    def set_system_size(self, n, l):
+        self.n = n
+        self.l = l
+        self.m = self.l - self.n
+
+        self.o = slice(0, self.n)
+        self.v = slice(self.n, self.l)
 
     def setup_system(self):
         pass
@@ -63,35 +66,49 @@ class QuantumSystem:
         if self._f is not None:
             self._f = self._f.astype(np.complex128)
 
-    def change_basis(self, c, c_tilde=None):
+    def change_basis_one_body_elements(self, c, c_tilde=None):
         self._h = transform_one_body_elements(
             self._h, c, np=self.np, c_tilde=c_tilde
         )
 
-        if self._dipole_moment is not None:
-            for i in range(self._dipole_moment.shape[0]):
-                self._dipole_moment[i] = transform_one_body_elements(
-                    self._dipole_moment[i], c, np=self.np, c_tilde=c_tilde
-                )
-
+    def change_basis_two_body_elements(self, c, c_tilde=None):
         self._u = transform_two_body_elements(
             self._u, c, np=self.np, c_tilde=c_tilde
         )
+
+    def change_basis_dipole_moment(self, c, c_tilde=None):
+        dipole_moment = []
+        for i in range(self._dipole_moment.shape[0]):
+            dipole_moment.append(
+                transform_one_body_elements(
+                    self._dipole_moment[i], c, np=self.np, c_tilde=c_tilde
+                )
+            )
+
+        self._dipole_moment = self.np.asarray(dipole_moment)
+
+    def change_basis_spf(self, c, c_tilde=None):
+        if c_tilde is not None:
+            # In case of bi-orthogonal basis sets, we create an extra set
+            # of single-particle functions for the bra-side
+            self._bra_spf = self.np.tensordot(
+                c_tilde,
+                self._spf.conj() if self._bra_spf is None else self._bra_spf,
+                axes=((1), (0)),
+            )
+
+        self._spf = self.np.tensordot(c, self._spf, axes=((0), (0)))
+
+    def change_basis(self, c, c_tilde=None):
+        self.change_basis_one_body_elements(c, c_tilde)
+        self.change_basis_two_body_elements(c, c_tilde)
         self._f = self.construct_fock_matrix(self._h, self._u)
 
-        if self._spf is not None:
-            if c_tilde is not None:
-                # In case of bi-orthogonal basis sets, we create an extra set
-                # of single-particle functions for the bra-side
-                self._bra_spf = self.np.tensordot(
-                    c_tilde,
-                    self._spf.conj()
-                    if self._bra_spf is None
-                    else self._bra_spf,
-                    axes=((1), (0)),
-                )
+        if self._dipole_moment is not None:
+            self.change_basis_dipole_moment(c, c_tilde)
 
-            self._spf = self.np.tensordot(c, self._spf, axes=((0), (0)))
+        if self._spf is not None:
+            self.change_basis_spf(c, c_tilde)
 
     def change_to_hf_basis(self, *args, verbose=False, **kwargs):
         from tdhf import HartreeFock
@@ -121,7 +138,10 @@ class QuantumSystem:
 
     @property
     def s(self):
-        """Getter returning the overlap matrix of the atomic orbitals"""
+        """Getter returning the overlap matrix of the atomic orbitals. If the
+        overlap elements don't yet exist, we assume that the overlap is the
+        identity.
+        """
         np = self.np
 
         if self._s is None:
