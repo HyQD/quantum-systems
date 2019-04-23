@@ -20,3 +20,6 @@ two_dim_interface.cpp
 
 # Travis miniconda
 miniconda.sh
+
+# Mac OS X directory file
+.DS_Store

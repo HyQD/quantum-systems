@@ -13,6 +13,9 @@ from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
     radial_integral,
     theta_1_integral,
     theta_2_integral,
+    construct_dataframe,
+    get_one_body_elements_B,
+    get_coulomb_elements_B,
 )
 from quantum_systems.system_helper import (
     add_spin_one_body,
@@ -209,3 +212,84 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
             self._u = self.np.asarray(self._u)
             self._f = self.np.asarray(self._f)
             self._spf = self.np.asarray(self._spf)
+
+
+class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
+    def __init__(
+        self, n, l, radius_length, num_grid_points, omega_0=1, mass=1, omega_c=0
+    ):
+        super().__init__(
+            n, l, radius_length, num_grid_points, omega=omega_0, mass=mass
+        )
+
+        self.omega_c = omega_c
+        self.omega = np.sqrt(omega_0 * omega_0 + omega_c * omega_c / 4)
+
+    def setup_system(self):
+
+        num_orbitals = self.l // 2
+        n_array = np.arange(num_orbitals)
+        m_array = np.arange(-num_orbitals - 5, num_orbitals + 6)
+        self.df = construct_dataframe(
+            n_array, m_array, omega_c=self.omega_c, omega=self.omega
+        )
+
+        _h = get_one_body_elements_B(num_orbitals, df=self.df).astype(
+            np.complex128
+        )
+        _u = np.sqrt(self.omega) * get_coulomb_elements_B(
+            num_orbitals, df=self.df
+        ).astype(np.complex128)
+
+        self._h = add_spin_one_body(_h, np=np)
+        self._u = anti_symmetrize_u(add_spin_two_body(_u, np=np))
+        self._f = self.construct_fock_matrix(_h, _u)
+
+        self.cast_to_complex()
+
+        self.setup_spf()
+        self.construct_dipole_moment()
+
+        # Some numpy-not-numpy stuff
+        if np is not self.np:
+            self._h = self.np.asarray(self._h)
+            self._u = self.np.asarray(self._u)
+            self._f = self.np.asarray(self._f)
+            self._spf = self.np.asarray(self._spf)
+
+    def construct_dipole_moment(self):
+        dipole_moment = np.zeros(
+            (2, self.l // 2, self.l // 2), dtype=self._spf.dtype
+        )
+
+        for p in range(self.l // 2):
+            # It is important that these are not floats
+            # assoc_laguerre is picky
+            n_p, m_p = self.df.loc[p, ["n", "m"]].values
+            n_p = int(n_p)
+            m_p = int(m_p)
+
+            norm_p = spf_norm(n_p, m_p, self.mass, self.omega)
+            r_p = spf_radial_function(n_p, m_p, self.mass, self.omega)
+
+            for q in range(self.l // 2):
+                n_q, m_q = self.df.loc[q, ["n", "m"]].values
+                n_q = int(n_q)
+                m_q = int(m_q)
+
+                norm_q = spf_norm(n_q, m_q, self.mass, self.omega)
+                r_q = spf_radial_function(n_q, m_q, self.mass, self.omega)
+
+                norm = norm_p.conjugate() * norm_q
+                I_r = radial_integral(r_p, r_q)
+                I_theta_1 = theta_1_integral(m_p, m_q)
+                I_theta_2 = theta_2_integral(m_p, m_q)
+
+                # x-direction
+                dipole_moment[0, p, q] = norm * I_r * I_theta_1
+                # y-direction
+                dipole_moment[1, p, q] = norm * I_r * I_theta_2
+
+        self._dipole_moment = np.array(
+            [add_spin_one_body(dipole_moment[i], np=np) for i in range(2)]
+        )
