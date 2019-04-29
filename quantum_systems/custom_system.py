@@ -4,6 +4,7 @@ from quantum_systems.system_helper import (
     add_spin_two_body,
     anti_symmetrize_u,
 )
+from quantum_systems.pyscf_system import *
 
 
 class CustomSystem(QuantumSystem):
@@ -72,6 +73,32 @@ class CustomSystem(QuantumSystem):
         self._nuclear_repulsion_energy = nuclear_repulsion_energy
 
 
+
+def construct_pyscf_system(molecule, basis="cc-pvdz", np=None):
+    if np is None:
+        import numpy as np
+
+    my_pyscf_system = PyscfSystem(molecule,basis)
+    h = my_pyscf_system.get_H()
+    u = my_pyscf_system.get_W()
+    
+    #my_pyscf_system performs the Hartree Fock calculation
+    n,l = my_pyscf_system.nocc, h.shape[0]
+    
+    dipole_integrals = np.zeros((3,l,l),dtype=np.complex128)
+    dipole_integrals[0] = my_pyscf_system.get_dipole(0)
+    dipole_integrals[1] = my_pyscf_system.get_dipole(1)
+    dipole_integrals[2] = my_pyscf_system.get_dipole(2)
+
+    system = CustomSystem(n, l, np=np)
+    system.set_h(h, add_spin=False)
+    system.set_u(u, add_spin=False, anti_symmetrize=False)
+    system.set_s(np.complex128(np.eye(l)), add_spin=False)
+    system.set_dipole_moment(dipole_integrals, add_spin=False)
+
+    return system
+    
+
 def construct_psi4_system(molecule, options, np=None):
     import psi4
 
@@ -113,3 +140,5 @@ def construct_psi4_system(molecule, options, np=None):
     system.set_nuclear_repulsion_energy(nuclear_repulsion_energy)
 
     return system
+
+
