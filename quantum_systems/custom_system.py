@@ -118,7 +118,6 @@ def construct_pyscf_system(molecule, basis="cc-pvdz", np=None):
 
     # my_pyscf_system performs the Hartree Fock calculation
     n, l = my_pyscf_system.nocc, h.shape[0]
-    print(n, l)
 
     dipole_integrals = np.zeros((3, l, l), dtype=np.complex128)
     dipole_integrals[0] = my_pyscf_system.get_dipole(0)
