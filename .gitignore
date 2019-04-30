@@ -23,3 +23,6 @@ miniconda.sh
 
 # Mac OS X directory file
 .DS_Store
+
+# Jupyter cache
+.ipynb_checkpoints
