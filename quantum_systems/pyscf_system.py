@@ -1,6 +1,7 @@
 import numpy as np
 from pyscf import gto, scf, ao2mo
 
+
 class PyscfSystem:
     """
     Class to store and retrieve integrals (in spin-orbital basis) along with other information regarding the Hamiltonian operator.
@@ -150,7 +151,7 @@ class PyscfSystem:
                 np.abs(np.real(E) - ehf) < eps
             ), "Incorrect UHF energy from F,W"
         v = slice(no, nso)
-        return e_tot, h1,F, W, dipole, no, nv, o, v
+        return e_tot, h1, F, W, dipole, no, nv, o, v
 
     def get_ERef(self):
         """
@@ -206,7 +207,7 @@ class PyscfSystem:
         """
         Returns the one-electron integrals in spin-orbital basis
         """
-        return self.H  
+        return self.H
 
     def get_dipole(self, component):
         """
