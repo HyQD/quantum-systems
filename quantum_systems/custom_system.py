@@ -103,8 +103,6 @@ def construct_pyscf_system_new(molecule, basis="cc-pvdz", np=None):
     cs.set_dipole_moment(dipole_integrals, add_spin=True)
     cs.cast_to_complex()
 
-    cs.change_to_hf_basis(verbose=True)
-
     return cs
 
 
