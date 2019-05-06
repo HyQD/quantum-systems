@@ -76,7 +76,7 @@ class CustomSystem(QuantumSystem):
         self._nuclear_repulsion_energy = nuclear_repulsion_energy
 
 
-def construct_pyscf_system_new(molecule, basis="cc-pvdz", np=None):
+def construct_pyscf_system_ao(molecule, basis="cc-pvdz", np=None):
     import pyscf
 
     if np is None:

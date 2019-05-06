@@ -3,7 +3,7 @@ from .custom_system import (
     CustomSystem,
     construct_psi4_system,
     construct_pyscf_system,
-    construct_pyscf_system_new,
+    construct_pyscf_system_ao,
 )
 from quantum_systems.quantum_dots.one_dim.one_dim_ho import (
     OneDimensionalHarmonicOscillator,
