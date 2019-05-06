@@ -1,10 +1,13 @@
+import warnings
+
 from quantum_systems.system import QuantumSystem
 from quantum_systems.system_helper import (
+    transform_one_body_elements,
+    transform_two_body_elements,
     add_spin_one_body,
     add_spin_two_body,
     anti_symmetrize_u,
 )
-from quantum_systems.pyscf_system import PyscfSystem
 
 
 class CustomSystem(QuantumSystem):
@@ -96,37 +99,124 @@ def construct_pyscf_system_new(molecule, basis="cc-pvdz", np=None):
     )
     dipole_integrals = mol.intor("int1e_r").reshape(3, l // 2, l // 2)
 
-    cs = CustomSystem(n, l, np=np)
-    cs.set_h(h, add_spin=True)
-    cs.set_s(s, add_spin=True)
-    cs.set_u(u, add_spin=True, anti_symmetrize=True)
-    cs.set_dipole_moment(dipole_integrals, add_spin=True)
-    cs.cast_to_complex()
+    system = CustomSystem(n, l, np=np)
+    system.set_h(h, add_spin=True)
+    system.set_s(s, add_spin=True)
+    system.set_u(u, add_spin=True, anti_symmetrize=True)
+    system.set_dipole_moment(dipole_integrals, add_spin=True)
+    system.cast_to_complex()
 
-    return cs
+    return system
 
 
-def construct_pyscf_system(molecule, basis="cc-pvdz", np=None):
+def construct_pyscf_system(molecule, basis="cc-pvdz", np=None, verbose=False):
+    import pyscf
+
     if np is None:
         import numpy as np
 
-    my_pyscf_system = PyscfSystem(molecule, basis)
-    h = my_pyscf_system.get_H()
-    u = my_pyscf_system.get_W()
+    # Build molecule in AO-basis
+    mol = pyscf.gto.Mole()
+    mol.unit = "bohr"
+    mol.build(atom=molecule, basis=basis, symmetry=False)
+    mol.set_common_origin(np.array([0.0, 0.0, 0.0]))
 
-    # my_pyscf_system performs the Hartree Fock calculation
-    n, l = my_pyscf_system.nocc, h.shape[0]
+    # Perform UHF-calculations to create the MO-basis
+    hf = pyscf.scf.UHF(mol)
+    ehf = hf.kernel()
 
-    dipole_integrals = np.zeros((3, l, l), dtype=np.complex128)
-    dipole_integrals[0] = my_pyscf_system.get_dipole(0)
-    dipole_integrals[1] = my_pyscf_system.get_dipole(1)
-    dipole_integrals[2] = my_pyscf_system.get_dipole(2)
+    if not hf.converged:
+        warnings.warn("UHF calculation did not converge")
 
+    if verbose:
+        print(f"UHF energy: {hf.e_tot}")
+
+    # Build the coefficient matrix from the occupied and virtual integrals. As
+    # we have done a UHF-calculation, we stack the two spin-directions on top
+    # of each other. That is, instead of using odd or even indices for each spin
+    # direction, we set up two separate blocks.
+    C_o = np.hstack(
+        (
+            # Fetch occupied coefficients for both spin-directions
+            hf.mo_coeff[0][:, hf.mo_occ[0] > 0],
+            hf.mo_coeff[1][:, hf.mo_occ[1] > 0],
+        )
+    )
+
+    C_v = np.hstack(
+        (
+            # Fetch virtual coefficients for both spin-directions
+            hf.mo_coeff[0][:, hf.mo_occ[0] == 0],
+            hf.mo_coeff[1][:, hf.mo_occ[1] == 0],
+        )
+    )
+
+    # Build full coefficient matrix.
+    C = np.hstack((C_o, C_v))
+
+    # Get the number of occupied molecular orbitals
+    n = C_o.shape[1]
+    # Fetch the number of molecular orbitals
+    l = C.shape[1]
+
+    # Check that the number of occupied molecular orbitals is correct
+    assert n == sum(hf.mo_occ[0] > 0) + sum(hf.mo_occ[1] > 0)
+    # Check that the number of molecular orbitals is twice of that of the number
+    # of atomic orbitals.
+    assert l == C.shape[0] * 2
+
+    # Note: Should the dipole moments have a negative sign?
+    dipole_moment = [
+        -transform_one_body_elements(dm, C, np)
+        for dm in mol.intor("int1e_r").reshape(3, mol.nao, mol.nao)
+    ]
+    dipole_moment = np.asarray(dipole_moment)
+
+    # Create a tuple with the shape of the AO two-body elements
+    u_shape = (mol.nao for i in range(4))
+
+    h = transform_one_body_elements(hf.get_hcore(), C, np)
+    u = transform_two_body_elements(mol.intor("int2e").reshape(*u_shape), C, np)
+
+    noa = sum(hf.mo_occ[0] > 0)
+    nva = sum(hf.mo_occ[0] == 0)
+    nob = sum(hf.mo_occ[1] > 0)
+    nvb = sum(hf.mo_occ[1] == 0)
+    no = noa + nob
+    nv = nva + nvb
+
+    oa = slice(0, noa)
+    ob = slice(noa, no)
+    va = slice(no, no + nva)
+    vb = slice(no + nva, no + nv)
+
+    a_slices = [oa, va]
+    b_slices = [ob, vb]
+
+    # Create a combination of slices that should be zero in all matrix elements,
+    # due to unequal spin-direction.
+    zero_slices = [(a, b) for a in a_slices for b in b_slices]
+    zero_slices += [(b, a) for a in a_slices for b in b_slices]
+
+    # Create a slice object for all indices, i.e., the ":" syntax in NumPy.
+    all_slice = slice(None, None)
+
+    # Explicitly set all cross-spin terms to zero
+    for s in zero_slices:
+        h[s] = 0
+        dipole_moment[(all_slice,) + s] = 0
+        u[s + (all_slice, all_slice)] = 0
+        u[(all_slice, all_slice) + s] = 0
+
+    # Convert to physicist's notation, from Mulliken notation
+    u = u.transpose(0, 2, 1, 3)
+
+    # Build a custom system from the integral elements
     system = CustomSystem(n, l, np=np)
-    system.set_h(h, add_spin=False)
-    system.set_u(u, add_spin=False, anti_symmetrize=False)
-    system.set_s(np.complex128(np.eye(l)), add_spin=False)
-    system.set_dipole_moment(dipole_integrals, add_spin=False)
+    system.set_h(h)
+    system.set_u(u, anti_symmetrize=True)
+    system.set_dipole_moment(dipole_moment)
+    system.cast_to_complex()
 
     return system
 

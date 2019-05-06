@@ -1,7 +1,11 @@
 import numpy as np
 import warnings
 
-from quantum_systems import CustomSystem, construct_psi4_system
+from quantum_systems import (
+    CustomSystem,
+    construct_psi4_system,
+    construct_pyscf_system,
+)
 
 
 def change_basis_h(h, c):
@@ -88,3 +92,11 @@ def test_psi4_construction():
         assert True
     except ImportError:
         warnings.warn("Unable to import psi4.")
+
+
+def test_pyscf_construction():
+    try:
+        system = construct_pyscf_system("be 0 0 0")
+        assert True
+    except ImportError:
+        warnings.warn("Unabel to import PySCF")
