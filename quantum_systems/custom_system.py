@@ -120,6 +120,7 @@ def construct_pyscf_system(molecule, basis="cc-pvdz", np=None, verbose=False):
     mol.unit = "bohr"
     mol.build(atom=molecule, basis=basis, symmetry=False)
     mol.set_common_origin(np.array([0.0, 0.0, 0.0]))
+    enuc = mol.energy_nuc()
 
     # Perform UHF-calculations to create the MO-basis
     hf = pyscf.scf.UHF(mol)
@@ -216,6 +217,7 @@ def construct_pyscf_system(molecule, basis="cc-pvdz", np=None, verbose=False):
     system.set_h(h)
     system.set_u(u, anti_symmetrize=True)
     system.set_dipole_moment(dipole_moment)
+    system.set_nuclear_repulsion_energy(enuc)
     system.cast_to_complex()
 
     return system
