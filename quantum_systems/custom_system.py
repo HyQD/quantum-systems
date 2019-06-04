@@ -67,7 +67,9 @@ class CustomSystem(QuantumSystem):
             self.l == axis for axis in new_shape[1:]
         ), "Shape of dipole moment matrices must match the number of orbitals"
 
-        self._dipole_moment = np.zeros(tuple(new_shape))
+        self._dipole_moment = np.zeros(
+            tuple(new_shape), dtype=dipole_moment.dtype
+        )
 
         for i in range(len(dipole_moment)):
             self._dipole_moment[i] = add_spin_one_body(dipole_moment[i], np=np)
