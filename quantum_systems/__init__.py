@@ -5,6 +5,7 @@ from .custom_system import (
     construct_pyscf_system,
     construct_pyscf_system_ao,
 )
+from .random_system import RandomSystem
 from quantum_systems.quantum_dots.one_dim.one_dim_ho import (
     OneDimensionalHarmonicOscillator,
 )
