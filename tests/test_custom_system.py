@@ -100,7 +100,7 @@ def test_pyscf_construction():
         system = construct_pyscf_system("be 0 0 0")
         assert True
     except ImportError:
-        warnings.warn("Unabel to import PySCF")
+        warnings.warn("Unable to import PySCF")
 
 
 def test_pyscf_ao_construction():
@@ -108,4 +108,4 @@ def test_pyscf_ao_construction():
         system = construct_pyscf_system_ao("be 0 0 0")
         assert True
     except ImportError:
-        warnings.warn("Unabel to import PySCF")
+        warnings.warn("Unable to import PySCF")
