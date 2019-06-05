@@ -183,14 +183,14 @@ class QuantumSystem:
         self._time_evolution_operator.set_system(self)
 
     @property
-    def is_one_body_time_evolution_operator(self):
+    def has_one_body_time_evolution_operator(self):
         if self._time_evolution_operator is None:
             return False
 
         return self._time_evolution_operator.is_one_body_operator
 
     @property
-    def is_two_body_time_evolution_operator(self):
+    def has_two_body_time_evolution_operator(self):
         if self._time_evolution_operator is None:
             return False
 
