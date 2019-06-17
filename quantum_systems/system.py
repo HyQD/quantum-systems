@@ -67,7 +67,7 @@ class QuantumSystem:
             self._f = self._f.astype(np.complex128)
 
         if self._s is not None:
-            self._s = self._s.astsype(np.complex128)
+            self._s = self._s.astype(np.complex128)
 
     def change_basis_one_body_elements(self, c, c_tilde=None):
         self._h = transform_one_body_elements(
