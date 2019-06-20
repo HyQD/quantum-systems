@@ -2,6 +2,10 @@ from quantum_system import CustomSystem
 from quantum_systems.system_helper import (
     transform_one_body_elements,
     transform_two_body_elements,
+    add_spin_one_body,
+    add_spin_two_body,
+    anti_symmetrize_u,
+    check_axis_lengths,
 )
 
 
@@ -43,6 +47,51 @@ class QuantumSystem:
 
     def setup_system(self):
         pass
+
+    def change_to_spin_orbital_basis(self, anti_symmetrize=True):
+        self.set_system_size(self.n, self.l * 2)
+
+        self._h = add_spin_one_body(self._h, np=self.np)
+        assert all(check_axis_lengths(self._h, self.l))
+
+        self._s = add_spin_one_body(self._s, np=self.np)
+        assert all(check_axis_lengths(self._s, self.l))
+
+        self._u = add_spin_two_body(self._u, np=self.np)
+
+        if anti_symmetrize:
+            self._u = anti_symmetrize(self._u)
+
+        assert all(check_axis_lengths(self._u, self.l))
+
+        if not self._dipole_moment is None:
+            dipole_moment = [
+                add_spin_one_body(self._dipole_moment[i], np=self.np)
+                for i in range(len(self._dipole_moment))
+            ]
+
+            self._dipole_moment = dipole_moment
+            assert all(check_axis_lengths(self._dipole_moment[0], self.l))
+
+        if not self._spf is None:
+            new_shape = [self._spf.shape[0] * 2, self._spf.shape[1:]]
+
+            spf = np.zeros(tuple(new_shape), dtype=self._spf.dtype)
+            spf[::2, :] = self._spf
+            spf[1::2, :] = self._spf
+
+            self._spf = spf
+            assert self._spf.shape[0] == self.l
+
+        if not self._bra_spf is None:
+            new_shape = [self._bra_spf.shape[0] * 2, self._bra_spf.shape[1:]]
+
+            bra_spf = np.zeros(tuple(new_shape), dtype=self._bra_spf.dtype)
+            bra_spf[::2, :] = self._bra_spf
+            bra_spf[1::2, :] = self._bra_spf
+
+            self._bra_spf = bra_spf
+            assert self._bra_spf.shape[0] == self.l
 
     def create_spin_orbital_basis(self, anti_symmetrize=True):
         cs = CustomSystem(self.n, self.l * 2, np=self.np)

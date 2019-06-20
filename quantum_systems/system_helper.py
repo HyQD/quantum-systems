@@ -1,6 +1,10 @@
 import numba
 
 
+def check_axis_lengths(arr, length):
+    return [length == axis for axis in arr.shape]
+
+
 @numba.njit(cache=True)
 def delta(p, q):
     return p == q
