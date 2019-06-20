@@ -25,6 +25,46 @@ from quantum_systems.system_helper import (
 
 
 class TwoDimensionalHarmonicOscillator(QuantumSystem):
+    """Create 2D harmonic oscillator, using 
+    polar coordinates
+
+    Parameters
+    ----------
+    n : int
+        Number of electrons
+    l : int
+        Number of spinorbitals
+    radius_length : int or float
+        Radius of space over which to model wavefunction
+    num_grid_points : int or float
+        Defines resolution of numerical representation
+        of wavefunction
+    omega : float, default 1 
+        Frequency of harmonic oscillator potential.
+    mass : int of float, default 1
+        Mass of electrons
+
+    Attributes
+    ----------
+    h : np.array
+        One-body matrix
+    f : np.array
+        Fock matrix
+    u : np.array
+        Two-body matrix
+
+    Methods
+    -------
+    setup_system()
+        Must be called to set up quantum system.
+    setup_spf()
+        Constructs single-particle functions. This method is called
+        by setup_system().
+    construct_dipole_moment()
+        Constructs dipole moment. This method is called by
+        setup_system().
+    """
+
     def __init__(self, n, l, radius_length, num_grid_points, omega=1, mass=1):
         super().__init__(n, l)
 
@@ -134,9 +174,6 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
     mass: float
         Mass of the particles.
 
-    Returns
-    -------
-    None
     """
 
     def __init__(
