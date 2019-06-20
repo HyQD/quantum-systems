@@ -11,8 +11,14 @@ One-Dimensional Quantum Dot
 .. autoclass:: quantum_systems.OneDimensionalHarmonicOscillator
     :members:
 
-Two-Dimensional Quantum Dot
----------------------------
+Two-Dimensional Quantum Dots
+----------------------------
 
 .. autoclass:: quantum_systems.TwoDimensionalHarmonicOscillator
+    :members:
+
+.. autoclass:: quantum_systems.TwoDimensionalDoubleWell
+    :members:
+
+.. autoclass:: quantum_systems.TwoDimHarmonicOscB
     :members:

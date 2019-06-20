@@ -204,17 +204,12 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
         """Function setting up the one- and two-body elements, the
         single-particle functions, dipole moments and other quantities used by
         second quantization methods.
+        
         Parameters
         ----------
         axis : int
-            Specifies which axis the barrier should be set to. For axis == 0
-            this corresponds to the x-axis and axis == 1 the y-axis. That is,
-                axis == 0 -> <p||x||q>,
-                axis == 1 -> <p||y||q>.
-
-        Returns
-        -------
-        None
+            The axis argument specifies which
+            axis the well barrier is aligned to. (0, 1) = (x, y).
         """
 
         super().setup_system()
@@ -252,6 +247,45 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
 
 
 class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
+    """Create 2D harmonic oscillator under homogenous
+    magnetic field, using polar coordinates
+
+    Parameters
+    ----------
+    n : int
+        Number of electrons
+    l : int
+        Number of spinorbitals
+    radius_length : int or float
+        Radius of space over which to model wavefunction
+    num_grid_points : int or float
+        Defines resolution of numerical representation
+        of wavefunction
+    omega_0 : float, default 1 
+        Frequency of harmonic oscillator potential.
+    mass : int of float, default 1
+        Mass of electrons.
+    omega_c : float, default 0
+        Frequency corresponding to strength of magnetic field.
+
+    Attributes
+    ----------
+    h : np.array
+        One-body matrix
+    f : np.array
+        Fock matrix
+    u : np.array
+        Two-body matrix
+
+    Methods
+    -------
+    setup_system()
+        Must be called to set up quantum system.
+    construct_dipole_moment()
+        Constructs dipole moment. This method is called by
+        setup_system().
+    """
+
     def __init__(
         self, n, l, radius_length, num_grid_points, omega_0=1, mass=1, omega_c=0
     ):
