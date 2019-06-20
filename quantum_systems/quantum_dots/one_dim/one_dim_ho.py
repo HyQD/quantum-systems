@@ -64,6 +64,46 @@ def _compute_orbital_integrals(spf, l, inner_integral, grid):
 
 
 class OneDimensionalHarmonicOscillator(QuantumSystem):
+    """Create 1D harmonic oscillator
+
+    Parameters
+    ----------
+    n : int
+        Number of electrons
+    l : int
+        Number of spinorbitals
+    grid_length : int or float
+        Space over which to model wavefunction
+    num_grid_points : int or float
+        Defines resolution of numerical representation
+        of wavefunction
+    omega : float, default 0.25
+        Frequency of harmonic oscillator potential.
+    mass : int of float, default 1
+        Mass of electrons
+    a : float, default 0.25
+        Parameter necessary in Coulomb integral computation
+    alpha : float, default 1.0
+        Parameter necesssary in Coulomb integral computation
+
+    Attributes
+    ----------
+    h : np.array
+        One-body matrix
+    f : np.array
+        Fock matrix
+    u : np.array
+        Two-body matrix
+
+    Methods
+    -------
+    setup_system(potential=None)
+        Must be called to set up quantum system.
+        It is not necessary to provide a potential.
+    construct_dipole_moment()
+        Constructs dipole moment. This method is called by
+        setup_system().
+    """
     def __init__(
         self,
         n,
