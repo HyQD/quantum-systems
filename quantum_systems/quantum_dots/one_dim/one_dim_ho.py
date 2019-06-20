@@ -99,8 +99,8 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
     -------
     setup_system(potential=None)
         Must be called to set up quantum system.
-        The method will revert to regular harmonic oscilaltor
-        potential if no potenatial is provided. It is also 
+        The method will revert to regular harmonic oscillator
+        potential if no potential is provided. It is also
         possible to use double well potentials.
     construct_dipole_moment()
         Constructs dipole moment. This method is called by
