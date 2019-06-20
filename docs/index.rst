@@ -7,10 +7,10 @@ Welcome to Quantum Systems's documentation!
 ===========================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :titlesonly:
+    :caption: Contents:
 
-
+    get_started
 
 Indices and tables
 ==================
