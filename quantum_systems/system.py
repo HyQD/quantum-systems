@@ -44,7 +44,7 @@ class QuantumSystem:
     def setup_system(self):
         pass
 
-    def change_to_spin_orbital_basis(self, anti_symmetrize=True):
+    def create_spin_orbital_basis(self, anti_symmetrize=True):
         cs = CustomSystem(self.n, self.l * 2, np=self.np)
         cs.set_h(self._h, add_spin=True)
         cs.set_u(self._u, add_spin=True, anti_symmetrize=anti_symmetrize)
