@@ -104,6 +104,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         Constructs dipole moment. This method is called by
         setup_system().
     """
+
     def __init__(
         self,
         n,
