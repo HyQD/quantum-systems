@@ -1,4 +1,3 @@
-from quantum_system import CustomSystem
 from quantum_systems.system_helper import (
     transform_one_body_elements,
     transform_two_body_elements,
@@ -92,20 +91,6 @@ class QuantumSystem:
 
             self._bra_spf = bra_spf
             assert self._bra_spf.shape[0] == self.l
-
-    def create_spin_orbital_basis(self, anti_symmetrize=True):
-        cs = CustomSystem(self.n, self.l * 2, np=self.np)
-        cs.set_h(self._h, add_spin=True)
-        cs.set_u(self._u, add_spin=True, anti_symmetrize=anti_symmetrize)
-        cs.set_s(self._s, add_spin=True)
-
-        if not self._dipole_moment is None:
-            cs.set_dipole_moment(self._dipole_moment, add_spin=True)
-
-        if not self._spf is None:
-            cs.set_spf(self.spf, add_spin=True)
-
-        return cs
 
     def construct_fock_matrix(self, h, u, f=None):
         """Function setting up the Fock matrix"""
