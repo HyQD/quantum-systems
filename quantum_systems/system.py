@@ -74,6 +74,11 @@ class QuantumSystem:
             self._h, c, np=self.np, c_tilde=c_tilde
         )
 
+        if self._s is not None:
+            self._s = transform_one_body_elements(
+                self._s, c, c_tilde=c_tilde, np=self.np
+            )
+
     def change_basis_two_body_elements(self, c, c_tilde=None):
         self._u = transform_two_body_elements(
             self._u, c, np=self.np, c_tilde=c_tilde
