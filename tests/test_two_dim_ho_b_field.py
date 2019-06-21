@@ -13,7 +13,7 @@ def get_tdhob():
     l = 20
 
     radius = 5
-    num_grid_points = 1001
+    num_grid_points = 201
     omega_c = 0.5
 
     tdhob = TwoDimHarmonicOscB(n, l, radius, num_grid_points, omega_c=omega_c)
@@ -33,6 +33,9 @@ def test_tdhob(get_tdhob):
 
     u = np.load(os.path.join("tests", "dat", "tdhob_u.npy"))
     np.testing.assert_allclose(u, tdhob.u, atol=1e-10)
+
+    spf = np.load(os.path.join("tests", "dat", "tdhob_spf.npy"))
+    np.testing.assert_allclose(spf, tdhob.spf, atol=1e-10)
 
 
 def test_two_body_elements_compare():

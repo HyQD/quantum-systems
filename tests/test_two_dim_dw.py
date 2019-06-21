@@ -111,7 +111,7 @@ def get_tddw():
     l = 20
 
     radius = 8
-    num_grid_points = 401
+    num_grid_points = 201
     l_ho_factor = 1
     barrier_strength = 3
     omega = 0.8
@@ -141,3 +141,6 @@ def test_tddw(get_tddw):
 
     u = np.load(os.path.join("tests", "dat", "tddw_u.npy"))
     np.testing.assert_allclose(u, tddw.u, atol=1e-10)
+
+    spf = np.load(os.path.join("tests", "dat", "tddw_spf.npy"))
+    np.testing.assert_allclose(spf, tddw.spf, atol=1e-10)
