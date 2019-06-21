@@ -82,7 +82,7 @@ class QuantumSystem:
                 for i in range(len(self._dipole_moment))
             ]
 
-            self._dipole_moment = dipole_moment
+            self._dipole_moment = self.np.array(dipole_moment)
             assert all(check_axis_lengths(self._dipole_moment[0], self.l))
 
         if not self._spf is None:
