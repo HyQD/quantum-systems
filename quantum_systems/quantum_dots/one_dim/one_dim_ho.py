@@ -196,6 +196,5 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         for p in range(self.l // 2):
             for q in range(self.l // 2):
                 self._dipole_moment[0, p, q] = np.trapz(
-                    self._spf[p].conj() * self.grid * self._spf[q],
-                    self.grid,
+                    self._spf[p].conj() * self.grid * self._spf[q], self.grid
                 )
