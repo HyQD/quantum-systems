@@ -34,9 +34,6 @@ def test_tdhob(get_tdhob):
     u = np.load(os.path.join("tests", "dat", "tdhob_u.npy"))
     np.testing.assert_allclose(u, tdhob.u, atol=1e-10)
 
-    spf = np.load(os.path.join("tests", "dat", "tdhob_spf.npy"))
-    np.testing.assert_allclose(spf, tdhob.spf, atol=1e-10)
-
 
 def test_two_body_elements_compare():
     n = 2
