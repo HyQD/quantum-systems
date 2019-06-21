@@ -8,7 +8,6 @@ def save_data(system, system_name):
     np.save(f"{system_name}_dipole_moment", system.dipole_moment)
     np.save(f"{system_name}_h", system.h)
     np.save(f"{system_name}_u", system.u)
-    np.save(f"{system_name}_spf", system.spf)
 
 
 tdhob = TwoDimHarmonicOscB(2, 20, 5, 1001, omega_c=0.5)
