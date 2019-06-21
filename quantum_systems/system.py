@@ -5,6 +5,7 @@ from quantum_systems.system_helper import (
     add_spin_two_body,
     anti_symmetrize_u,
     check_axis_lengths,
+    change_module,
 )
 
 
@@ -46,6 +47,18 @@ class QuantumSystem:
 
     def setup_system(self):
         pass
+
+    def change_module(self, np=None):
+        if np is not None:
+            self.np = np
+
+        self._h = change_module(self._h, self.np)
+        self._f = change_module(self._f, self.np)
+        self._s = change_module(self._s, self.np)
+        self._u = change_module(self._u, self.np)
+        self._spf = change_module(self._spf, self.np)
+        self._bra_spf = change_module(self._bra_spf, self.np)
+        self._dipole_moment = change_module(self._dipole_moment, self.np)
 
     def change_to_spin_orbital_basis(self, anti_symmetrize=True):
         self._h = add_spin_one_body(self._h, np=self.np)

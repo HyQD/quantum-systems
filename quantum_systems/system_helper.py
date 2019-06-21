@@ -5,6 +5,10 @@ def check_axis_lengths(arr, length):
     return [length == axis for axis in arr.shape]
 
 
+def change_module(arr, np):
+    return np.asarray(arr) if arr is not None else None
+
+
 @numba.njit(cache=True)
 def delta(p, q):
     return p == q
