@@ -177,13 +177,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
 
         self.construct_dipole_moment()
         self.cast_to_complex()
-
-        if np is not self.np:
-            self._h = self.np.asarray(self._h)
-            self._u = self.np.asarray(self._u)
-            self._f = self.np.asarray(self._f)
-            self._spf = self.np.asarray(self._spf)
-            self._dipole_moment = self.np.asarray(self._dipole_moment)
+        self.change_module()
 
         if add_spin:
             self.change_to_spin_orbital_basis(anti_symmetrize=anti_symmetrize)
