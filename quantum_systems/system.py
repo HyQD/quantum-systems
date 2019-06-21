@@ -48,8 +48,6 @@ class QuantumSystem:
         pass
 
     def change_to_spin_orbital_basis(self, anti_symmetrize=True):
-        self.set_system_size(self.n, self.l * 2)
-
         self._h = add_spin_one_body(self._h, np=self.np)
         assert all(check_axis_lengths(self._h, self.l))
 
