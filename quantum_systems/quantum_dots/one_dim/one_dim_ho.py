@@ -131,9 +131,6 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         self.grid = np.linspace(
             -self.grid_length, self.grid_length, self.num_grid_points
         )
-        self._spf = np.zeros(
-            (self.l, self.num_grid_points), dtype=np.complex128
-        )
 
     def setup_system(self, potential=None):
         if potential is None:
@@ -156,6 +153,9 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         eigen_energies = eigen_energies[: self.l // 2]
         eigen_states = eigen_states[:, : self.l // 2]
 
+        self._spf = np.zeros(
+            (self.l, self.num_grid_points), dtype=np.complex128
+        )
         self._spf[::2, 1:-1] = eigen_states.T / np.sqrt(dx)
         self._spf[1::2, 1:-1] = eigen_states.T / np.sqrt(dx)
         self.eigen_energies = eigen_energies
