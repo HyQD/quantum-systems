@@ -2,6 +2,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from quantum_systems import OneDimensionalHarmonicOscillator
+from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
+    HOPotenial,
+    DWPotential,
+    GaussianPotential,
+    DWPotentialSmooth,
+)
+
+
+def save_data(system, system_name):
+    np.save(f"{system_name}_dipole_moment", system.dipole_moment)
+    np.save(f"{system_name}_h", system.h)
+    np.save(f"{system_name}_u", system.u)
+    np.save(f"{system_name}_spf", system.spf)
 
 
 n = 2
@@ -15,15 +28,31 @@ omega = 1
 odho = OneDimensionalHarmonicOscillator(
     n, l, grid_length, num_grid_points, mass=mass, omega=omega
 )
-odho.setup_system()
+odho.setup_system(potential=HOPotenial(mass, omega))
+save_data(odho, "odho")
 
-# plt.figure()
-# plt.imshow(odho.dipole_moment[0].real)
-# plt.figure()
-# plt.imshow(odho.dipole_moment[0].imag)
-# plt.show()
+length_of_dw = 5
 
-np.save("odho_dipole_moment", odho.dipole_moment)
-np.save("odho_h", odho.h)
-np.save("odho_u", odho.u)
-np.save("odho_spf", odho.spf)
+oddw = OneDimensionalHarmonicOscillator(
+    n, l, 6, num_grid_points, mass=mass, omega=omega
+)
+oddw.setup_system(potential=DWPotential(mass, omega, length_of_dw))
+save_data(oddw, "oddw")
+
+weight = 1
+center = 0
+deviation = 2.5
+
+odgauss = OneDimensionalHarmonicOscillator(
+    n, l, 20, num_grid_points, mass=mass, omega=omega
+)
+odgauss.setup_system(
+    potential=GaussianPotential(weight, center, deviation, np=np)
+)
+save_data(odgauss, "odgauss")
+
+oddw_smooth = OneDimensionalHarmonicOscillator(
+    n, l, grid_length, num_grid_points, mass=mass, omega=omega
+)
+oddw_smooth.setup_system(potential=DWPotentialSmooth(a=5))
+save_data(oddw_smooth, "oddw_smooth")
