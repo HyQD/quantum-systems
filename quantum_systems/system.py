@@ -57,9 +57,11 @@ class QuantumSystem:
         self._u = add_spin_two_body(self._u, np=self.np)
 
         if anti_symmetrize:
-            self._u = anti_symmetrize(self._u)
+            self._u = anti_symmetrize_u(self._u)
 
         assert all(check_axis_lengths(self._u, self.l))
+
+        self._f = self.construct_fock_matrix(self._h, self._u)
 
         if not self._dipole_moment is None:
             dipole_moment = [
@@ -71,9 +73,9 @@ class QuantumSystem:
             assert all(check_axis_lengths(self._dipole_moment[0], self.l))
 
         if not self._spf is None:
-            new_shape = [self._spf.shape[0] * 2, self._spf.shape[1:]]
+            new_shape = [self._spf.shape[0] * 2, *self._spf.shape[1:]]
 
-            spf = np.zeros(tuple(new_shape), dtype=self._spf.dtype)
+            spf = self.np.zeros(tuple(new_shape), dtype=self._spf.dtype)
             spf[::2, :] = self._spf
             spf[1::2, :] = self._spf
 
@@ -81,9 +83,9 @@ class QuantumSystem:
             assert self._spf.shape[0] == self.l
 
         if not self._bra_spf is None:
-            new_shape = [self._bra_spf.shape[0] * 2, self._bra_spf.shape[1:]]
+            new_shape = [self._bra_spf.shape[0] * 2, *self._bra_spf.shape[1:]]
 
-            bra_spf = np.zeros(tuple(new_shape), dtype=self._bra_spf.dtype)
+            bra_spf = self.np.zeros(tuple(new_shape), dtype=self._bra_spf.dtype)
             bra_spf[::2, :] = self._bra_spf
             bra_spf[1::2, :] = self._bra_spf
 
