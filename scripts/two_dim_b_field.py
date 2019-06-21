@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from quantum_systems import TwoDimHarmonicOscB
+from quantum_systems import TwoDimHarmonicOscB, TwoDimensionalDoubleWell
 
 
 def save_data(system, system_name):
@@ -12,5 +12,10 @@ def save_data(system, system_name):
 
 tdhob = TwoDimHarmonicOscB(2, 20, 5, 1001, omega_c=0.5)
 tdhob.setup_system()
-
 save_data(tdhob, "tdhob")
+
+tddw = TwoDimensionalDoubleWell(
+    2, 20, 8, 401, l_ho_factor=1, barrier_strength=3, omega=0.8
+)
+tddw.setup_system(axis=0)
+save_data(tddw, "tddw")
