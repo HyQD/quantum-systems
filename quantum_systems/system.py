@@ -1,6 +1,11 @@
 from quantum_systems.system_helper import (
     transform_one_body_elements,
     transform_two_body_elements,
+    add_spin_one_body,
+    add_spin_two_body,
+    anti_symmetrize_u,
+    check_axis_lengths,
+    change_module,
 )
 
 
@@ -43,6 +48,63 @@ class QuantumSystem:
     def setup_system(self):
         pass
 
+    def change_module(self, np=None):
+        if np is not None:
+            self.np = np
+
+        self._h = change_module(self._h, self.np)
+        self._f = change_module(self._f, self.np)
+        self._s = change_module(self._s, self.np)
+        self._u = change_module(self._u, self.np)
+        self._spf = change_module(self._spf, self.np)
+        self._bra_spf = change_module(self._bra_spf, self.np)
+        self._dipole_moment = change_module(self._dipole_moment, self.np)
+
+    def change_to_spin_orbital_basis(self, anti_symmetrize=True):
+        self._h = add_spin_one_body(self._h, np=self.np)
+        assert all(check_axis_lengths(self._h, self.l))
+
+        self._s = add_spin_one_body(self._s, np=self.np)
+        assert all(check_axis_lengths(self._s, self.l))
+
+        self._u = add_spin_two_body(self._u, np=self.np)
+
+        if anti_symmetrize:
+            self._u = anti_symmetrize_u(self._u)
+
+        assert all(check_axis_lengths(self._u, self.l))
+
+        self._f = self.construct_fock_matrix(self._h, self._u)
+
+        if not self._dipole_moment is None:
+            dipole_moment = [
+                add_spin_one_body(self._dipole_moment[i], np=self.np)
+                for i in range(len(self._dipole_moment))
+            ]
+
+            self._dipole_moment = self.np.array(dipole_moment)
+            assert all(check_axis_lengths(self._dipole_moment[0], self.l))
+
+        if not self._spf is None:
+            new_shape = [self._spf.shape[0] * 2, *self._spf.shape[1:]]
+
+            spf = self.np.zeros(tuple(new_shape), dtype=self._spf.dtype)
+            spf[::2] += self._spf
+            spf[1::2] += self._spf
+
+            self._spf = spf
+            assert self._spf.shape[0] == self.l
+
+        if not self._bra_spf is None:
+            new_shape = [self._bra_spf.shape[0] * 2, *self._bra_spf.shape[1:]]
+
+            bra_spf = self.np.zeros(tuple(new_shape), dtype=self._bra_spf.dtype)
+            bra_spf[::2, :] = self._bra_spf
+            bra_spf[1::2, :] = self._bra_spf
+
+            self._bra_spf = bra_spf
+            assert self._bra_spf.shape[0] == self.l
+
     def construct_fock_matrix(self, h, u, f=None):
         """Function setting up the Fock matrix"""
         np = self.np
@@ -73,6 +135,11 @@ class QuantumSystem:
         self._h = transform_one_body_elements(
             self._h, c, np=self.np, c_tilde=c_tilde
         )
+
+        if self._s is not None:
+            self._s = transform_one_body_elements(
+                self._s, c, c_tilde=c_tilde, np=self.np
+            )
 
     def change_basis_two_body_elements(self, c, c_tilde=None):
         self._u = transform_two_body_elements(

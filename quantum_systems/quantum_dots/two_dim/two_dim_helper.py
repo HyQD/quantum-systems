@@ -216,8 +216,7 @@ def get_shell_energy_B(n, m, omega_c=0, omega=1):
     return omega * (2 * n + abs(m) + 1) - (omega_c * m) / 2
 
 
-def get_one_body_elements_B(num_orbitals, dtype=np.float64, df=None, omega_c=0):
-
+def get_one_body_elements_B(num_orbitals, df, dtype=np.float64, omega_c=0):
     h = np.zeros((num_orbitals, num_orbitals), dtype=dtype)
 
     for p in range(num_orbitals):
@@ -226,14 +225,11 @@ def get_one_body_elements_B(num_orbitals, dtype=np.float64, df=None, omega_c=0):
     return h
 
 
-# TODO: Work-around DataFrame to enable njit-usage
-@numba.jit(fastmath=True, nogil=True, parallel=True)
-def get_coulomb_elements_B(num_orbitals, dtype=np.float64, df=None, omega_c=0):
-
+def get_coulomb_elements_B(num_orbitals, df, dtype=np.float64, omega_c=0):
     shape = (num_orbitals, num_orbitals, num_orbitals, num_orbitals)
     u = np.zeros(shape, dtype=dtype)
 
-    for p in numba.prange(num_orbitals):
+    for p in range(num_orbitals):
         n_p, m_p = df.loc[p, ["n", "m"]].values
         for q in range(num_orbitals):
             n_q, m_q = df.loc[q, ["n", "m"]].values

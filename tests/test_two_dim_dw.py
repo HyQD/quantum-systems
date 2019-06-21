@@ -1,3 +1,5 @@
+import os
+import pytest
 import numpy as np
 
 from quantum_systems import (
@@ -101,3 +103,44 @@ def test_change_of_basis():
 
     np.testing.assert_allclose(tdho.u, tddw.u, atol=1e-7)
     np.testing.assert_allclose(tdho.spf, tddw.spf, atol=1e-7)
+
+
+@pytest.fixture(scope="module")
+def get_tddw():
+    n = 2
+    l = 20
+
+    radius = 8
+    num_grid_points = 201
+    l_ho_factor = 1
+    barrier_strength = 3
+    omega = 0.8
+
+    tddw = TwoDimensionalDoubleWell(
+        n,
+        l,
+        radius,
+        num_grid_points,
+        l_ho_factor=l_ho_factor,
+        barrier_strength=barrier_strength,
+        omega=omega,
+    )
+    tddw.setup_system(axis=0)
+
+    return tddw
+
+
+def test_tddw(get_tddw):
+    tddw = get_tddw
+
+    dip = np.load(os.path.join("tests", "dat", "tddw_dipole_moment.npy"))
+    np.testing.assert_allclose(dip, tddw.dipole_moment, atol=1e-10)
+
+    h = np.load(os.path.join("tests", "dat", "tddw_h.npy"))
+    np.testing.assert_allclose(h, tddw.h, atol=1e-10)
+
+    u = np.load(os.path.join("tests", "dat", "tddw_u.npy"))
+    np.testing.assert_allclose(u, tddw.u, atol=1e-10)
+
+    spf = np.load(os.path.join("tests", "dat", "tddw_spf.npy"))
+    np.testing.assert_allclose(spf, tddw.spf, atol=1e-10)
