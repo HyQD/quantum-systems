@@ -132,7 +132,7 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
             -self.grid_length, self.grid_length, self.num_grid_points
         )
 
-    def setup_system(self, potential=None):
+    def setup_system(self, potential=None, add_spin=True, anti_symmetrize=True):
         if potential is None:
             potential = HOPotenial(self.mass, self.omega)
 
@@ -154,17 +154,16 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         eigen_states = eigen_states[:, : self.l // 2]
 
         self._spf = np.zeros(
-            (self.l, self.num_grid_points), dtype=np.complex128
+            (self.l // 2, self.num_grid_points), dtype=np.complex128
         )
-        self._spf[::2, 1:-1] = eigen_states.T / np.sqrt(dx)
-        self._spf[1::2, 1:-1] = eigen_states.T / np.sqrt(dx)
+        self._spf[:, 1:-1] = eigen_states.T / np.sqrt(dx)
         self.eigen_energies = eigen_energies
 
-        self.__h = np.diag(eigen_energies).astype(np.complex128)
-        self._h = add_spin_one_body(self.__h, np=np)
+        self._h = np.diag(eigen_energies).astype(np.complex128)
+        self._s = np.eye(self.l // 2)
 
         inner_integral = _compute_inner_integral(
-            self._spf[::2],
+            self._spf,
             self.l // 2,
             self.num_grid_points,
             self.grid,
@@ -172,13 +171,11 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
             self.a,
         )
 
-        self.__u = _compute_orbital_integrals(
-            self._spf[::2], self.l // 2, inner_integral, self.grid
+        self._u = _compute_orbital_integrals(
+            self._spf, self.l // 2, inner_integral, self.grid
         )
-        self._u = anti_symmetrize_u(add_spin_two_body(self.__u, np=np))
 
         self.construct_dipole_moment()
-        self._f = self.construct_fock_matrix(self._h, self._u)
         self.cast_to_complex()
 
         if np is not self.np:
@@ -188,18 +185,17 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
             self._spf = self.np.asarray(self._spf)
             self._dipole_moment = self.np.asarray(self._dipole_moment)
 
+        if add_spin:
+            self.change_to_spin_orbital_basis(anti_symmetrize=anti_symmetrize)
+
     def construct_dipole_moment(self):
-        dipole_moment = np.zeros(
-            (self.l // 2, self.l // 2), dtype=self._spf.dtype
+        self._dipole_moment = np.zeros(
+            (1, self.l // 2, self.l // 2), dtype=self._spf.dtype
         )
 
         for p in range(self.l // 2):
             for q in range(self.l // 2):
-                dipole_moment[p, q] = np.trapz(
-                    self._spf[2 * p].conj() * self.grid * self._spf[2 * q],
+                self._dipole_moment[0, p, q] = np.trapz(
+                    self._spf[p].conj() * self.grid * self._spf[q],
                     self.grid,
                 )
-
-        self._dipole_moment = np.array(
-            [add_spin_one_body(dipole_moment, np=np)]
-        )
