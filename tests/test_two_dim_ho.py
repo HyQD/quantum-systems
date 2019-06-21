@@ -64,5 +64,4 @@ def test_spf(spf_2dho):
     tdho.setup_spf()
 
     for p in range(l // 2):
-        np.testing.assert_allclose(spf_test[p], tdho.spf[2 * p])
-        np.testing.assert_allclose(spf_test[p], tdho.spf[2 * p + 1])
+        np.testing.assert_allclose(spf_test[p], tdho.spf[p])
