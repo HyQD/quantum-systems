@@ -115,19 +115,22 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
             )
             self._spf[2 * p + 1, :] += self._spf[2 * p, :]
 
+    def get_indices_nm(self, p):
+        return get_indices_nm(p)
+
     def construct_dipole_moment(self):
         dipole_moment = np.zeros(
             (2, self.l // 2, self.l // 2), dtype=self._spf.dtype
         )
 
         for p in range(self.l // 2):
-            n_p, m_p = get_indices_nm(p)
+            n_p, m_p = self.get_indices_nm(p)
 
             norm_p = spf_norm(n_p, m_p, self.mass, self.omega)
             r_p = spf_radial_function(n_p, m_p, self.mass, self.omega)
 
             for q in range(self.l // 2):
-                n_q, m_q = get_indices_nm(q)
+                n_q, m_q = self.get_indices_nm(q)
 
                 norm_q = spf_norm(n_q, m_q, self.mass, self.omega)
                 r_q = spf_radial_function(n_q, m_q, self.mass, self.omega)
@@ -328,39 +331,7 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
             self._f = self.np.asarray(self._f)
             self._spf = self.np.asarray(self._spf)
 
-    def construct_dipole_moment(self):
-        dipole_moment = np.zeros(
-            (2, self.l // 2, self.l // 2), dtype=self._spf.dtype
-        )
+    def get_indices_nm(self, p):
+        n, m = self.df.loc[p, ["n", "m"]].values
 
-        for p in range(self.l // 2):
-            # It is important that these are not floats
-            # assoc_laguerre is picky
-            n_p, m_p = self.df.loc[p, ["n", "m"]].values
-            n_p = int(n_p)
-            m_p = int(m_p)
-
-            norm_p = spf_norm(n_p, m_p, self.mass, self.omega)
-            r_p = spf_radial_function(n_p, m_p, self.mass, self.omega)
-
-            for q in range(self.l // 2):
-                n_q, m_q = self.df.loc[q, ["n", "m"]].values
-                n_q = int(n_q)
-                m_q = int(m_q)
-
-                norm_q = spf_norm(n_q, m_q, self.mass, self.omega)
-                r_q = spf_radial_function(n_q, m_q, self.mass, self.omega)
-
-                norm = norm_p.conjugate() * norm_q
-                I_r = radial_integral(r_p, r_q)
-                I_theta_1 = theta_1_integral(m_p, m_q)
-                I_theta_2 = theta_2_integral(m_p, m_q)
-
-                # x-direction
-                dipole_moment[0, p, q] = norm * I_r * I_theta_1
-                # y-direction
-                dipole_moment[1, p, q] = norm * I_r * I_theta_2
-
-        self._dipole_moment = np.array(
-            [add_spin_one_body(dipole_moment[i], np=np) for i in range(2)]
-        )
+        return int(n), int(m)
