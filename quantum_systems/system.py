@@ -89,8 +89,8 @@ class QuantumSystem:
             new_shape = [self._spf.shape[0] * 2, *self._spf.shape[1:]]
 
             spf = self.np.zeros(tuple(new_shape), dtype=self._spf.dtype)
-            spf[::2, :] = self._spf
-            spf[1::2, :] = self._spf
+            spf[::2] += self._spf
+            spf[1::2] += self._spf
 
             self._spf = spf
             assert self._spf.shape[0] == self.l
