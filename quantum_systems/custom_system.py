@@ -21,10 +21,6 @@ class CustomSystem(QuantumSystem):
         if add_spin:
             h = add_spin_one_body(h, np=self.np)
 
-        assert all(
-            self.l == axis for axis in h.shape
-        ), "Shape of one-body tensor must match the number of orbitals"
-
         self._h = h
 
     def set_u(self, u, add_spin=False, anti_symmetrize=False):
@@ -34,19 +30,11 @@ class CustomSystem(QuantumSystem):
         if anti_symmetrize:
             u = anti_symmetrize_u(u)
 
-        assert all(
-            self.l == axis for axis in u.shape
-        ), "Shape of two-body tensor axis must match the number of orbitals"
-
         self._u = u
 
     def set_s(self, s, add_spin=False):
         if add_spin:
             s = add_spin_one_body(s, np=self.np)
-
-        assert all(
-            self.l == axis for axis in s.shape
-        ), "Shape of overlap tensor must match the number of orbitals"
 
         self._s = s
 
@@ -63,10 +51,6 @@ class CustomSystem(QuantumSystem):
         new_shape = [dipole_moment.shape[0]]
         new_shape.extend(list(map(lambda x: x * 2, dipole_moment.shape[1:])))
 
-        assert all(
-            self.l == axis for axis in new_shape[1:]
-        ), "Shape of dipole moment matrices must match the number of orbitals"
-
         self._dipole_moment = np.zeros(
             tuple(new_shape), dtype=dipole_moment.dtype
         )
@@ -82,10 +66,6 @@ class CustomSystem(QuantumSystem):
             return
 
         new_shape = [spf.shape[0] * 2, *spf.shape[1:]]
-
-        assert (
-            new_shape[0] == self.l
-        ), "Number of spf's must match the number of spin-orbitals"
 
         self._spf = np.zeros(tuple(new_shape), dtype=spf.dtype)
 
