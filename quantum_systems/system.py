@@ -14,7 +14,7 @@ class QuantumSystem:
     quantum systems.
     """
 
-    def __init__(self, n, l, np=None):
+    def __init__(self, n, l, n_up=None, np=None):
         assert n <= l
 
         if np is None:
@@ -22,7 +22,7 @@ class QuantumSystem:
 
         self.np = np
 
-        self.set_system_size(n, l)
+        self.set_system_size(n, l, n_up)
 
         self._h = None
         self._f = None
@@ -37,12 +37,23 @@ class QuantumSystem:
 
         self._nuclear_repulsion_energy = None
 
-    def set_system_size(self, n, l):
+    def set_system_size(self, n, l, n_up=None):
+        if n_up is None:
+            n_up = n // 2
+
+        assert n_up <= n
+
+        n_down = n - n_up
+
         self.n = n
+        self.n_up = n_up
+        self.n_down = n_down
         self.l = l
         self.m = self.l - self.n
 
         self.o = slice(0, self.n)
+        self.o_up = slice(0, self.n_up)
+        self.o_down = slice(0, self.n_down)
         self.v = slice(self.n, self.l)
 
     def setup_system(self):
