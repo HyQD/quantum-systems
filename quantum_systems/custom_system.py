@@ -116,6 +116,64 @@ def construct_pyscf_system_ao(
     return system
 
 
+def construct_pyscf_system_rhf(
+    molecule,
+    basis="cc-pvdz",
+    np=None,
+    verbose=False,
+    add_spin=True,
+    anti_symmetrize=True,
+    **kwargs,
+):
+    import pyscf
+
+    if np is None:
+        import numpy as np
+
+    # Build molecule in AO-basis
+    mol = pyscf.gto.Mole()
+    mol.unit = "bohr"
+    mol.build(atom=molecule, basis=basis, **kwargs)
+    nuclear_repulsion_energy = mol.energy_nuc()
+
+    n = mol.nelectron
+    assert (
+        n % 2 == 0
+    ), "We require closed shell, with an even number of particles"
+
+    l = mol.nao * 2
+
+    hf = pyscf.scf.RHF(mol)
+    hf_energy = hf.kernel()
+
+    if not hf.converged:
+        warnings.warn("RHF calculation did not converge")
+
+    if verbose:
+        print(f"RHF energy: {hf.e_tot}")
+
+    C = np.asarray(hf.mo_coeff)
+
+    h = pyscf.scf.hf.get_hcore(mol)
+    s = mol.intor_symmetric("int1e_ovlp")
+    u = (
+        mol.intor("int2e")
+        .reshape(l // 2, l // 2, l // 2, l // 2)
+        .transpose(0, 2, 1, 3)
+    )
+    dipole_integrals = mol.intor("int1e_r").reshape(3, l // 2, l // 2)
+
+    system = CustomSystem(n, l, np=np)
+    system.set_h(h, add_spin=False)
+    system.set_s(s, add_spin=False)
+    system.set_u(u, add_spin=False, anti_symmetrize=False)
+    system.set_dipole_moment(dipole_integrals, add_spin=False)
+    system.set_nuclear_repulsion_energy(nuclear_repulsion_energy)
+
+    system.change_basis(C)
+
+    if add_spin:
+        system.change_to_spin_orbital_basis(anti_symmetrize=anti_symmetrize)
 
     return system
 
