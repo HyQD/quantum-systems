@@ -76,7 +76,14 @@ class CustomSystem(QuantumSystem):
         self._nuclear_repulsion_energy = nuclear_repulsion_energy
 
 
-def construct_pyscf_system_ao(molecule, basis="cc-pvdz", np=None):
+def construct_pyscf_system_ao(
+    molecule,
+    basis="cc-pvdz",
+    add_spin=True,
+    anti_symmetrize=True,
+    np=None,
+    **kwargs,
+):
     import pyscf
 
     if np is None:
@@ -84,8 +91,8 @@ def construct_pyscf_system_ao(molecule, basis="cc-pvdz", np=None):
 
     mol = pyscf.gto.Mole()
     mol.unit = "bohr"
-    mol.build(atom=molecule, basis=basis, symmetry=False)
-    mol.set_common_origin(np.array([0.0, 0.0, 0.0]))
+    mol.build(atom=molecule, basis=basis, **kwargs)
+    nuclear_repulsion_energy = mol.energy_nuc()
 
     n = mol.nelectron
     l = mol.nao * 2
@@ -100,11 +107,15 @@ def construct_pyscf_system_ao(molecule, basis="cc-pvdz", np=None):
     dipole_integrals = mol.intor("int1e_r").reshape(3, l // 2, l // 2)
 
     system = CustomSystem(n, l, np=np)
-    system.set_h(h, add_spin=True)
-    system.set_s(s, add_spin=True)
-    system.set_u(u, add_spin=True, anti_symmetrize=True)
-    system.set_dipole_moment(dipole_integrals, add_spin=True)
-    system.cast_to_complex()
+    system.set_h(h, add_spin=add_spin)
+    system.set_s(s, add_spin=add_spin)
+    system.set_u(u, add_spin=add_spin, anti_symmetrize=anti_symmetrize)
+    system.set_dipole_moment(dipole_integrals, add_spin=add_spin)
+    system.set_nuclear_repulsion_energy(nuclear_repulsion_energy)
+
+    return system
+
+
 
     return system
 
