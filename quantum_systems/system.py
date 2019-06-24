@@ -35,7 +35,7 @@ class QuantumSystem:
         self._spf = None
         self._bra_spf = None
 
-        self._nuclear_repulsion_energy = None
+        self._nuclear_repulsion_energy = 0
 
     def set_system_size(self, n, l, n_up=None):
         if n_up is None:
