@@ -223,7 +223,9 @@ def construct_pyscf_system(molecule, basis="cc-pvdz", np=None, verbose=False):
     return system
 
 
-def construct_psi4_system(molecule, options, np=None):
+def construct_psi4_system(
+    molecule, options, np=None, add_spin=True, anti_symmetrize=True
+):
     import psi4
 
     if np is None:
@@ -248,7 +250,9 @@ def construct_psi4_system(molecule, options, np=None):
     u = np.asarray(molecular_integrals.ao_eri()).transpose(0, 2, 1, 3)
     overlap = np.asarray(molecular_integrals.ao_overlap())
 
-    n = wavefunction.nalpha() + wavefunction.nbeta()
+    n_up = wavefunction.nalpha()
+    n_down = wavefunction.nbeta()
+    n = n_up + n_down
     l = 2 * wavefunction.nmo()
 
     dipole_integrals = [
@@ -256,11 +260,11 @@ def construct_psi4_system(molecule, options, np=None):
     ]
     dipole_integrals = np.stack(dipole_integrals)
 
-    system = CustomSystem(n, l, np=np)
-    system.set_h(h, add_spin=True)
-    system.set_u(u, add_spin=True, anti_symmetrize=True)
-    system.set_s(overlap, add_spin=True)
-    system.set_dipole_moment(dipole_integrals, add_spin=True)
+    system = CustomSystem(n, l, n_up=n_up, np=np)
+    system.set_h(h, add_spin=add_spin)
+    system.set_u(u, add_spin=add_spin, anti_symmetrize=anti_symmetrize)
+    system.set_s(overlap, add_spin=add_spin)
+    system.set_dipole_moment(dipole_integrals, add_spin=add_spin)
     system.set_nuclear_repulsion_energy(nuclear_repulsion_energy)
 
     return system
