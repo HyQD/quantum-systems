@@ -97,6 +97,11 @@ def construct_pyscf_system_ao(
     n = mol.nelectron
     l = mol.nao * 2
 
+    n_up = (mol.nelectron + mol.spin) // 2
+    n_down = n_up - mol.spin
+
+    assert n_down == n - n_up
+
     h = pyscf.scf.hf.get_hcore(mol)
     s = mol.intor_symmetric("int1e_ovlp")
     u = (
@@ -106,7 +111,7 @@ def construct_pyscf_system_ao(
     )
     dipole_integrals = mol.intor("int1e_r").reshape(3, l // 2, l // 2)
 
-    system = CustomSystem(n, l, np=np)
+    system = CustomSystem(n, l, n_up=n_up, np=np)
     system.set_h(h, add_spin=add_spin)
     system.set_s(s, add_spin=add_spin)
     system.set_u(u, add_spin=add_spin, anti_symmetrize=anti_symmetrize)
