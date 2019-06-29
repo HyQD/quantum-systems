@@ -152,6 +152,11 @@ def construct_pyscf_system_rhf(
     if verbose:
         print(f"RHF energy: {hf.e_tot}")
 
+    charges = mol.atom_charges()
+    coords = mol.atom_coords()
+    nuc_charge_center = np.einsum("z,zx->x", charges, coords) / charges.sum()
+    mol.set_common_orig_(nuc_charge_center)
+
     C = np.asarray(hf.mo_coeff)
 
     h = pyscf.scf.hf.get_hcore(mol)
