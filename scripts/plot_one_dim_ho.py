@@ -7,6 +7,7 @@ from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
     DWPotential,
     GaussianPotential,
     DWPotentialSmooth,
+    AtomicPotential,
 )
 
 
@@ -25,11 +26,12 @@ def plot_one_body_system(system):
 
 n = 2
 l = 20
-grid_length = 5
-num_grid_points = 1001
+grid_length = 100
+num_grid_points = 2001
 mass = 1
 omega = 1
 
+"""
 odho = OneDimensionalHarmonicOscillator(
     n, l, grid_length, num_grid_points, mass=mass, omega=omega
 )
@@ -75,3 +77,10 @@ dw_smooth = OneDimensionalHarmonicOscillator(
 )
 dw_smooth.setup_system(potential=DWPotentialSmooth(a=5))
 plot_one_body_system(dw_smooth)
+"""
+
+helium_ion = OneDimensionalHarmonicOscillator(
+    n, l, grid_length, num_grid_points, mass=mass, omega=omega,a=0.7408
+)
+helium_ion.setup_system(potential=AtomicPotential(Za=2,c=0.7408**2))
+plot_one_body_system(helium_ion)
