@@ -80,7 +80,7 @@ plot_one_body_system(dw_smooth)
 """
 
 helium_ion = OneDimensionalHarmonicOscillator(
-    n, l, grid_length, num_grid_points, mass=mass, omega=omega,a=0.7408
+    n, l, grid_length, num_grid_points, mass=mass, omega=omega, a=0.7408
 )
-helium_ion.setup_system(potential=AtomicPotential(Za=2,c=0.7408**2))
+helium_ion.setup_system(potential=AtomicPotential(Za=2, c=0.7408 ** 2))
 plot_one_body_system(helium_ion)

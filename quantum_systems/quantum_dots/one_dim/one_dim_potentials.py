@@ -1,6 +1,7 @@
 import abc
 import numpy as np
 
+
 class OneDimPotential(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def __call__(self, x):
@@ -56,9 +57,11 @@ class GaussianPotential(OneDimPotential):
             -(x - self.center) ** 2 / (2.0 * self.deviation ** 2)
         )
 
+
 class AtomicPotential(OneDimPotential):
     def __init__(self, Za=2, c=0.54878464):
         self.Za = Za
         self.c = c
-    def __call__(self,x):
-        return -self.Za/np.sqrt(x**2+self.c)
+
+    def __call__(self, x):
+        return -self.Za / np.sqrt(x ** 2 + self.c)
