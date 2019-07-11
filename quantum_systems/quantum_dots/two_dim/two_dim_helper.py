@@ -332,9 +332,6 @@ def get_smooth_double_well_one_body_elements(
             n_q, m_q = get_indices_nm(q)
             r_q = spf_radial_function(n_q, m_q, mass, omega)
 
-            if int(abs(m_p - m_q)) == 1:
-                continue
-
             h[p, q] += (
                 1
                 / a ** 2
