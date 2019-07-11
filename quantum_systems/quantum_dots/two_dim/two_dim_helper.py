@@ -66,6 +66,40 @@ def radial_integral(r_p, r_q):
     )
 
 
+def smooth_radial_integral_1(r_p, r_q):
+    r = sympy.Symbol("r")
+
+    return sympy.integrate(
+        r ** 5 * r_p(r).conjugate() * r_q(r), (r, 0, sympy.oo)
+    )
+
+
+def smooth_radial_integral_2(r_p, r_q):
+    r = sympy.Symbol("r")
+
+    return sympy.integrate(
+        r ** 3 * r_p(r).conjugate() * r_q(r), (r, 0, sympy.oo)
+    )
+
+
+def smooth_theta_integral_1(m_p, m_q):
+
+    if abs(m_p - m_q) % 2 == 0:
+        return (3 * np.pi) / 4
+
+    if abs(m_p - m_q) % 2 == 1:
+        return -(3 * np.pi) / 4
+
+
+def smooth_theta_integral_2(m_p, m_q):
+
+    if abs(m_p - m_q) % 2 == 0:
+        return np.pi
+
+    if abs(m_p - m_q) % 2 == 1:
+        return -np.pi
+
+
 def theta_1_integral(m_p, m_q):
     if abs(m_p - m_q) == 1:
         return np.pi
@@ -281,6 +315,44 @@ def get_double_well_one_body_elements(
             )
 
     return h
+
+
+def get_smooth_double_well_one_body_elements(
+    num_orbitals, omega, mass, a=2, b=2, dtype=np.float64
+):
+    h = np.zeros((num_orbitals, num_orbitals), dtype=dtype)
+
+    for p in range(num_orbitals):
+        n_p, m_p = get_indices_nm(p)
+        r_p = spf_radial_function(n_p, m_p, mass, omega)
+
+        h[p, p] += omega * get_shell_energy(n_p, m_p) + a ** 2 / 16
+
+        for q in range(num_orbitals):
+            n_q, m_q = get_indices_nm(q)
+            r_q = spf_radial_function(n_q, m_q, mass, omega)
+
+            if int(abs(m_p - m_q)) == 1:
+                continue
+
+            h[p, q] += (
+                1
+                / a ** 2
+                * spf_norm(n_p, m_p, mass, omega)
+                * spf_norm(n_q, m_q, mass, omega)
+                * smooth_radial_integral_1(r_p, r_q)
+                * smooth_theta_integral_1(m_p, m_q)
+            )
+
+            h[p, 1] -= (
+                ((5 * b) / 2)
+                * spf_norm(n_p, m_p, mass, omega)
+                * spf_norm(n_q, m_q, mass, omega)
+                * smooth_radial_integral_2(r_p, r_q)
+                * smooth_theta_integral_2(m_p, m_q)
+            )
+
+    return 0.25 * mass * omega * omega * h
 
 
 def construct_dataframe(n_array, m_array, omega_c=0, omega=1):

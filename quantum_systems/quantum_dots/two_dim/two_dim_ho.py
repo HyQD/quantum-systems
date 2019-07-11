@@ -6,6 +6,7 @@ from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
     get_coulomb_elements,
     get_one_body_elements,
     get_double_well_one_body_elements,
+    get_smooth_double_well_one_body_elements,
     get_indices_nm,
     spf_state,
     spf_norm,
@@ -210,6 +211,69 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
             self.barrier_strength,
             dtype=np.complex128,
             axis=axis,
+        )
+
+        self.epsilon, C = np.linalg.eigh(h_dw)
+        self._h = np.diagflat(self.epsilon[: self.l_dw // 2])
+        self._s = np.eye(self.l_dw // 2)
+        C_dw = C[:, : self.l_dw // 2]
+
+        if add_spin:
+            self._h = add_spin_one_body(self._h, np=np)
+            self._s = add_spin_one_body(self._s, np=np)
+            C_dw = add_spin_one_body(C_dw, np=np)
+
+        self.change_basis_two_body_elements(C_dw)
+        self.change_basis_dipole_moment(C_dw)
+        self.change_basis_spf(C_dw)
+
+        self.set_system_size(self.n, self.l_dw)
+
+        self.cast_to_complex()
+        self.change_module()
+
+
+class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
+    def __init__(
+        self,
+        n,
+        l,
+        radius,
+        num_grid_points,
+        a=2,
+        b=2,
+        l_ho_factor=1,
+        omega=1,
+        mass=1,
+    ):
+
+        assert l_ho_factor >= 1, (
+            "Ensure number of harmonic oscillator functions are higher than"
+            + " the number of double-well basis functions"
+        )
+
+        l_ho = math.floor(l * l_ho_factor)
+        super().__init__(
+            n, l_ho, radius, num_grid_points, omega=omega, mass=mass
+        )
+
+        self.l_dw = l
+        self.a = a
+        self.b = b
+
+    def setup_system(self, add_spin=True, anti_symmetrize=True):
+        """The wells are divided by x-axis by default.
+        """
+
+        super().setup_system(add_spin=add_spin, anti_symmetrize=anti_symmetrize)
+
+        h_dw = get_smooth_double_well_one_body_elements(
+            self.l // 2,
+            self.omega,
+            self.mass,
+            a=self.a,
+            b=self.b,
+            dtype=np.complex128,
         )
 
         self.epsilon, C = np.linalg.eigh(h_dw)
