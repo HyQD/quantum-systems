@@ -322,34 +322,37 @@ def get_smooth_double_well_one_body_elements(
 ):
     h = np.zeros((num_orbitals, num_orbitals), dtype=dtype)
 
+    prefactor = omega ** 2 / 4
+
     for p in range(num_orbitals):
         n_p, m_p = get_indices_nm(p)
         r_p = spf_radial_function(n_p, m_p, mass, omega)
 
-        h[p, p] += omega * get_shell_energy(n_p, m_p) + a ** 2 / 16
+        h[p, p] += omega * get_shell_energy(n_p, m_p) + omega ** 2 * a ** 2 / 64
 
         for q in range(num_orbitals):
             n_q, m_q = get_indices_nm(q)
             r_q = spf_radial_function(n_q, m_q, mass, omega)
 
             h[p, q] += (
-                1
-                / a ** 2
+                prefactor
+                * (1 / a ** 2)
                 * spf_norm(n_p, m_p, mass, omega)
                 * spf_norm(n_q, m_q, mass, omega)
                 * smooth_radial_integral_1(r_p, r_q)
                 * smooth_theta_integral_1(m_p, m_q)
             )
 
-            h[p, 1] -= (
-                ((5 * b) / 2)
+            h[p, q] -= (
+                prefactor
+                * ((5 * b) / 2)
                 * spf_norm(n_p, m_p, mass, omega)
                 * spf_norm(n_q, m_q, mass, omega)
                 * smooth_radial_integral_2(r_p, r_q)
                 * smooth_theta_integral_2(m_p, m_q)
             )
 
-    return 0.25 * mass * omega * omega * h
+    return h
 
 
 def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
