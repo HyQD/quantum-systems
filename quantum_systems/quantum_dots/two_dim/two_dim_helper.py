@@ -84,20 +84,12 @@ def smooth_radial_integral_2(r_p, r_q):
 
 def smooth_theta_integral_1(m_p, m_q):
 
-    if abs(m_p - m_q) % 2 == 0:
-        return (3 * np.pi) / 4
-
-    if abs(m_p - m_q) % 2 == 1:
-        return -(3 * np.pi) / 4
+    return (-1) ** (abs(m_p - m_q) % 2) * (3 * np.pi / 4)
 
 
 def smooth_theta_integral_2(m_p, m_q):
 
-    if abs(m_p - m_q) % 2 == 0:
-        return np.pi
-
-    if abs(m_p - m_q) % 2 == 1:
-        return -np.pi
+    return (-1) ** (abs(m_p - m_q) % 2) * np.pi
 
 
 def theta_1_integral(m_p, m_q):
