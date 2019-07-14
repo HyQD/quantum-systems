@@ -96,20 +96,14 @@ def theta_1_integral(m_p, m_q):
     if abs(m_p - m_q) == 1:
         return np.pi
 
-    integral = -1j * (-1 + np.exp(2 * 1j * np.pi * (m_q - m_p))) * (m_q - m_p)
-    integral /= (m_q - m_p) ** 2 - 1
-
-    return integral
+    return 0
 
 
 def theta_2_integral(m_p, m_q):
     if abs(m_p - m_q) == 1:
-        return 1j * np.pi
+        return -(m_p - m_q) * 1j * np.pi
 
-    integral = -1 + np.exp(2 * 1j * np.pi * (m_q - m_p))
-    integral /= (m_q - m_p) ** 2 - 1
-
-    return integral
+    return 0
 
 
 def theta_1_tilde_integral(m_p, m_q):
