@@ -58,27 +58,11 @@ def spf_radial_function(n, m, mass, omega):
     return radial_function
 
 
-def radial_integral(r_p, r_q):
+def radial_integral(r_p, r_q, order=1):
     r = sympy.Symbol("r")
 
     return sympy.integrate(
-        r ** 2 * r_p(r).conjugate() * r_q(r), (r, 0, sympy.oo)
-    )
-
-
-def smooth_radial_integral_1(r_p, r_q):
-    r = sympy.Symbol("r")
-
-    return sympy.integrate(
-        r ** 5 * r_p(r).conjugate() * r_q(r), (r, 0, sympy.oo)
-    )
-
-
-def smooth_radial_integral_2(r_p, r_q):
-    r = sympy.Symbol("r")
-
-    return sympy.integrate(
-        r ** 3 * r_p(r).conjugate() * r_q(r), (r, 0, sympy.oo)
+        r ** order * r_p(r).conjugate() * r_q(r), (r, 0, sympy.oo)
     )
 
 
@@ -292,7 +276,7 @@ def get_double_well_one_body_elements(
                 * barrier_strength
                 * spf_norm(n_p, m_p, mass, omega)
                 * spf_norm(n_q, m_q, mass, omega)
-                * radial_integral(r_p, r_q)
+                * radial_integral(r_p, r_q, order=2)
                 * (
                     theta_1_tilde_integral(m_p, m_q)
                     if axis == 0
@@ -325,7 +309,7 @@ def get_smooth_double_well_one_body_elements(
                 * (1 / a ** 2)
                 * spf_norm(n_p, m_p, mass, omega)
                 * spf_norm(n_q, m_q, mass, omega)
-                * smooth_radial_integral_1(r_p, r_q)
+                * radial_integral(r_p, r_q, order=5)
                 * smooth_theta_integral_1(m_p, m_q)
             )
 
@@ -334,7 +318,7 @@ def get_smooth_double_well_one_body_elements(
                 * ((5 * b) / 2)
                 * spf_norm(n_p, m_p, mass, omega)
                 * spf_norm(n_q, m_q, mass, omega)
-                * smooth_radial_integral_2(r_p, r_q)
+                * radial_integral(r_p, r_q, order=3)
                 * smooth_theta_integral_2(m_p, m_q)
             )
 
