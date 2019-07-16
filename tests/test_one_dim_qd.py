@@ -2,7 +2,7 @@ import os
 import pytest
 import numpy as np
 
-from quantum_systems import OneDimensionalHarmonicOscillator
+from quantum_systems import ODQD
 from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
     HOPotenial,
     DWPotential,
@@ -18,13 +18,10 @@ def get_odho():
 
     grid_length = 5
     num_grid_points = 1001
-    mass = 1
     omega = 1
 
-    odho = OneDimensionalHarmonicOscillator(
-        n, l, grid_length, num_grid_points, mass=mass, omega=omega
-    )
-    odho.setup_system(potential=HOPotenial(mass, omega))
+    odho = ODQD(n, l, grid_length, num_grid_points)
+    odho.setup_system(potential=HOPotenial(omega))
 
     return odho
 
@@ -36,15 +33,12 @@ def get_oddw():
 
     grid_length = 6
     num_grid_points = 1001
-    mass = 1
-    omega = 1
 
+    omega = 1
     length_of_dw = 5
 
-    oddw = OneDimensionalHarmonicOscillator(
-        n, l, grid_length, num_grid_points, mass=mass, omega=omega
-    )
-    oddw.setup_system(potential=DWPotential(mass, omega, length_of_dw))
+    oddw = ODQD(n, l, grid_length, num_grid_points)
+    oddw.setup_system(potential=DWPotential(omega, length_of_dw))
 
     return oddw
 
@@ -56,16 +50,12 @@ def get_odgauss():
 
     grid_length = 20
     num_grid_points = 1001
-    mass = 1
-    omega = 1
 
     weight = 1
     center = 0
     deviation = 2.5
 
-    odgauss = OneDimensionalHarmonicOscillator(
-        n, l, grid_length, num_grid_points, mass=mass, omega=omega
-    )
+    odgauss = ODQD(n, l, grid_length, num_grid_points)
     odgauss.setup_system(
         potential=GaussianPotential(weight, center, deviation, np=np)
     )
@@ -80,13 +70,9 @@ def get_oddw_smooth():
 
     grid_length = 5
     num_grid_points = 1001
-    mass = 1
-    omega = 1
     a = 5
 
-    oddw_smooth = OneDimensionalHarmonicOscillator(
-        n, l, grid_length, num_grid_points, mass=mass, omega=omega
-    )
+    oddw_smooth = ODQD(n, l, grid_length, num_grid_points)
     oddw_smooth.setup_system(potential=DWPotentialSmooth(a=a))
 
     return oddw_smooth
