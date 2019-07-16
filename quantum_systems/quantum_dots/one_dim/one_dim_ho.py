@@ -140,8 +140,10 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
 
         dx = self.grid[1] - self.grid[0]
 
-        h_diag = 1.0 / (dx ** 2) + potential(self.grid[1:-1])
-        h_off_diag = -1.0 / (2 * dx ** 2) * np.ones(self.num_grid_points - 3)
+        h_diag = 1.0 / (self.mass * dx ** 2) + potential(self.grid[1:-1])
+        h_off_diag = (
+            -1.0 / (2 * self.mass * dx ** 2) * np.ones(self.num_grid_points - 3)
+        )
 
         H = (
             np.diag(h_diag)
