@@ -8,7 +8,7 @@ class OneDimPotential(metaclass=abc.ABCMeta):
         pass
 
 
-class HOPotenial(OneDimPotential):
+class HOPotential(OneDimPotential):
     def __init__(self, omega):
         self.omega = omega
 
@@ -16,7 +16,7 @@ class HOPotenial(OneDimPotential):
         return 0.5 * self.omega ** 2 * x ** 2
 
 
-class DWPotential(HOPotenial):
+class DWPotential(HOPotential):
     def __init__(self, omega, l):
         super().__init__(omega)
         self.l = l

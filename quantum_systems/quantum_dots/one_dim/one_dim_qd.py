@@ -11,7 +11,7 @@ from quantum_systems.system_helper import (
     anti_symmetrize_u,
 )
 
-from quantum_systems.quantum_dots.one_dim.one_dim_potentials import HOPotenial
+from quantum_systems.quantum_dots.one_dim.one_dim_potentials import HOPotential
 
 
 @numba.njit(cache=True)
@@ -122,7 +122,7 @@ class ODQD(QuantumSystem):
             omega = (
                 0.25
             )  # Default frequency corresponding to Zanghellini article
-            potential = HOPotenial(omega)
+            potential = HOPotential(omega)
 
         self.potential = potential
 
