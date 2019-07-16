@@ -39,7 +39,7 @@ def _compute_inner_integral(spf, l, num_grid_points, grid, alpha, a):
         for s in range(l):
             for i in range(num_grid_points):
                 inner_integral[q, s, i] = _trapz(
-                    spf[q]
+                    np.conjugate(spf[q])
                     * _shielded_coulomb(grid[i], grid, alpha, a)
                     * spf[s],
                     grid,
@@ -57,7 +57,8 @@ def _compute_orbital_integrals(spf, l, inner_integral, grid):
             for r in range(l):
                 for s in range(l):
                     u[p, q, r, s] = _trapz(
-                        spf[p] * inner_integral[q, s] * spf[r], grid
+                        np.conjugate(spf[p]) * inner_integral[q, s] * spf[r],
+                        grid,
                     )
 
     return u
