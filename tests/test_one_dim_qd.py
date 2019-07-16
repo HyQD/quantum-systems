@@ -4,7 +4,7 @@ import numpy as np
 
 from quantum_systems import ODQD
 from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
-    HOPotenial,
+    HOPotential,
     DWPotential,
     GaussianPotential,
     DWPotentialSmooth,
@@ -21,7 +21,7 @@ def get_odho():
     omega = 1
 
     odho = ODQD(n, l, grid_length, num_grid_points)
-    odho.setup_system(potential=HOPotenial(omega))
+    odho.setup_system(potential=HOPotential(omega))
 
     return odho
 
