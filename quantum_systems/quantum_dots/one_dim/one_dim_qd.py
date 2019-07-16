@@ -64,8 +64,8 @@ def _compute_orbital_integrals(spf, l, inner_integral, grid):
     return u
 
 
-class OneDimensionalHarmonicOscillator(QuantumSystem):
-    """Create 1D harmonic oscillator
+class ODQD(QuantumSystem):
+    """Create 1D quantum dot system
 
     Parameters
     ----------
@@ -78,14 +78,10 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
     num_grid_points : int or float
         Defines resolution of numerical representation
         of wavefunction
-    omega : float, default 0.25
-        Frequency of harmonic oscillator potential.
-    mass : int of float, default 1
-        Mass of electrons
     a : float, default 0.25
-        Parameter necessary in Coulomb integral computation
+        Screening parameter in the shielded Coulomb interation.
     alpha : float, default 1.0
-        Parameter necesssary in Coulomb integral computation
+        Strength parameter in the shielded Coulomb interaction.
 
     Attributes
     ----------
@@ -108,22 +104,10 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
         setup_system().
     """
 
-    def __init__(
-        self,
-        n,
-        l,
-        grid_length,
-        num_grid_points,
-        omega=0.25,
-        mass=1,
-        a=0.25,
-        alpha=1.0,
-    ):
+    def __init__(self, n, l, grid_length, num_grid_points, a=0.25, alpha=1.0):
 
         super().__init__(n, l)
 
-        self.omega = omega
-        self.mass = mass
         self.a = a
         self.alpha = alpha
 
@@ -135,24 +119,25 @@ class OneDimensionalHarmonicOscillator(QuantumSystem):
 
     def setup_system(self, potential=None, add_spin=True, anti_symmetrize=True):
         if potential is None:
-            potential = HOPotenial(self.mass, self.omega)
+            omega = (
+                0.25
+            )  # Default frequency corresponding to Zanghellini article
+            potential = HOPotenial(omega)
 
         self.potential = potential
 
         dx = self.grid[1] - self.grid[0]
 
-        h_diag = 1.0 / (self.mass * dx ** 2) + potential(self.grid[1:-1])
-        h_off_diag = (
-            -1.0 / (2 * self.mass * dx ** 2) * np.ones(self.num_grid_points - 3)
-        )
+        h_diag = 1.0 / (dx ** 2) + potential(self.grid[1:-1])
+        h_off_diag = -1.0 / (2 * dx ** 2) * np.ones(self.num_grid_points - 3)
 
-        H = (
+        h = (
             np.diag(h_diag)
             + np.diag(h_off_diag, k=-1)
             + np.diag(h_off_diag, k=1)
         )
 
-        eigen_energies, eigen_states = np.linalg.eigh(H)
+        eigen_energies, eigen_states = np.linalg.eigh(h)
         eigen_energies = eigen_energies[: self.l // 2]
         eigen_states = eigen_states[:, : self.l // 2]
 
