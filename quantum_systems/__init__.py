@@ -7,9 +7,7 @@ from .custom_system import (
     construct_pyscf_system_rhf,
 )
 from .random_system import RandomSystem
-from quantum_systems.quantum_dots.one_dim.one_dim_ho import (
-    OneDimensionalHarmonicOscillator,
-)
+from quantum_systems.quantum_dots.one_dim.one_dim_qd import ODQD
 from quantum_systems.quantum_dots.two_dim.two_dim_ho import (
     TwoDimensionalHarmonicOscillator,
     TwoDimensionalDoubleWell,
