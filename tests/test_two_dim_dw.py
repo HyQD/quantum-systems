@@ -33,6 +33,17 @@ def theta_1_tilde_integral_wolfram(m_p, m_q):
     return integral
 
 
+def theta_2_tilde_integral_wolfram(m_p, m_q):
+    if abs(m_p - m_q) == 1:
+        return 0
+
+    integral = -(1 + np.exp(1j * np.pi * (m_q - m_p))) ** 2 / (
+        (m_q - m_p) ** 2 - 1
+    )
+
+    return integral
+
+
 def test_theta_1_tilde_integral():
     for m_p in range(-100, 101):
         for m_q in range(-100, 101):
@@ -40,6 +51,18 @@ def test_theta_1_tilde_integral():
                 abs(
                     theta_1_tilde_integral_wolfram(m_p, m_q)
                     - theta_1_tilde_integral(m_p, m_q)
+                )
+                < 1e-10
+            )
+
+
+def test_theta_2_tilde_integral():
+    for m_p in range(-100, 101):
+        for m_q in range(-100, 101):
+            assert (
+                abs(
+                    theta_2_tilde_integral_wolfram(m_p, m_q)
+                    - theta_2_tilde_integral(m_p, m_q)
                 )
                 < 1e-10
             )
@@ -167,13 +190,15 @@ def test_tddw(get_tddw):
     tddw = get_tddw
 
     dip = np.load(os.path.join("tests", "dat", "tddw_dipole_moment.npy"))
-    np.testing.assert_allclose(dip, tddw.dipole_moment, atol=1e-10)
+    np.testing.assert_allclose(
+        np.abs(dip), np.abs(tddw.dipole_moment), atol=1e-10
+    )
 
     h = np.load(os.path.join("tests", "dat", "tddw_h.npy"))
     np.testing.assert_allclose(h, tddw.h, atol=1e-10)
 
     u = np.load(os.path.join("tests", "dat", "tddw_u.npy"))
-    np.testing.assert_allclose(u, tddw.u, atol=1e-10)
+    np.testing.assert_allclose(np.abs(u), np.abs(tddw.u), atol=1e-10)
 
     spf = np.load(os.path.join("tests", "dat", "tddw_spf.npy"))
-    np.testing.assert_allclose(spf, tddw.spf, atol=1e-10)
+    np.testing.assert_allclose(np.abs(spf), np.abs(tddw.spf), atol=1e-10)
