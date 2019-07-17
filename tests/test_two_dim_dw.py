@@ -8,8 +8,41 @@ from quantum_systems import (
 )
 from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
     get_double_well_one_body_elements,
+    theta_1_tilde_integral,
+    theta_2_tilde_integral,
 )
 from quantum_systems.system_helper import add_spin_one_body
+
+
+def theta_1_tilde_integral_wolfram(m_p, m_q):
+    if abs(m_p - m_q) == 1:
+        return 0
+
+    integral = (
+        -1j
+        * (
+            -m_q
+            + m_p
+            + (m_q - m_p) * np.exp(1j * np.pi * (m_q - m_p))
+            - 2 * 1j * np.exp(1j * np.pi * (m_q - m_p) / 2)
+        )
+        * (1 + np.exp(1j * np.pi * (m_q - m_p)))
+        / ((m_q - m_p) ** 2 - 1)
+    )
+
+    return integral
+
+
+def test_theta_1_tilde_integral():
+    for m_p in range(-100, 101):
+        for m_q in range(-100, 101):
+            assert (
+                abs(
+                    theta_1_tilde_integral_wolfram(m_p, m_q)
+                    - theta_1_tilde_integral(m_p, m_q)
+                )
+                < 1e-10
+            )
 
 
 def test_zero_barrier():
