@@ -91,33 +91,19 @@ def theta_2_integral(m_p, m_q):
 
 
 def theta_1_tilde_integral(m_p, m_q):
-    if abs(m_p - m_q) == 1:
+    if abs(m_p - m_q) % 2 == 1:
         return 0
 
-    integral = (
-        -1j
-        * (
-            -m_q
-            + m_p
-            + (m_q - m_p) * np.exp(1j * np.pi * (m_q - m_p))
-            - 2 * 1j * np.exp(1j * np.pi * (m_q - m_p) / 2)
-        )
-        * (1 + np.exp(1j * np.pi * (m_q - m_p)))
-        / ((m_q - m_p) ** 2 - 1)
-    )
+    sign = 1 if ((abs(m_p - m_q) // 2) % 2) == 0 else -1
 
-    return integral
+    return sign * 4 / (1 - (m_p - m_q) ** 2)
 
 
 def theta_2_tilde_integral(m_p, m_q):
-    if abs(m_p - m_q) == 1:
+    if abs(m_p - m_q) % 2 == 1:
         return 0
 
-    integral = -(1 + np.exp(1j * np.pi * (m_q - m_p))) ** 2 / (
-        (m_q - m_p) ** 2 - 1
-    )
-
-    return integral
+    return 4 / (1 - (m_p - m_q) ** 2)
 
 
 @numba.njit(cache=True, nogil=True)
