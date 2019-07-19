@@ -316,7 +316,7 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
         of wavefunction
     omega_0 : float, default 1 
         Frequency of harmonic oscillator potential.
-    mass : int of float, default 1
+    mass : int or float, default 1
         Mass of electrons.
     omega_c : float, default 0
         Frequency corresponding to strength of magnetic field.
