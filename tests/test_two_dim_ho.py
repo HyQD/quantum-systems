@@ -17,6 +17,18 @@ from quantum_systems.system_helper import (
 from quantum_systems import TwoDimensionalHarmonicOscillator
 
 
+def test_two_body_symmetry():
+    l = 12
+
+    u = get_coulomb_elements(l)
+
+    for p in range(l):
+        for q in range(l):
+            for r in range(l):
+                for s in range(l):
+                    assert abs(u[p, q, r, s] - u[q, p, s, r]) < 1e-8
+
+
 def test_p_index(index_map):
     for p, (n, m) in enumerate(index_map):
         assert p == get_index_p(n, m)

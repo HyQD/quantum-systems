@@ -170,8 +170,8 @@ def get_shell_energy(n, m):
 
 
 @numba.njit(cache=True, nogil=True)
-def get_one_body_elements(num_orbitals, dtype=np.float64):
-    h = np.zeros((num_orbitals, num_orbitals), dtype=dtype)
+def get_one_body_elements(num_orbitals):
+    h = np.zeros((num_orbitals, num_orbitals))
 
     for p in range(num_orbitals):
         n, m = get_indices_nm(p)
@@ -181,10 +181,10 @@ def get_one_body_elements(num_orbitals, dtype=np.float64):
 
 
 @numba.njit(fastmath=True, nogil=True, parallel=True)
-def get_coulomb_elements(num_orbitals, dtype=np.float64):
+def get_coulomb_elements(num_orbitals):
 
     shape = (num_orbitals, num_orbitals, num_orbitals, num_orbitals)
-    u = np.zeros(shape, dtype=dtype)
+    u = np.zeros(shape)
 
     for p in numba.prange(num_orbitals):
         n_p, m_p = get_indices_nm(p)
@@ -206,8 +206,8 @@ def get_shell_energy_B(n, m, omega_c=0, omega=1):
     return omega * (2 * n + abs(m) + 1) - (omega_c * m) / 2
 
 
-def get_one_body_elements_B(num_orbitals, df, dtype=np.float64, omega_c=0):
-    h = np.zeros((num_orbitals, num_orbitals), dtype=dtype)
+def get_one_body_elements_B(num_orbitals, df, omega_c=0):
+    h = np.zeros((num_orbitals, num_orbitals))
 
     for p in range(num_orbitals):
         h[p, p] = df.loc[p, "E"]
@@ -215,9 +215,9 @@ def get_one_body_elements_B(num_orbitals, df, dtype=np.float64, omega_c=0):
     return h
 
 
-def get_coulomb_elements_B(num_orbitals, df, dtype=np.float64):
+def get_coulomb_elements_B(num_orbitals, df):
     shape = (num_orbitals, num_orbitals, num_orbitals, num_orbitals)
-    u = np.zeros(shape, dtype=dtype)
+    u = np.zeros(shape)
 
     for p in range(num_orbitals):
         n_p, m_p = df.loc[p, ["n", "m"]].values

@@ -79,12 +79,8 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         self.theta = np.linspace(0, 2 * np.pi, self.num_grid_points)
 
     def setup_system(self, add_spin=True, anti_symmetrize=True):
-        self._h = self.omega * get_one_body_elements(
-            self.l // 2, dtype=np.complex128
-        )
-        self._u = np.sqrt(self.omega) * get_coulomb_elements(
-            self.l // 2, dtype=np.complex128
-        )
+        self._h = self.omega * get_one_body_elements(self.l // 2)
+        self._u = np.sqrt(self.omega) * get_coulomb_elements(self.l // 2)
         self._s = np.eye(self.l // 2)
 
         self.setup_spf()
@@ -357,13 +353,11 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
             n_array, m_array, omega_c=self.omega_c, omega=self.omega
         )
 
-        self._h = get_one_body_elements_B(num_orbitals, df=self.df).astype(
-            np.complex128
-        )
+        self._h = get_one_body_elements_B(num_orbitals, df=self.df)
         self._s = np.eye(num_orbitals)
         self._u = np.sqrt(self.omega) * get_coulomb_elements_B(
             num_orbitals, df=self.df
-        ).astype(np.complex128)
+        )
 
         self.setup_spf()
         self.construct_dipole_moment()

@@ -27,6 +27,23 @@ def get_odho():
 
 
 @pytest.fixture(scope="module")
+def get_odho_ao():
+    n = 2
+    l = 20
+
+    grid_length = 5
+    num_grid_points = 1001
+    omega = 1
+
+    odho = ODQD(n, l, grid_length, num_grid_points)
+    odho.setup_system(
+        potential=HOPotential(omega), add_spin=False, anti_symmetrize=False
+    )
+
+    return odho
+
+
+@pytest.fixture(scope="module")
 def get_oddw():
     n = 2
     l = 20
@@ -140,3 +157,46 @@ def test_oddw_smooth(get_oddw_smooth):
 
     spf = np.load(os.path.join("tests", "dat", "oddw_smooth_spf.npy"))
     np.testing.assert_allclose(spf, oddw_smooth.spf, atol=1e-10)
+
+
+def test_anti_symmetric_two_body_symmetry_odho(get_odho):
+    odho = get_odho
+
+    l = odho.l
+    u = odho.u
+
+    for p in range(l):
+        for q in range(l):
+            for r in range(l):
+                for s in range(l):
+                    assert abs(u[p, q, r, s] + u[p, q, s, r]) < 1e-8
+                    assert abs(u[p, q, r, s] + u[q, p, r, s]) < 1e-8
+                    assert abs(u[p, q, r, s] - u[q, p, s, r]) < 1e-8
+
+
+def test_anti_symmetric_two_body_symmetry_oddw(get_oddw):
+    oddw = get_oddw
+
+    l = oddw.l
+    u = oddw.u
+
+    for p in range(l):
+        for q in range(l):
+            for r in range(l):
+                for s in range(l):
+                    assert abs(u[p, q, r, s] + u[p, q, s, r]) < 1e-8
+                    assert abs(u[p, q, r, s] + u[q, p, r, s]) < 1e-8
+                    assert abs(u[p, q, r, s] - u[q, p, s, r]) < 1e-8
+
+
+def test_two_body_symmetry_odho(get_odho_ao):
+    odho = get_odho_ao
+
+    l = odho.l // 2
+    u = odho.u
+
+    for p in range(l):
+        for q in range(l):
+            for r in range(l):
+                for s in range(l):
+                    assert abs(u[p, q, r, s] - u[q, p, s, r]) < 1e-8
