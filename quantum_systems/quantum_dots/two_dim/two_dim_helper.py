@@ -215,7 +215,7 @@ def get_one_body_elements_B(num_orbitals, df, dtype=np.float64, omega_c=0):
     return h
 
 
-def get_coulomb_elements_B(num_orbitals, df, dtype=np.float64, omega_c=0):
+def get_coulomb_elements_B(num_orbitals, df, dtype=np.float64):
     shape = (num_orbitals, num_orbitals, num_orbitals, num_orbitals)
     u = np.zeros(shape, dtype=dtype)
 
