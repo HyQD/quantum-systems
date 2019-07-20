@@ -1,3 +1,7 @@
+import os
+import sys
+import time
+
 import numpy as np
 import scipy
 import sympy
@@ -180,8 +184,73 @@ def get_one_body_elements(num_orbitals):
     return h
 
 
+def get_coulomb_elements(num_orbitals, verbose=False):
+    """Driver function for retrieving the Coulomb elements in the
+    two-dimensional harmonic oscillator basis as described in the article by
+    [E. Anisimovas and A. Matulis](https://doi.org/10.1088%2F0953-8984%2F10%2F3%2F013).
+
+    By setting the environment variable QS_CACHE_TDHO to a value this function
+    will store the Coulomb elements for ease of re-use. The default storage
+    location is the working directory of the calling process, so make sure to
+    check if this area has enough storage.
+
+    Parameters
+    ----------
+    num_orbitals : int
+        The number of orbital basis functions (sans spin).
+
+    Returns
+    -------
+    u : np.ndarray
+        A np.ndarray of size num_orbitals ** 4 with the Coulomb elements.
+    """
+    if os.environ.get("QS_CACHE_TDHO") is None:
+        t_0 = time.time()
+        coulomb_elements = _get_coulomb_elements(num_orbitals)
+        t_1 = time.time()
+
+        if verbose:
+            print(f"Time spent setting up Coulomb elements {t_1 - t_0} sec")
+
+        return coulomb_elements
+
+    # Use the working directory of caller as storage
+    storage_path = sys.path[0]
+    filename = f"tdho_coulomb_num_orbitals={num_orbitals}.npy"
+    filename = os.path.join(storage_path, filename)
+
+    # Load and return elements if they exist
+    if os.path.exists(filename):
+        t_0 = time.time()
+        coulomb_elements = np.load(filename)
+        t_1 = time.time()
+
+        if verbose:
+            print(
+                f"Time spent loading Coulomb elements from {filename}: "
+                + f"{t_1 - t_0} sec"
+            )
+
+        return coulomb_elements
+
+    t_0 = time.time()
+    # Create new Coulomb elements
+    coulomb_elements = _get_coulomb_elements(num_orbitals)
+    t_1 = time.time()
+
+    if verbose:
+        print(f"Time spent setting up Coulomb elements {t_1 - t_0} sec")
+        print(f"Caching Coulomb elements to {filename}")
+
+    # Store elements
+    np.save(filename, coulomb_elements)
+
+    # Return newly created Coulomb elements
+    return coulomb_elements
+
+
 @numba.njit(fastmath=True, nogil=True, parallel=True)
-def get_coulomb_elements(num_orbitals):
+def _get_coulomb_elements(num_orbitals):
 
     shape = (num_orbitals, num_orbitals, num_orbitals, num_orbitals)
     u = np.zeros(shape)

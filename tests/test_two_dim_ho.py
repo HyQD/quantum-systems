@@ -1,3 +1,5 @@
+import os
+import sys
 import pytest
 import numpy as np
 
@@ -27,6 +29,27 @@ def test_two_body_symmetry():
             for r in range(l):
                 for s in range(l):
                     assert abs(u[p, q, r, s] - u[q, p, s, r]) < 1e-8
+
+
+def test_tdho_caching():
+    l = 12
+
+    pre_cache = os.listdir()
+
+    os.environ["QS_CACHE_TDHO"] = "1"
+    u = get_coulomb_elements(l)
+
+    post_cache = os.listdir()
+
+    assert len(set(post_cache) - set(pre_cache)) == 1
+
+    u_2 = get_coulomb_elements(l)
+    np.testing.assert_allclose(u, u_2)
+
+    filename = (set(post_cache) - set(pre_cache)).pop()
+    os.remove(filename)
+
+    assert len(set(os.listdir()) - set(pre_cache)) == 0
 
 
 def test_p_index(index_map):
