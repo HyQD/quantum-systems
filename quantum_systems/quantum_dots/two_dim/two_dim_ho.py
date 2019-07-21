@@ -78,9 +78,11 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         self.radius = np.linspace(0, self.radius_length, self.num_grid_points)
         self.theta = np.linspace(0, 2 * np.pi, self.num_grid_points)
 
-    def setup_system(self, add_spin=True, anti_symmetrize=True):
+    def setup_system(self, add_spin=True, anti_symmetrize=True, verbose=True):
         self._h = self.omega * get_one_body_elements(self.l // 2)
-        self._u = np.sqrt(self.omega) * get_coulomb_elements(self.l // 2)
+        self._u = np.sqrt(self.omega) * get_coulomb_elements(
+            self.l // 2, verbose=verbose
+        )
         self._s = np.eye(self.l // 2)
 
         self.setup_spf()
