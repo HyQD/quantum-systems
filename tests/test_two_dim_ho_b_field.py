@@ -42,7 +42,7 @@ def test_two_body_elements_compare():
     n = 2
     l = 6
     grid_length = 5
-    num_grid_points = 1001
+    num_grid_points = 201
     mass = 1
     omega = 1
     omega_c = 0

@@ -12,7 +12,7 @@ import pandas as pd
 from quantum_systems.quantum_dots.two_dim.coulomb_elements import coulomb_ho
 
 
-def spf_state(r, theta, p, mass, omega):
+def spf_state(r, theta, p, mass, omega, get_indices_nm):
     n, m = get_indices_nm(p)
 
     norm = spf_norm(n, m, mass, omega)
@@ -393,7 +393,7 @@ def construct_dataframe(n_array, m_array, omega_c=0, omega=1):
             )
             i += 1
 
-    df = df.sort_values("E").reset_index().drop("index", axis=1)
+    df = df.sort_values(by=["E", "m"]).reset_index().drop("index", axis=1)
 
     df["level"] = 0
     energies = df["E"].round(decimals=8).unique()
