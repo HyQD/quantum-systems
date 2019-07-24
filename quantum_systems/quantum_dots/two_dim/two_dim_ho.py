@@ -102,7 +102,9 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         self.R, self.T = np.meshgrid(self.radius, self.theta)
 
         for p in range(self.l // 2):
-            self._spf[p] += spf_state(self.R, self.T, p, self.mass, self.omega, self.get_indices_nm)
+            self._spf[p] += spf_state(
+                self.R, self.T, p, self.mass, self.omega, self.get_indices_nm
+            )
 
     def get_indices_nm(self, p):
         return get_indices_nm(p)
@@ -361,7 +363,7 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
             num_orbitals, df=self.df
         )
 
-        self.setup_spf() # This is maybe not wrong.
+        self.setup_spf()  # This is maybe not wrong.
         self.construct_dipole_moment()
         self.cast_to_complex()
         self.change_module()
