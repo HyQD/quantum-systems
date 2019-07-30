@@ -104,9 +104,11 @@ class ODQD(QuantumSystem):
         setup_system().
     """
 
-    def __init__(self, n, l, grid_length, num_grid_points, a=0.25, alpha=1.0):
+    def __init__(
+        self, n, l, grid_length, num_grid_points, a=0.25, alpha=1.0, **kwargs
+    ):
 
-        super().__init__(n, l)
+        super().__init__(n, l, **kwargs)
 
         self.a = a
         self.alpha = alpha

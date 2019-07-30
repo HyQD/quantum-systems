@@ -66,8 +66,10 @@ class TwoDimensionalHarmonicOscillator(QuantumSystem):
         setup_system().
     """
 
-    def __init__(self, n, l, radius_length, num_grid_points, omega=1, mass=1):
-        super().__init__(n, l)
+    def __init__(
+        self, n, l, radius_length, num_grid_points, omega=1, mass=1, **kwargs
+    ):
+        super().__init__(n, l, **kwargs)
 
         self.omega = omega
         self.mass = mass
@@ -189,6 +191,7 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
         l_ho_factor=1.0,
         omega=1,
         mass=1,
+        **kwargs,
     ):
         assert l_ho_factor >= 1, (
             "Number of harmonic oscillator functions must be higher than the"
@@ -197,7 +200,7 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
 
         l_ho = math.floor(l * l_ho_factor)
         super().__init__(
-            n, l_ho, radius, num_grid_points, omega=omega, mass=mass
+            n, l_ho, radius, num_grid_points, omega=omega, mass=mass, **kwargs
         )
 
         self.l_dw = l
@@ -258,6 +261,7 @@ class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
         l_ho_factor=1,
         omega=1,
         mass=1,
+        **kwargs,
     ):
 
         assert l_ho_factor >= 1, (
@@ -267,7 +271,7 @@ class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
 
         l_ho = math.floor(l * l_ho_factor)
         super().__init__(
-            n, l_ho, radius, num_grid_points, omega=omega, mass=mass
+            n, l_ho, radius, num_grid_points, omega=omega, mass=mass, **kwargs
         )
 
         self.l_dw = l
@@ -350,10 +354,24 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
     """
 
     def __init__(
-        self, n, l, radius_length, num_grid_points, omega_0=1, mass=1, omega_c=0
+        self,
+        n,
+        l,
+        radius_length,
+        num_grid_points,
+        omega_0=1,
+        mass=1,
+        omega_c=0,
+        **kwargs,
     ):
         super().__init__(
-            n, l, radius_length, num_grid_points, omega=omega_0, mass=mass
+            n,
+            l,
+            radius_length,
+            num_grid_points,
+            omega=omega_0,
+            mass=mass,
+            **kwargs,
         )
 
         self.omega_c = omega_c
