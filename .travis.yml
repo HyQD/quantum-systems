@@ -16,6 +16,4 @@ install:
     - source activate quantum-systems
 script:
     - pytest
-after_success:
-    - black .
-    - bash push_formatting.sh
+    - black --check .
