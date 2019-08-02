@@ -24,3 +24,7 @@ matplotlib
 
 # Install black
 black
+
+# Install spinx
+sphinx
+sphinx_rtd_theme
