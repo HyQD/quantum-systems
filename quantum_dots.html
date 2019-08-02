@@ -45,7 +45,7 @@ homogeneous magnetic field.</p>
 <h2>One-Dimensional Quantum Dot<a class="headerlink" href="#one-dimensional-quantum-dot" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="quantum_systems.ODQD">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">ODQD</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">grid_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">a=0.25</em>, <em class="sig-param">alpha=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">ODQD</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">grid_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">a=0.25</em>, <em class="sig-param">alpha=1.0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create 1D quantum dot system</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -116,7 +116,7 @@ setup_system().</p>
 <h2>Two-Dimensional Quantum Dots<a class="headerlink" href="#two-dimensional-quantum-dots" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="quantum_systems.TwoDimensionalHarmonicOscillator">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalHarmonicOscillator</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">radius_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">omega=1</em>, <em class="sig-param">mass=1</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalHarmonicOscillator</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">radius_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">omega=1</em>, <em class="sig-param">mass=1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create 2D harmonic oscillator, using
 polar coordinates</p>
 <dl class="field-list simple">
@@ -189,7 +189,7 @@ setup_system().</p>
 
 <dl class="class">
 <dt id="quantum_systems.TwoDimensionalDoubleWell">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalDoubleWell</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">radius</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">barrier_strength=1</em>, <em class="sig-param">l_ho_factor=1.0</em>, <em class="sig-param">omega=1</em>, <em class="sig-param">mass=1</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalDoubleWell" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalDoubleWell</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">radius</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">barrier_strength=1</em>, <em class="sig-param">l_ho_factor=1.0</em>, <em class="sig-param">omega=1</em>, <em class="sig-param">mass=1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalDoubleWell" title="Permalink to this definition">¶</a></dt>
 <dd><p>System constructing two-dimensional quantum dots with a double well
 potential barrier.</p>
 <dl class="field-list simple">
@@ -228,7 +228,7 @@ axis the well barrier is aligned to. (0, 1) = (x, y).</p>
 
 <dl class="class">
 <dt id="quantum_systems.TwoDimHarmonicOscB">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimHarmonicOscB</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">radius_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">omega_0=1</em>, <em class="sig-param">mass=1</em>, <em class="sig-param">omega_c=0</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimHarmonicOscB</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">radius_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">omega_0=1</em>, <em class="sig-param">mass=1</em>, <em class="sig-param">omega_c=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create 2D harmonic oscillator under homogenous
 magnetic field, using polar coordinates</p>
 <dl class="field-list simple">
