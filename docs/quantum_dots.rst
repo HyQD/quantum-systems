@@ -8,7 +8,7 @@ homogeneous magnetic field.
 One-Dimensional Quantum Dot
 ---------------------------
 
-.. autoclass:: quantum_systems.OneDimensionalHarmonicOscillator
+.. autoclass:: quantum_systems.ODQD
     :members:
 
 Two-Dimensional Quantum Dots
