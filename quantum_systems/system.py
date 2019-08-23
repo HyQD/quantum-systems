@@ -142,6 +142,12 @@ class QuantumSystem:
         if self._s is not None:
             self._s = self._s.astype(np.complex128)
 
+    def transform_one_body_elements(self, h, c, c_tilde=None):
+        return transform_one_body_elements(h, c, np=self.np, c_tilde=c_tilde)
+
+    def transform_two_body_elements(self, u, c, c_tilde=None):
+        return transform_two_body_elements(u, c, np=self.np, c_tilde=c_tilde)
+
     def change_basis_one_body_elements(self, c, c_tilde=None):
         self._h = transform_one_body_elements(
             self._h, c, np=self.np, c_tilde=c_tilde
