@@ -156,7 +156,7 @@ homogeneous magnetic field.</p>
 <h2>One-Dimensional Quantum Dot<a class="headerlink" href="#one-dimensional-quantum-dot" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="quantum_systems.ODQD">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">ODQD</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">grid_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">a=0.25</em>, <em class="sig-param">alpha=1.0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">ODQD</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">grid_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">a=0.25</em>, <em class="sig-param">alpha=1.0</em>, <em class="sig-param">beta=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create 1D quantum dot system</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -168,6 +168,7 @@ homogeneous magnetic field.</p>
 of wavefunction</p></li>
 <li><p><strong>a</strong> (<em>float</em><em>, </em><em>default 0.25</em>) – Screening parameter in the shielded Coulomb interation.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – Strength parameter in the shielded Coulomb interaction.</p></li>
+<li><p><strong>beta</strong> (<em>float</em><em>, </em><em>default 0.0</em>) – Strength parameter of the non-dipole term in the laser interaction matrix.</p></li>
 </ul>
 </dd>
 </dl>
