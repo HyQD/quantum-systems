@@ -2,6 +2,7 @@ import numba
 import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.linalg as spsl
+import time
 
 from quantum_systems import QuantumSystem
 
@@ -51,7 +52,6 @@ def _compute_inner_integral(spf, l, num_grid_points, grid, alpha, a):
 @numba.njit(cache=True)
 def _compute_orbital_integrals(spf, l, inner_integral, grid):
     u = np.zeros((l, l, l, l), dtype=np.complex128)
-
     for p in range(l):
         for q in range(l):
             for r in range(l):
@@ -82,6 +82,8 @@ class ODQD(QuantumSystem):
         Screening parameter in the shielded Coulomb interation.
     alpha : float, default 1.0
         Strength parameter in the shielded Coulomb interaction.
+    beta : float, default 0.0
+        Strength parameter of the non-dipole term in the laser interaction matrix.
 
     Attributes
     ----------
@@ -105,7 +107,15 @@ class ODQD(QuantumSystem):
     """
 
     def __init__(
-        self, n, l, grid_length, num_grid_points, a=0.25, alpha=1.0, **kwargs
+        self,
+        n,
+        l,
+        grid_length,
+        num_grid_points,
+        a=0.25,
+        alpha=1.0,
+        beta=0,
+        **kwargs
     ):
 
         super().__init__(n, l, **kwargs)
@@ -118,6 +128,7 @@ class ODQD(QuantumSystem):
         self.grid = np.linspace(
             -self.grid_length, self.grid_length, self.num_grid_points
         )
+        self.beta = beta
 
     def setup_system(self, potential=None, add_spin=True, anti_symmetrize=True):
         if potential is None:
@@ -152,6 +163,7 @@ class ODQD(QuantumSystem):
         self._h = np.diag(eigen_energies).astype(np.complex128)
         self._s = np.eye(self.l // 2)
 
+        tic = time.time()
         inner_integral = _compute_inner_integral(
             self._spf,
             self.l // 2,
@@ -164,6 +176,8 @@ class ODQD(QuantumSystem):
         self._u = _compute_orbital_integrals(
             self._spf, self.l // 2, inner_integral, self.grid
         )
+        toc = time.time()
+        # print(f"Time computing u_pqrs: {toc-tic}")
 
         self.construct_dipole_moment()
         self.cast_to_complex()
@@ -180,5 +194,8 @@ class ODQD(QuantumSystem):
         for p in range(self.l // 2):
             for q in range(self.l // 2):
                 self._dipole_moment[0, p, q] = np.trapz(
-                    self._spf[p].conj() * self.grid * self._spf[q], self.grid
+                    self._spf[p].conj()
+                    * (self.grid + self.beta * self.grid ** 2)
+                    * self._spf[q],
+                    self.grid,
                 )
