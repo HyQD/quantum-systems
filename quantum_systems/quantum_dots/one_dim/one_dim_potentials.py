@@ -71,7 +71,7 @@ class AsymmetricDWPotential(OneDimPotential):
         self.c = c
 
     def __call__(self, x):
-        return self.a * x ** 2 + self.b * x ** 3 + self.c * x ** 2
+        return self.a * x ** 4 + self.b * x ** 3 + self.c * x ** 2
 
 
 class GaussianPotential(OneDimPotential):
