@@ -43,31 +43,35 @@ class DWPotentialSmooth(OneDimPotential):
             * (x - 0.5 * self.a) ** 2
         )
 
+
 class SymmetricDWPotential(OneDimPotential):
     """
     This is a generalization of the symmetric double-well potential 
     used by Wadehra et. al: https://aip.scitation.org/doi/10.1063/1.1589481
     """
-    def __init__(self,a=0.5,b=1,c=-7):
+
+    def __init__(self, a=0.5, b=1, c=-7):
         self.a = a
         self.b = b
         self.c = c
 
-    def __call__(self,x):
-        return self.a*x**6+self.b*x**4+self.c*x**2
+    def __call__(self, x):
+        return self.a * x ** 6 + self.b * x ** 4 + self.c * x ** 2
+
 
 class AsymmetricDWPotential(OneDimPotential):
     """
     This is a generalization of the asymmetric double-well potential 
     used by Wadehra et. al: https://aip.scitation.org/doi/10.1063/1.1589481
     """
-    def __init__(self,a=1,b=1,c=-2.5):
+
+    def __init__(self, a=1, b=1, c=-2.5):
         self.a = a
         self.b = b
-        self.c = c 
+        self.c = c
 
-    def __call__(self,x):
-        return self.a*x**2+self.b*x**3+self.c*x**2
+    def __call__(self, x):
+        return self.a * x ** 2 + self.b * x ** 3 + self.c * x ** 2
 
 
 class GaussianPotential(OneDimPotential):
