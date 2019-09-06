@@ -128,6 +128,8 @@ def construct_pyscf_system_rhf(
     verbose=False,
     add_spin=True,
     anti_symmetrize=True,
+    charge=0,
+    cart=False,
     **kwargs,
 ):
     import pyscf
@@ -138,6 +140,8 @@ def construct_pyscf_system_rhf(
     # Build molecule in AO-basis
     mol = pyscf.gto.Mole()
     mol.unit = "bohr"
+    mol.charge = charge
+    mol.cart = cart
     mol.build(atom=molecule, basis=basis, **kwargs)
     nuclear_repulsion_energy = mol.energy_nuc()
 
@@ -150,7 +154,7 @@ def construct_pyscf_system_rhf(
 
     hf = pyscf.scf.RHF(mol)
     hf_energy = hf.kernel()
-
+    
     if not hf.converged:
         warnings.warn("RHF calculation did not converge")
 
