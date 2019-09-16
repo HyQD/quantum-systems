@@ -16,6 +16,9 @@ pytest
 # Install numba
 numba
 
+# Install PySCF
+pyscf
+
 # Install sympy for symbolic expressions
 sympy
 
