@@ -154,7 +154,7 @@ def construct_pyscf_system_rhf(
 
     hf = pyscf.scf.RHF(mol)
     hf_energy = hf.kernel()
-    
+
     if not hf.converged:
         warnings.warn("RHF calculation did not converge")
 
