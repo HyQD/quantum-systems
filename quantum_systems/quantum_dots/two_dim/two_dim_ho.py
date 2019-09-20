@@ -169,11 +169,6 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
         the angular part of the room.
     barrier_strength: float
         Barrier strength in the double well potential.
-    l_ho_factor : float
-        Factor of harmonic oscillator basis functions compared to the number of
-        double-well functions. Note that l_ho_factor >= 1, as we need more
-        harmonic oscillator basis functions than double-well functions in
-        order to get a good representation of the basis elements.
     omega: float
         Frequency of the oscillator potential.
     mass: float
@@ -188,22 +183,14 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
         radius,
         num_grid_points,
         barrier_strength=1,
-        l_ho_factor=1.0,
         omega=1,
         mass=1,
         **kwargs,
     ):
-        assert l_ho_factor >= 1, (
-            "Number of harmonic oscillator functions must be higher than the"
-            + " number of double-well basis functions"
-        )
-
-        l_ho = math.floor(l * l_ho_factor)
         super().__init__(
-            n, l_ho, radius, num_grid_points, omega=omega, mass=mass, **kwargs
+            n, l, radius, num_grid_points, omega=omega, mass=mass, **kwargs
         )
 
-        self.l_dw = l
         self.barrier_strength = barrier_strength
 
     def setup_system(self, axis=0, add_spin=True, anti_symmetrize=True):
@@ -220,7 +207,7 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
 
         super().setup_system(add_spin=add_spin, anti_symmetrize=anti_symmetrize)
 
-        h_dw = get_double_well_one_body_elements(
+        self._h = get_double_well_one_body_elements(
             self.l // 2,
             self.omega,
             self.mass,
@@ -229,21 +216,11 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
             axis=axis,
         )
 
-        self.epsilon, C = np.linalg.eigh(h_dw)
-        self._h = np.diagflat(self.epsilon[: self.l_dw // 2])
-        self._s = np.eye(self.l_dw // 2)
-        C_dw = C[:, : self.l_dw // 2]
+        self._s = np.eye(self.l // 2)
 
         if add_spin:
             self._h = add_spin_one_body(self._h, np=np)
             self._s = add_spin_one_body(self._s, np=np)
-            C_dw = add_spin_one_body(C_dw, np=np)
-
-        self.change_basis_two_body_elements(C_dw)
-        self.change_basis_dipole_moment(C_dw)
-        self.change_basis_spf(C_dw)
-
-        self.set_system_size(self.n, self.l_dw)
 
         self.cast_to_complex()
         self.change_module()
