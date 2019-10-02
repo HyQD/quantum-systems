@@ -11,9 +11,13 @@ class SampleCollector(metaclass=abc.ABCMeta):
     ----------
     samplers : iterable
         Container with all sampler classes.
+    np : linalg module
+        For example, `numpy` or `cupy`.
     """
 
-    def __init__(self, samplers):
+    def __init__(self, samplers, np):
+        self.np = np
+
         if type(samplers) not in [list, tuple, set]:
             samplers = list(samplers)
 
@@ -59,7 +63,7 @@ class SampleCollector(metaclass=abc.ABCMeta):
             self.samples = sampler.dump(self.samples)
 
         filename = os.path.join(path, filename)
-        np.save(filename, self.samples)
+        self.np.save(filename, self.samples)
 
     def add_sample(self, key, sample):
         self.samples[key] = sample
