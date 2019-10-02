@@ -79,7 +79,7 @@ def test_zero_barrier():
     num_grid_points = 401
 
     tddw = TwoDimensionalDoubleWell(
-        n, l, radius, num_grid_points, l_ho_factor=1, barrier_strength=0
+        n, l, radius, num_grid_points, barrier_strength=0
     )
     tddw.setup_system(axis=0)
 
@@ -95,24 +95,22 @@ def test_spf_energies():
     test_energies = np.array(
         [0.81129823, 1.37162083, 1.93581042, 2.21403823, 2.37162083, 2.93581042]
     )
+
     n = 2
-    l = 6
+    l = 12
     radius = 10
     num_grid_points = 401
+    omega = 1
+    mass = 1
+    barrier_strength = 2
+    axis = 1
 
-    # Test barrier in x-direction
-    tddw = TwoDimensionalDoubleWell(
-        n, l, radius, num_grid_points, l_ho_factor=2, barrier_strength=2
+    h_dw = get_double_well_one_body_elements(
+        l // 2, omega, mass, barrier_strength, dtype=np.complex128, axis=axis
     )
-    tddw.setup_system(axis=0)
-    np.testing.assert_allclose(tddw.epsilon, test_energies)
 
-    # Test barrier in y-direction
-    tddw = TwoDimensionalDoubleWell(
-        n, l, radius, num_grid_points, l_ho_factor=2, barrier_strength=2
-    )
-    tddw.setup_system(axis=1)
-    np.testing.assert_allclose(tddw.epsilon, test_energies)
+    epsilon, C = np.linalg.eigh(h_dw)
+    np.testing.assert_allclose(epsilon[: len(test_energies)], test_energies)
 
 
 def test_change_of_basis():
@@ -122,8 +120,6 @@ def test_change_of_basis():
     # Hamiltonian.
     n = 2
     l = 12
-    l_ho_factor = 2
-    l_ho = int(l * l_ho_factor)
     omega = 1
     mass = 1
     barrier_strength = 3
@@ -132,12 +128,12 @@ def test_change_of_basis():
     axis = 0
 
     tdho = TwoDimensionalHarmonicOscillator(
-        n, l_ho, radius, num_grid_points, omega=omega
+        n, l, radius, num_grid_points, omega=omega
     )
     tdho.setup_system()
 
     h_dw = get_double_well_one_body_elements(
-        l_ho // 2, omega, mass, barrier_strength, dtype=np.complex128, axis=axis
+        l // 2, omega, mass, barrier_strength, dtype=np.complex128, axis=axis
     )
 
     epsilon, C_dw = np.linalg.eigh(h_dw)
@@ -153,9 +149,9 @@ def test_change_of_basis():
         omega=omega,
         mass=mass,
         barrier_strength=barrier_strength,
-        l_ho_factor=l_ho_factor,
     )
     tddw.setup_system(axis=axis)
+    tddw.change_basis(C[:, :l])
 
     np.testing.assert_allclose(tdho.u, tddw.u, atol=1e-7)
     np.testing.assert_allclose(tdho.spf, tddw.spf, atol=1e-7)
@@ -168,7 +164,6 @@ def get_tddw():
 
     radius = 8
     num_grid_points = 201
-    l_ho_factor = 1
     barrier_strength = 3
     omega = 0.8
 
@@ -177,7 +172,6 @@ def get_tddw():
         l,
         radius,
         num_grid_points,
-        l_ho_factor=l_ho_factor,
         barrier_strength=barrier_strength,
         omega=omega,
     )
@@ -188,6 +182,20 @@ def get_tddw():
 
 def test_tddw(get_tddw):
     tddw = get_tddw
+
+    h_dw = get_double_well_one_body_elements(
+        tddw.l // 2,
+        tddw.omega,
+        tddw.mass,
+        tddw.barrier_strength,
+        dtype=np.complex128,
+        axis=0,
+    )
+
+    epsilon, C_dw = np.linalg.eigh(h_dw)
+    C = add_spin_one_body(C_dw, np=np)
+
+    tddw.change_basis(C[:, : tddw.l])
 
     dip = np.load(os.path.join("tests", "dat", "tddw_dipole_moment.npy"))
     np.testing.assert_allclose(
