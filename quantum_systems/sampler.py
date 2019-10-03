@@ -74,10 +74,11 @@ class SampleCollector:
 class Sampler(metaclass=abc.ABCMeta):
     """Abstract base class defining the skeleton of a sampler class."""
 
-    def __init__(self, solver, num_samples):
+    def __init__(self, solver, num_samples, np):
         self.solver = solver
         self.system = self.solver.system
         self.num_samples = num_samples
+        self.np = np
 
     @abc.abstractmethod
     def sample(self, step):
