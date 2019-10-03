@@ -2,7 +2,7 @@ import os
 import abc
 
 
-class SampleCollector(metaclass=abc.ABCMeta):
+class SampleCollector:
     """Abstract base class defining common methods for all sampler classes. The
     purpose of a derived class of `SampleCollector` is to define all sampler
     classes and pass them to the constructor of `SampleCollector`.
