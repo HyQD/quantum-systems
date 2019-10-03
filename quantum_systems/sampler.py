@@ -24,7 +24,6 @@ class SampleCollector(metaclass=abc.ABCMeta):
         self.samplers = samplers
         self.samples = dict()
 
-    @abc.abstractmethod
     def sample(self, step):
         """Function calling all samplers for a given time step.
 
