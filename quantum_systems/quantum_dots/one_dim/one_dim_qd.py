@@ -13,7 +13,15 @@ from quantum_systems.system_helper import (
     anti_symmetrize_u,
 )
 
-from quantum_systems.quantum_dots.one_dim.one_dim_potentials import HOPotential
+from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
+    HOPotential,
+    DWPotential,
+    DWPotentialSmooth,
+    SymmetricDWPotential,
+    AsymmetricDWPotential,
+    GaussianPotential,
+    AtomicPotential,
+)
 
 
 @numba.njit(cache=True)
@@ -188,6 +196,14 @@ class ODQD(QuantumSystem):
         Constructs dipole moment. This method is called by
         setup_system().
     """
+
+    HOPotential = HOPotential
+    DWPotential = DWPotential
+    DWPotentialSmooth = DWPotentialSmooth
+    SymmetricDWPotential = SymmetricDWPotential
+    AsymmetricDWPotential = AsymmetricDWPotential
+    GaussianPotential = GaussianPotential
+    AtomicPotential = AtomicPotential
 
     def __init__(
         self,
