@@ -86,11 +86,13 @@ class GaussianPotential(OneDimPotential):
             -(x - self.center) ** 2 / (2.0 * self.deviation ** 2)
         )
 
+
 class GaussianPotentialHardWall(OneDimPotential):
     """
     A hard wall is introduced in order to force the 
     higher lying states (unbound states) to go to zero at the end of the grid.
     """
+
     def __init__(self, weight, center, deviation, x_wall):
         self.weight = weight
         self.center = center
@@ -101,12 +103,14 @@ class GaussianPotentialHardWall(OneDimPotential):
 
         wall = np.zeros(len(x))
         for i in range(len(x)):
-            if(abs(x[i]) > self.x_wall):
+            if abs(x[i]) > self.x_wall:
                 wall[i] = 1e5
 
-        return -self.weight * np.exp(
-            -(x - self.center) ** 2 / (2.0 * self.deviation ** 2) 
-        ) + wall
+        return (
+            -self.weight
+            * np.exp(-(x - self.center) ** 2 / (2.0 * self.deviation ** 2))
+            + wall
+        )
 
 
 class AtomicPotential(OneDimPotential):

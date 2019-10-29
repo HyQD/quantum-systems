@@ -72,6 +72,7 @@ def _compute_orbital_integrals(spf, l, inner_integral, grid):
 
     return u
 
+
 class ODHO(QuantumSystem):
     """
     Create matrix elements and grid representation associated with the harmonic 
@@ -104,14 +105,14 @@ class ODHO(QuantumSystem):
         )
         self.beta = beta
 
-    def setup_system(self,potential=None,add_spin=True, anti_symmetrize=True):
+    def setup_system(self, potential=None, add_spin=True, anti_symmetrize=True):
         dx = self.grid[1] - self.grid[0]
-        self.eigen_energies = self.omega*(np.arange(self.l//2)+0.5)
+        self.eigen_energies = self.omega * (np.arange(self.l // 2) + 0.5)
         self._h = np.diag(self.eigen_energies).astype(np.complex128)
         self._s = np.eye(self.l // 2)
-        self._spf = np.zeros((self.l//2,self.num_grid_points))
-        for p in range(self.l//2):
-            self._spf[p] = self.ho_function(self.grid,p)
+        self._spf = np.zeros((self.l // 2, self.num_grid_points))
+        for p in range(self.l // 2):
+            self._spf[p] = self.ho_function(self.grid, p)
 
         tic = time.time()
         inner_integral = _compute_inner_integral(
@@ -136,23 +137,39 @@ class ODHO(QuantumSystem):
         if add_spin:
             self.change_to_spin_orbital_basis(anti_symmetrize=anti_symmetrize)
 
-    def ho_function(self,x,n):
-        return self.normalization(n)*np.exp(-0.5*self.omega*x**2)*spec.hermite(n)(np.sqrt(self.omega)*x)
-    def normalization(self,n):
-        return 1.0/np.sqrt(2**n*spec.factorial(n))*(self.omega/np.pi)**0.25
+    def ho_function(self, x, n):
+        return (
+            self.normalization(n)
+            * np.exp(-0.5 * self.omega * x ** 2)
+            * spec.hermite(n)(np.sqrt(self.omega) * x)
+        )
+
+    def normalization(self, n):
+        return (
+            1.0
+            / np.sqrt(2 ** n * spec.factorial(n))
+            * (self.omega / np.pi) ** 0.25
+        )
 
     def construct_dipole_moment(self):
         self._dipole_moment = np.zeros(
             (1, self.l // 2, self.l // 2), dtype=self._spf.dtype
         )
 
-        for n in range(self.l//2-1):
+        for n in range(self.l // 2 - 1):
             Nn = self.normalization(n)
-            Nn_up = self.normalization(n+1)
-            dip_mom = Nn*Nn_up*(n+1)*np.sqrt(np.pi)*2**n*spec.factorial(n)/self.omega
-            self._dipole_moment[0,n,n+1] = dip_mom
-            self._dipole_moment[0,n+1,n] = dip_mom
-
+            Nn_up = self.normalization(n + 1)
+            dip_mom = (
+                Nn
+                * Nn_up
+                * (n + 1)
+                * np.sqrt(np.pi)
+                * 2 ** n
+                * spec.factorial(n)
+                / self.omega
+            )
+            self._dipole_moment[0, n, n + 1] = dip_mom
+            self._dipole_moment[0, n + 1, n] = dip_mom
 
 
 class ODQD(QuantumSystem):
