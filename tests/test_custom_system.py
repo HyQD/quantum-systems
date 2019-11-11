@@ -6,6 +6,7 @@ from quantum_systems import (
     construct_psi4_system,
     construct_pyscf_system,
     construct_pyscf_system_ao,
+    construct_pyscf_system_rhf,
 )
 
 
@@ -109,3 +110,12 @@ def test_pyscf_ao_construction():
         assert True
     except ImportError:
         warnings.warn("Unable to import PySCF")
+
+
+def test_reference_energy():
+    system = construct_pyscf_system_rhf("he", basis="cc-pvdz")
+
+    # This energy is found from PySCF's RHF solver
+    he_energy = -2.85516047724274
+
+    assert abs(system.compute_reference_energy() - he_energy) < 1e-8

@@ -204,6 +204,15 @@ class QuantumSystem:
         c = hf.scf(*args, **kwargs)
         self.change_basis(c)
 
+    def compute_reference_energy(self):
+        """Function computing the reference energy."""
+
+        o, v = self.o, self.v
+
+        return self.np.trace(self._h[o, o]) + 0.5 * self.np.trace(
+            self.np.trace(self._u[o, o, o, o], axis1=1, axis2=3)
+        )
+
     @property
     def h(self):
         """Getter returning one-body matrix"""
