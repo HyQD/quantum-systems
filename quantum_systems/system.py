@@ -117,7 +117,41 @@ class QuantumSystem:
             assert self._bra_spf.shape[0] == self.l
 
     def construct_fock_matrix(self, h, u, f=None):
-        """Function setting up the Fock matrix"""
+        """Function setting up the Fock matrix, that is, the normal-ordered
+        one-body elements. If the axis lengths of the two-body elements are
+        half of the number of spin-orbitals, i.e., we are in the
+        spin-restricted regime, we assume that the user wishes to compute the
+        restricted Fock matrix and that the two-body elements are not
+        antisymmetric.
+
+        In a spin-orbital basis we compute:
+
+        .. math:: f^{p}_{q} = h^{p}_{q} + u^{pi}_{qi},
+
+        where :math:`p, q, r, s, ...` run over all indices and `i, j, k, l,
+        ...` correspond to the occupied indices.
+        For an orbital basis we return:
+
+        .. math:: f^{p}_{q} = h^{p}_{q} + 2 u^{pi}_{qi} - u^{pi}_{iq},
+
+        where the two-body elements are assumed to not be antisymmetric.
+
+        Parameters
+        ----------
+        h : np.ndarray
+            The one-body matrix elements.
+        u : np.ndarray
+            The two-body matrix elements.
+        f : np.ndarray
+            An empty array of the same shape as `h` to be filled with the Fock
+            matrix elements. Default is `None` which means that we allocate a
+            new matrix.
+
+        Returns
+        -------
+        np.ndarray
+            The filled Fock matrix.
+        """
         np = self.np
         o, v = (self.o, self.v)
 
@@ -125,7 +159,13 @@ class QuantumSystem:
             f = np.zeros_like(h)
 
         f.fill(0)
-        f += np.einsum("piqi -> pq", u[:, o, :, o])
+
+        if all(check_axis_lengths(u, self.l // 2)):
+            f += 2 * np.einsum("piqi -> pq", u[:, o, :, o])
+            f -= np.einsum("piiq -> pq", u[:, o, o, :])
+        else:
+            f += np.einsum("piqi -> pq", u[:, o, :, o])
+
         f += h
 
         return f
