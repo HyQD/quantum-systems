@@ -161,6 +161,8 @@ class QuantumSystem:
         f.fill(0)
 
         if all(check_axis_lengths(u, self.l // 2)):
+            o = slice(0, self.n//2), 
+            v = slice(self.n//2, self.n//2 + self.m//2)
             f += 2 * np.einsum("piqi -> pq", u[:, o, :, o])
             f -= np.einsum("piiq -> pq", u[:, o, o, :])
         else:
