@@ -1,4 +1,6 @@
 from quantum_systems.system_helper import (
+    transform_spf,
+    transform_bra_spf,
     transform_one_body_elements,
     transform_two_body_elements,
     add_spin_one_body,
@@ -220,13 +222,9 @@ class QuantumSystem:
         if c_tilde is not None:
             # In case of bi-orthogonal basis sets, we create an extra set
             # of single-particle functions for the bra-side
-            self._bra_spf = self.np.tensordot(
-                c_tilde,
-                self._spf.conj() if self._bra_spf is None else self._bra_spf,
-                axes=((1), (0)),
-            )
+            self._bra_spf = transform_bra_spf(self.bra_spf, c_tilde, self.np)
 
-        self._spf = self.np.tensordot(c, self._spf, axes=((0), (0)))
+        self._spf = transform_spf(self._spf, c, self.np)
 
     def change_basis(self, c, c_tilde=None):
         self.change_basis_one_body_elements(c, c_tilde)

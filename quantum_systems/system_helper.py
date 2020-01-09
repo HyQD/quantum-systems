@@ -19,6 +19,14 @@ def spin_delta(p, q):
     return ((p & 0x1) ^ (q & 0x1)) ^ 0x1
 
 
+def transform_spf(spf, c, np):
+    return np.tensordot(c, spf, axes=((0), (0)))
+
+
+def transform_bra_spf(bra_spf, c_tilde, np):
+    return np.tensordot(c_tilde, bra_spf, axes=((1), (0)))
+
+
 def transform_one_body_elements(h, c, np, c_tilde=None):
     if c_tilde is None:
         c_tilde = c.conj().T
