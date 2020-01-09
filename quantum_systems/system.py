@@ -253,6 +253,42 @@ class QuantumSystem:
             self.np.trace(self._u[o, o, o, o], axis1=1, axis2=3)
         )
 
+    def compute_particle_density(self, rho_qp, c=None, c_tilde=None):
+        """Function computing the particle density for a given one-body density
+        matrix. This function (optionally) changes the basis of the
+        single-particle states for given coefficient matrices.
+
+        Parameters
+        ----------
+        rho_qp : np.ndarray
+            One-body density matrix
+        c : np.ndarray
+            Coefficient matrix for basis change. Default is `None` and hence no
+            transformation occurs.
+        c_tilde : np.ndarray
+            Bra-state coefficient matrix. Default is `None` which leads to one
+            of two situations. If `c != None` `c_tilde` is assumed to be the
+            conjugated transpose of `c`. Otherwise, no transformation occurs.
+
+        Returns
+        -------
+        np.ndarray
+            Particle density with the same dimensions as the grid.
+        """
+        assert (
+            self._spf is not None
+        ), "Set up single-particle functions prior to calling this function"
+
+        ket_spf = self.spf
+        bra_spf = self.bra_spf
+
+        if c is not None:
+            ket_spf = transform_spf(ket_spf, c, self.np)
+            c_tilde = c_tilde if c_tilde is None else c.conj().T
+            bra_spf = transform_bra_spf(bra_spf, c_tilde, self.np)
+
+        return compute_particle_density(rho_qp, ket_spf, bra_spf, self.np)
+
     @property
     def h(self):
         """Getter returning one-body matrix."""
