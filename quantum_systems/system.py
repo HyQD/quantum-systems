@@ -255,12 +255,12 @@ class QuantumSystem:
 
     @property
     def h(self):
-        """Getter returning one-body matrix"""
+        """Getter returning one-body matrix."""
         return self._h
 
     @property
     def f(self):
-        """Getter returning one-body Fock matrix"""
+        """Getter returning one-body Fock matrix."""
         return self._f
 
     @f.setter
@@ -269,7 +269,7 @@ class QuantumSystem:
 
     @property
     def u(self):
-        """Getter returning the antisymmetric two-body matrix"""
+        """Getter returning the antisymmetric two-body matrix."""
         return self._u
 
     @property
@@ -292,13 +292,15 @@ class QuantumSystem:
     @property
     def spf(self):
         """Getter returning the single particle functions, i.e, the eigenstates
-        of the non-interacting Hamiltonian"""
+        of the non-interacting Hamiltonian.
+        """
         return self._spf
 
     @property
     def bra_spf(self):
-        """Getter returning the conjugate  single particle functions. This is
-        None, unless we are working with a bi-variational basis."""
+        """Getter returning the conjugate single particle functions. This is
+        `None`, unless we are working with a bi-variational basis.
+        """
         if self._bra_spf is None:
             self._bra_spf = self._spf.conj()
 
