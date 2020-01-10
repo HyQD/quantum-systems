@@ -154,9 +154,274 @@ In two dimensions there is also functionality for adding a constant
 homogeneous magnetic field.</p>
 <div class="section" id="one-dimensional-quantum-dot">
 <h2>One-Dimensional Quantum Dot<a class="headerlink" href="#one-dimensional-quantum-dot" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="quantum_systems.ODQD">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">ODQD</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">grid_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">a=0.25</em>, <em class="sig-param">alpha=1.0</em>, <em class="sig-param">beta=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create 1D quantum dot system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – Number of electrons</p></li>
+<li><p><strong>l</strong> (<em>int</em>) – Number of spinorbitals</p></li>
+<li><p><strong>grid_length</strong> (<em>int</em><em> or </em><em>float</em>) – Space over which to model wavefunction</p></li>
+<li><p><strong>num_grid_points</strong> (<em>int</em><em> or </em><em>float</em>) – Defines resolution of numerical representation
+of wavefunction</p></li>
+<li><p><strong>a</strong> (<em>float</em><em>, </em><em>default 0.25</em>) – Screening parameter in the shielded Coulomb interation.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – Strength parameter in the shielded Coulomb interaction.</p></li>
+<li><p><strong>beta</strong> (<em>float</em><em>, </em><em>default 0.0</em>) – Strength parameter of the non-dipole term in the laser interaction matrix.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="quantum_systems.ODQD.h">
+<code class="sig-name descname">h</code><a class="headerlink" href="#quantum_systems.ODQD.h" title="Permalink to this definition">¶</a></dt>
+<dd><p>One-body matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="quantum_systems.ODQD.f">
+<code class="sig-name descname">f</code><a class="headerlink" href="#quantum_systems.ODQD.f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fock matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="quantum_systems.ODQD.u">
+<code class="sig-name descname">u</code><a class="headerlink" href="#quantum_systems.ODQD.u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two-body matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.ODQD.setup_system">
+<code class="sig-name descname">setup_system</code><span class="sig-paren">(</span><em class="sig-param">potential=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.setup_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must be called to set up quantum system.
+The method will revert to regular harmonic oscillator
+potential if no potential is provided. It is also
+possible to use double well potentials.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.ODQD.construct_dipole_moment">
+<code class="sig-name descname">construct_dipole_moment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.construct_dipole_moment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs dipole moment. This method is called by
+setup_system().</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="quantum_systems.ODQD.AsymmetricDWPotential">
+<em class="property">class </em><code class="sig-name descname">AsymmetricDWPotential</code><span class="sig-paren">(</span><em class="sig-param">a=1</em>, <em class="sig-param">b=1</em>, <em class="sig-param">c=-2.5</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.AsymmetricDWPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a generalization of the asymmetric double-well potential
+used by Wadehra et. al: <a class="reference external" href="https://aip.scitation.org/doi/10.1063/1.1589481">https://aip.scitation.org/doi/10.1063/1.1589481</a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="quantum_systems.ODQD.DWPotentialSmooth">
+<em class="property">class </em><code class="sig-name descname">DWPotentialSmooth</code><span class="sig-paren">(</span><em class="sig-param">a=4</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.DWPotentialSmooth" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the double-well potential used by J. Kryvi and S. Bøe in their
+thesis work. See Eq. [13.11] in Bøe: <a class="reference external" href="https://www.duo.uio.no/handle/10852/37170">https://www.duo.uio.no/handle/10852/37170</a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="quantum_systems.ODQD.SymmetricDWPotential">
+<em class="property">class </em><code class="sig-name descname">SymmetricDWPotential</code><span class="sig-paren">(</span><em class="sig-param">a=0.5</em>, <em class="sig-param">b=1</em>, <em class="sig-param">c=-7</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.SymmetricDWPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a generalization of the symmetric double-well potential
+used by Wadehra et. al: <a class="reference external" href="https://aip.scitation.org/doi/10.1063/1.1589481">https://aip.scitation.org/doi/10.1063/1.1589481</a></p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="two-dimensional-quantum-dots">
 <h2>Two-Dimensional Quantum Dots<a class="headerlink" href="#two-dimensional-quantum-dots" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="quantum_systems.TwoDimensionalHarmonicOscillator">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalHarmonicOscillator</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">radius_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">omega=1</em>, <em class="sig-param">mass=1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create 2D harmonic oscillator, using
+polar coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – Number of electrons</p></li>
+<li><p><strong>l</strong> (<em>int</em>) – Number of spinorbitals</p></li>
+<li><p><strong>radius_length</strong> (<em>int</em><em> or </em><em>float</em>) – Radius of space over which to model wavefunction</p></li>
+<li><p><strong>num_grid_points</strong> (<em>int</em><em> or </em><em>float</em>) – Defines resolution of numerical representation
+of wavefunction</p></li>
+<li><p><strong>omega</strong> (<em>float</em><em>, </em><em>default 1</em>) – Frequency of harmonic oscillator potential.</p></li>
+<li><p><strong>mass</strong> (<em>int of float</em><em>, </em><em>default 1</em>) – Mass of electrons</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="quantum_systems.TwoDimensionalHarmonicOscillator.h">
+<code class="sig-name descname">h</code><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.h" title="Permalink to this definition">¶</a></dt>
+<dd><p>One-body matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="quantum_systems.TwoDimensionalHarmonicOscillator.f">
+<code class="sig-name descname">f</code><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fock matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="quantum_systems.TwoDimensionalHarmonicOscillator.u">
+<code class="sig-name descname">u</code><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two-body matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.TwoDimensionalHarmonicOscillator.setup_system">
+<code class="sig-name descname">setup_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.setup_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must be called to set up quantum system.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.TwoDimensionalHarmonicOscillator.setup_spf">
+<code class="sig-name descname">setup_spf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.setup_spf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs single-particle functions. This method is called
+by setup_system().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.TwoDimensionalHarmonicOscillator.construct_dipole_moment">
+<code class="sig-name descname">construct_dipole_moment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.construct_dipole_moment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs dipole moment. This method is called by
+setup_system().</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="quantum_systems.TwoDimensionalDoubleWell">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalDoubleWell</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">radius</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">barrier_strength=1</em>, <em class="sig-param">omega=1</em>, <em class="sig-param">mass=1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalDoubleWell" title="Permalink to this definition">¶</a></dt>
+<dd><p>System constructing two-dimensional quantum dots with a double well
+potential barrier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – Number of occupied spin-orbitals.</p></li>
+<li><p><strong>l</strong> (<em>int</em>) – Number of spin-orbitals.</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – Length of radial coordinate.</p></li>
+<li><p><strong>num_grid_points</strong> (<em>int</em>) – Discretization of spatial coordinates. This includes both the radial and
+the angular part of the room.</p></li>
+<li><p><strong>barrier_strength</strong> (<em>float</em>) – Barrier strength in the double well potential.</p></li>
+<li><p><strong>omega</strong> (<em>float</em>) – Frequency of the oscillator potential.</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – Mass of the particles.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="quantum_systems.TwoDimensionalDoubleWell.setup_system">
+<code class="sig-name descname">setup_system</code><span class="sig-paren">(</span><em class="sig-param">axis=0</em>, <em class="sig-param">add_spin=True</em>, <em class="sig-param">anti_symmetrize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalDoubleWell.setup_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function setting up the one- and two-body elements, the
+single-particle functions, dipole moments and other quantities used by
+second quantization methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>axis</strong> (<em>int</em>) – The axis argument specifies which
+axis the well barrier is aligned to. (0, 1) = (x, y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="quantum_systems.TwoDimHarmonicOscB">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimHarmonicOscB</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">radius_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">omega_0=1</em>, <em class="sig-param">mass=1</em>, <em class="sig-param">omega_c=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create 2D harmonic oscillator under homogenous
+magnetic field, using polar coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – Number of electrons</p></li>
+<li><p><strong>l</strong> (<em>int</em>) – Number of spinorbitals</p></li>
+<li><p><strong>radius_length</strong> (<em>int</em><em> or </em><em>float</em>) – Radius of space over which to model wavefunction</p></li>
+<li><p><strong>num_grid_points</strong> (<em>int</em><em> or </em><em>float</em>) – Defines resolution of numerical representation
+of wavefunction</p></li>
+<li><p><strong>omega_0</strong> (<em>float</em><em>, </em><em>default 1</em>) – Frequency of harmonic oscillator potential.</p></li>
+<li><p><strong>mass</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>default 1</em>) – Mass of electrons.</p></li>
+<li><p><strong>omega_c</strong> (<em>float</em><em>, </em><em>default 0</em>) – Frequency corresponding to strength of magnetic field.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="quantum_systems.TwoDimHarmonicOscB.h">
+<code class="sig-name descname">h</code><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB.h" title="Permalink to this definition">¶</a></dt>
+<dd><p>One-body matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="quantum_systems.TwoDimHarmonicOscB.f">
+<code class="sig-name descname">f</code><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB.f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fock matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="quantum_systems.TwoDimHarmonicOscB.u">
+<code class="sig-name descname">u</code><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB.u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two-body matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.TwoDimHarmonicOscB.setup_system">
+<code class="sig-name descname">setup_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB.setup_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must be called to set up quantum system.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.TwoDimHarmonicOscB.construct_dipole_moment">
+<code class="sig-name descname">construct_dipole_moment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB.construct_dipole_moment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs dipole moment. This method is called by
+setup_system().</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
