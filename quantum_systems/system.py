@@ -373,3 +373,61 @@ class QuantumSystem:
             return self._u
 
         return self._time_evolution_operator.u_t(current_time)
+
+    def set_h(self, h, add_spin=False):
+        if add_spin:
+            h = add_spin_one_body(h, np=self.np)
+
+        self._h = h
+
+    def set_u(self, u, add_spin=False, anti_symmetrize=False):
+        if add_spin:
+            u = add_spin_two_body(u, np=self.np)
+
+        if anti_symmetrize:
+            u = anti_symmetrize_u(u)
+
+        self._u = u
+
+    def set_s(self, s, add_spin=False):
+        if add_spin:
+            s = add_spin_one_body(s, np=self.np)
+
+        self._s = s
+
+    def set_dipole_moment(self, dipole_moment, add_spin=False):
+        np = self.np
+
+        if len(dipole_moment.shape) < 3:
+            dipole_moment = np.array([dipole_moment])
+
+        if not add_spin:
+            self._dipole_moment = dipole_moment
+            return
+
+        new_shape = [dipole_moment.shape[0]]
+        new_shape.extend(list(map(lambda x: x * 2, dipole_moment.shape[1:])))
+
+        self._dipole_moment = np.zeros(
+            tuple(new_shape), dtype=dipole_moment.dtype
+        )
+
+        for i in range(len(dipole_moment)):
+            self._dipole_moment[i] = add_spin_one_body(dipole_moment[i], np=np)
+
+    def set_spf(self, spf, add_spin=False):
+        if not add_spin:
+            self._spf = spf
+            return
+
+        self._spf = add_spin_spf(spf, self.np)
+
+    def set_bra_spf(self, bra_spf, add_spin=False):
+        if not add_spin:
+            self._bra_spf = bra_spf
+            return
+
+        self._bra_spf = add_spin_bra_spf(bra_spf, self.np)
+
+    def set_nuclear_repulsion_energy(self, nuclear_repulsion_energy):
+        self._nuclear_repulsion_energy = nuclear_repulsion_energy

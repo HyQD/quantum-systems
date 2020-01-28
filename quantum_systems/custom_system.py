@@ -4,78 +4,7 @@ from quantum_systems.system import QuantumSystem
 from quantum_systems.system_helper import (
     transform_one_body_elements,
     transform_two_body_elements,
-    add_spin_spf,
-    add_spin_bra_spf,
-    add_spin_one_body,
-    add_spin_two_body,
-    anti_symmetrize_u,
 )
-
-
-class CustomSystem(QuantumSystem):
-    """Custom quantum system where a user can pass in matrix elements from
-    other sources. The purpose of this class is to allow usage of quantum
-    solvers made by the author and collaborators using other sources of matrix
-    elements.
-    """
-
-    def set_h(self, h, add_spin=False):
-        if add_spin:
-            h = add_spin_one_body(h, np=self.np)
-
-        self._h = h
-
-    def set_u(self, u, add_spin=False, anti_symmetrize=False):
-        if add_spin:
-            u = add_spin_two_body(u, np=self.np)
-
-        if anti_symmetrize:
-            u = anti_symmetrize_u(u)
-
-        self._u = u
-
-    def set_s(self, s, add_spin=False):
-        if add_spin:
-            s = add_spin_one_body(s, np=self.np)
-
-        self._s = s
-
-    def set_dipole_moment(self, dipole_moment, add_spin=False):
-        np = self.np
-
-        if len(dipole_moment.shape) < 3:
-            dipole_moment = np.array([dipole_moment])
-
-        if not add_spin:
-            self._dipole_moment = dipole_moment
-            return
-
-        new_shape = [dipole_moment.shape[0]]
-        new_shape.extend(list(map(lambda x: x * 2, dipole_moment.shape[1:])))
-
-        self._dipole_moment = np.zeros(
-            tuple(new_shape), dtype=dipole_moment.dtype
-        )
-
-        for i in range(len(dipole_moment)):
-            self._dipole_moment[i] = add_spin_one_body(dipole_moment[i], np=np)
-
-    def set_spf(self, spf, add_spin=False):
-        if not add_spin:
-            self._spf = spf
-            return
-
-        self._spf = add_spin_spf(spf, self.np)
-
-    def set_bra_spf(self, bra_spf, add_spin=False):
-        if not add_spin:
-            self._bra_spf = bra_spf
-            return
-
-        self._bra_spf = add_spin_bra_spf(bra_spf, self.np)
-
-    def set_nuclear_repulsion_energy(self, nuclear_repulsion_energy):
-        self._nuclear_repulsion_energy = nuclear_repulsion_energy
 
 
 def construct_pyscf_system_ao(
@@ -113,7 +42,7 @@ def construct_pyscf_system_ao(
     )
     dipole_integrals = mol.intor("int1e_r").reshape(3, l // 2, l // 2)
 
-    system = CustomSystem(n, l, n_up=n_up, np=np)
+    system = QuantumSystem(n, l, n_up=n_up, np=np)
     system.set_h(h, add_spin=add_spin)
     system.set_s(s, add_spin=add_spin)
     system.set_u(u, add_spin=add_spin, anti_symmetrize=anti_symmetrize)
@@ -179,7 +108,7 @@ def construct_pyscf_system_rhf(
     )
     dipole_integrals = mol.intor("int1e_r").reshape(3, l // 2, l // 2)
 
-    system = CustomSystem(n, l, np=np)
+    system = QuantumSystem(n, l, np=np)
     system.set_h(h, add_spin=False)
     system.set_s(s, add_spin=False)
     system.set_u(u, add_spin=False, anti_symmetrize=False)
@@ -298,7 +227,7 @@ def construct_pyscf_system(molecule, basis="cc-pvdz", np=None, verbose=False):
     u = u.transpose(0, 2, 1, 3)
 
     # Build a custom system from the integral elements
-    system = CustomSystem(n, l, np=np)
+    system = QuantumSystem(n, l, np=np)
     system.set_h(h)
     system.set_u(u, anti_symmetrize=True)
     system.set_dipole_moment(dipole_moment)
@@ -345,7 +274,7 @@ def construct_psi4_system(
     ]
     dipole_integrals = np.stack(dipole_integrals)
 
-    system = CustomSystem(n, l, n_up=n_up, np=np)
+    system = QuantumSystem(n, l, n_up=n_up, np=np)
     system.set_h(h, add_spin=add_spin)
     system.set_u(u, add_spin=add_spin, anti_symmetrize=anti_symmetrize)
     system.set_s(overlap, add_spin=add_spin)

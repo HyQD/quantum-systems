@@ -1,7 +1,7 @@
-from quantum_systems import CustomSystem
+from quantum_systems import QuantumSystem
 
 
-class RandomSystem(CustomSystem):
+class RandomSystem(QuantumSystem):
     """A system consisting of random matrix elements satisfying the symmetries
     of the second quantized integral elements. The purpose of this system is for
     unit testing of purely mathematical methods ignoring inherent symmetries in
@@ -25,11 +25,11 @@ class RandomSystem(CustomSystem):
 
     def set_h(self, **kwargs):
         """Function setting up random one-body Hamiltonian matrix elements. The
-        arguments are the same as for the CustomSystem-class.
+        arguments are the same as for the QuantumSystem-class.
 
         See Also
         --------
-        CustomSystem.set_h : Set one-body Hamiltonian.
+        QuantumSystem.set_h : Set one-body Hamiltonian.
         """
 
         shape = (self.l, self.l)
@@ -42,11 +42,11 @@ class RandomSystem(CustomSystem):
 
     def set_u(self, **kwargs):
         """Function setting up random two-body Hamiltonian matrix elements. The
-        arguments are the same as for the CustomSystem-class.
+        arguments are the same as for the QuantumSystem-class.
 
         See Also
         --------
-        CustomSystem.set_u : Set two-body Hamiltonian.
+        QuantumSystem.set_u : Set two-body Hamiltonian.
         """
 
         shape = [self.l for i in range(4)]
@@ -62,11 +62,11 @@ class RandomSystem(CustomSystem):
 
     def set_s(self, *args, **kwargs):
         """Function setting up random overlap matrix elements. The arguments
-        are the same as for the CustomSystem-class.
+        are the same as for the QuantumSystem-class.
 
         See Also
         --------
-        CustomSystem.set_s : Set overlap matrix elements.
+        QuantumSystem.set_s : Set overlap matrix elements.
         """
 
         shape = (self.l, self.l)
@@ -79,7 +79,7 @@ class RandomSystem(CustomSystem):
 
     def set_dipole_moment(self, *args, dim=3, **kwargs):
         """Function setting up random dipole moment matrix elements. The
-        arguments are the same as for the CustomSystem-class.
+        arguments are the same as for the QuantumSystem-class.
 
         Parameters
         ----------
@@ -88,7 +88,7 @@ class RandomSystem(CustomSystem):
 
         See Also
         --------
-        CustomSystem.set_dipole_moment : Set dipole moment matrix elements.
+        QuantumSystem.set_dipole_moment : Set dipole moment matrix elements.
         """
 
         shape = (dim, self.l, self.l)
@@ -101,11 +101,11 @@ class RandomSystem(CustomSystem):
 
     def set_nuclear_repulsion_energy(self, *args, **kwargs):
         """Function setting up a random nuclear repulsion energy. The arguments
-        are the same as for the CustomSystem-class.
+        are the same as for the QuantumSystem-class.
 
         See Also
         --------
-        CustomSystem.set_nuclear_repulsion_energy : Set nuclear repulsion
+        QuantumSystem.set_nuclear_repulsion_energy : Set nuclear repulsion
         energy.
         """
         if len(args) == 0:

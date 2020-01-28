@@ -1,6 +1,5 @@
 from .system import QuantumSystem
 from .custom_system import (
-    CustomSystem,
     construct_psi4_system,
     construct_pyscf_system,
     construct_pyscf_system_ao,
