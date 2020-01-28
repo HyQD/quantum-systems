@@ -278,7 +278,7 @@ class QuantumSystem:
 
         if c is not None:
             ket_spf = transform_spf(ket_spf, c, self.np)
-            c_tilde = c_tilde if c_tilde is None else c.conj().T
+            c_tilde = c_tilde if c_tilde is not None else c.conj().T
             bra_spf = transform_bra_spf(bra_spf, c_tilde, self.np)
 
         return compute_particle_density(rho_qp, ket_spf, bra_spf, self.np)
