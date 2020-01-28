@@ -1,3 +1,5 @@
+import copy
+
 from quantum_systems.system_helper import (
     transform_spf,
     transform_bra_spf,
@@ -431,3 +433,23 @@ class QuantumSystem:
 
     def set_nuclear_repulsion_energy(self, nuclear_repulsion_energy):
         self._nuclear_repulsion_energy = nuclear_repulsion_energy
+
+    def copy_system(self):
+        """Function creating a deep copy of the current system. This function
+        is a hack as we have to temporarily remove the stored module before
+        using Python's `copy.deepcopy`-function.
+
+        Returns
+        -------
+        QuantumSystem
+            A deep copy of the current system.
+        """
+
+        np = self.np
+        self.np = None
+
+        new_system = copy.deepcopy(self)
+        new_system.np = np
+        self.np = np
+
+        return new_system
