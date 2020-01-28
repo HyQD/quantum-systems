@@ -1,0 +1,341 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Quantum System &mdash; Quantum Systems  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quantum Dots" href="quantum_dots.html" />
+    <link rel="prev" title="Getting started" href="get_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Quantum Systems
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quantum System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantum_dots.html">Quantum Dots</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Quantum Systems</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Quantum System</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/system.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quantum-system">
+<h1>Quantum System<a class="headerlink" href="#quantum-system" title="Permalink to this headline">¶</a></h1>
+<p>All systems are represented by the <cite>QuantumSystem</cite>-class. This class allows the
+construction of custom systems by passing in matrix elements. Alternatively,
+there are subclasses setting up specific systems.</p>
+<dl class="class">
+<dt id="quantum_systems.QuantumSystem">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">QuantumSystem</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em>, <em class="sig-param">n_up=None</em>, <em class="sig-param">np=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class defining some of the common methods used by all the different
+quantum systems.</p>
+<dl class="method">
+<dt id="quantum_systems.QuantumSystem.bra_spf">
+<em class="property">property </em><code class="sig-name descname">bra_spf</code><a class="headerlink" href="#quantum_systems.QuantumSystem.bra_spf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter returning the conjugate single particle functions. This is
+<cite>None</cite>, unless we are working with a bi-variational basis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.QuantumSystem.compute_particle_density">
+<code class="sig-name descname">compute_particle_density</code><span class="sig-paren">(</span><em class="sig-param">rho_qp</em>, <em class="sig-param">c=None</em>, <em class="sig-param">c_tilde=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.compute_particle_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function computing the particle density for a given one-body density
+matrix. This function (optionally) changes the basis of the
+single-particle states for given coefficient matrices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_qp</strong> (<em>np.ndarray</em>) – One-body density matrix</p></li>
+<li><p><strong>c</strong> (<em>np.ndarray</em>) – Coefficient matrix for basis change. Default is <cite>None</cite> and hence no
+transformation occurs.</p></li>
+<li><p><strong>c_tilde</strong> (<em>np.ndarray</em>) – Bra-state coefficient matrix. Default is <cite>None</cite> which leads to one
+of two situations. If <cite>c != None</cite> <cite>c_tilde</cite> is assumed to be the
+conjugated transpose of <cite>c</cite>. Otherwise, no transformation occurs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Particle density with the same dimensions as the grid.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.QuantumSystem.compute_reference_energy">
+<code class="sig-name descname">compute_reference_energy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.compute_reference_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function computing the reference energy.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.QuantumSystem.construct_fock_matrix">
+<code class="sig-name descname">construct_fock_matrix</code><span class="sig-paren">(</span><em class="sig-param">h</em>, <em class="sig-param">u</em>, <em class="sig-param">f=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.construct_fock_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function setting up the Fock matrix, that is, the normal-ordered
+one-body elements. If the axis lengths of the two-body elements are
+half of the number of spin-orbitals, i.e., we are in the
+spin-restricted regime, we assume that the user wishes to compute the
+restricted Fock matrix and that the two-body elements are not
+antisymmetric.</p>
+<p>In a spin-orbital basis we compute:</p>
+<div class="math notranslate nohighlight">
+\[f^{p}_{q} = h^{p}_{q} + u^{pi}_{qi},\]</div>
+<p>where <span class="math notranslate nohighlight">\(p, q, r, s, ...\)</span> run over all indices and <cite>i, j, k, l,
+…</cite> correspond to the occupied indices.
+For an orbital basis we return:</p>
+<div class="math notranslate nohighlight">
+\[f^{p}_{q} = h^{p}_{q} + 2 u^{pi}_{qi} - u^{pi}_{iq},\]</div>
+<p>where the two-body elements are assumed to not be antisymmetric.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h</strong> (<em>np.ndarray</em>) – The one-body matrix elements.</p></li>
+<li><p><strong>u</strong> (<em>np.ndarray</em>) – The two-body matrix elements.</p></li>
+<li><p><strong>f</strong> (<em>np.ndarray</em>) – An empty array of the same shape as <cite>h</cite> to be filled with the Fock
+matrix elements. Default is <cite>None</cite> which means that we allocate a
+new matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The filled Fock matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.QuantumSystem.copy_system">
+<code class="sig-name descname">copy_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.copy_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function creating a deep copy of the current system. This function
+is a hack as we have to temporarily remove the stored module before
+using Python’s <cite>copy.deepcopy</cite>-function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A deep copy of the current system.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#quantum_systems.QuantumSystem" title="quantum_systems.QuantumSystem">QuantumSystem</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.QuantumSystem.f">
+<em class="property">property </em><code class="sig-name descname">f</code><a class="headerlink" href="#quantum_systems.QuantumSystem.f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter returning one-body Fock matrix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.QuantumSystem.h">
+<em class="property">property </em><code class="sig-name descname">h</code><a class="headerlink" href="#quantum_systems.QuantumSystem.h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter returning one-body matrix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.QuantumSystem.s">
+<em class="property">property </em><code class="sig-name descname">s</code><a class="headerlink" href="#quantum_systems.QuantumSystem.s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter returning the overlap matrix of the atomic orbitals. If the
+overlap elements don’t yet exist, we assume that the overlap is the
+identity.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.QuantumSystem.spf">
+<em class="property">property </em><code class="sig-name descname">spf</code><a class="headerlink" href="#quantum_systems.QuantumSystem.spf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter returning the single particle functions, i.e, the eigenstates
+of the non-interacting Hamiltonian.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.QuantumSystem.u">
+<em class="property">property </em><code class="sig-name descname">u</code><a class="headerlink" href="#quantum_systems.QuantumSystem.u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter returning the antisymmetric two-body matrix.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="quantum_dots.html" class="btn btn-neutral float-right" title="Quantum Dots" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="get_started.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Schoyen, gregwinther
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
