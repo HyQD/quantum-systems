@@ -4,6 +4,8 @@ from quantum_systems.system import QuantumSystem
 from quantum_systems.system_helper import (
     transform_one_body_elements,
     transform_two_body_elements,
+    add_spin_spf,
+    add_spin_bra_spf,
     add_spin_one_body,
     add_spin_two_body,
     anti_symmetrize_u,
@@ -59,18 +61,18 @@ class CustomSystem(QuantumSystem):
             self._dipole_moment[i] = add_spin_one_body(dipole_moment[i], np=np)
 
     def set_spf(self, spf, add_spin=False):
-        np = self.np
-
         if not add_spin:
             self._spf = spf
             return
 
-        new_shape = [spf.shape[0] * 2, *spf.shape[1:]]
+        self._spf = add_spin_spf(spf, self.np)
 
-        self._spf = np.zeros(tuple(new_shape), dtype=spf.dtype)
+    def set_bra_spf(self, bra_spf, add_spin=False):
+        if not add_spin:
+            self._bra_spf = bra_spf
+            return
 
-        self._spf[::2, :] = spf
-        self._spf[1::2, :] = spf
+        self._bra_spf = add_spin_bra_spf(bra_spf, self.np)
 
     def set_nuclear_repulsion_energy(self, nuclear_repulsion_energy):
         self._nuclear_repulsion_energy = nuclear_repulsion_energy

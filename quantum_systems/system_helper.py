@@ -50,6 +50,23 @@ def transform_two_body_elements(u, c, np, c_tilde=None):
     return _u
 
 
+def add_spin_spf(spf, np):
+    new_shape = [spf.shape[0] * 2, *spf.shape[1:]]
+    new_spf = np.zeros(tuple(new_shape), dtype=spf.dtype)
+
+    new_spf[::2, :] = spf
+    new_spf[1::2, :] = spf
+
+    return new_spf
+
+
+def add_spin_bra_spf(bra_spf, np):
+    if bra_spf is None:
+        return None
+
+    return add_spin_spf(bra_spf, np)
+
+
 def add_spin_one_body(h, np):
     return np.kron(h, np.eye(2))
 
