@@ -11,6 +11,7 @@ Welcome to Quantum Systems's documentation!
     :caption: Contents:
 
     get_started
+    system
     quantum_dots
 
 Indices and tables
