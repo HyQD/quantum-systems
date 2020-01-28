@@ -97,19 +97,11 @@ def test_psi4_construction():
 
 
 def test_pyscf_construction():
-    try:
-        system = construct_pyscf_system("be 0 0 0")
-        assert True
-    except ImportError:
-        warnings.warn("Unable to import PySCF")
+    system = construct_pyscf_system("be 0 0 0")
 
 
 def test_pyscf_ao_construction():
-    try:
-        system = construct_pyscf_system_ao("be 0 0 0")
-        assert True
-    except ImportError:
-        warnings.warn("Unable to import PySCF")
+    system = construct_pyscf_system_ao("be 0 0 0")
 
 
 def test_reference_energy():
