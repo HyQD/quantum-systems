@@ -12,6 +12,7 @@ from quantum_systems.system_helper import (
     anti_symmetrize_u,
     check_axis_lengths,
     change_module,
+    compute_particle_density,
 )
 
 
