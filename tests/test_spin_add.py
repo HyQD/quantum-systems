@@ -53,3 +53,40 @@ def test_restricted_odho():
     np.testing.assert_allclose(
         odho_res.h[o_res, o_res], odho.h[odho.o_down, odho.o_down]
     )
+
+    np.testing.assert_allclose(
+        odho_res.h[v_res, v_res], odho.h[odho.v_up, odho.v_up]
+    )
+
+    np.testing.assert_allclose(
+        odho_res.h[v_res, v_res], odho.h[odho.v_down, odho.v_down]
+    )
+
+
+def test_open_odqd():
+    n = 5
+    n_up = 3
+    n_down = n - n_up
+    l = 20
+
+    odho_res = ODQD(n, l, 11, 201, n_up=n_up)
+    odho_res.setup_system(add_spin=False, anti_symmetrize=False)
+
+    odho = ODQD(n, l, 11, 201, n_up=n_up)
+    odho.setup_system()
+
+    np.testing.assert_allclose(
+        odho_res.h[:n_up, :n_up], odho.h[odho.o_up, odho.o_up]
+    )
+
+    np.testing.assert_allclose(
+        odho_res.h[: n - n_up, : n - n_up], odho.h[odho.o_down, odho.o_down]
+    )
+
+    np.testing.assert_allclose(
+        np.zeros((n_up, n_down)), odho.h[odho.o_up, odho.o_down]
+    )
+
+    np.testing.assert_allclose(
+        np.zeros((n_down, n_up)), odho.h[odho.o_down, odho.o_up]
+    )
