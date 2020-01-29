@@ -54,8 +54,8 @@ def add_spin_spf(spf, np):
     new_shape = [spf.shape[0] * 2, *spf.shape[1:]]
     new_spf = np.zeros(tuple(new_shape), dtype=spf.dtype)
 
-    new_spf[::2, :] = spf
-    new_spf[1::2, :] = spf
+    new_spf[::2] = spf
+    new_spf[1::2] = spf
 
     return new_spf
 
