@@ -37,7 +37,7 @@ def theta_2_tilde_integral_wolfram(m_p, m_q):
     if abs(m_p - m_q) == 1:
         return 0
 
-    integral = -(1 + np.exp(1j * np.pi * (m_q - m_p))) ** 2 / (
+    integral = -((1 + np.exp(1j * np.pi * (m_q - m_p))) ** 2) / (
         (m_q - m_p) ** 2 - 1
     )
 
