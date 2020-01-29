@@ -18,6 +18,14 @@ def test_restricted_odho():
     assert odho.u.shape == tuple(2 * s for s in odho_res.u.shape)
 
     np.testing.assert_allclose(
+        odho.spf[odho.o_up], odho.spf[odho.o_down],
+    )
+
+    np.testing.assert_allclose(
+        odho.spf[odho.v_up], odho.spf[odho.v_down],
+    )
+
+    np.testing.assert_allclose(
         odho.h[odho.o_up, odho.o_up], odho.h[odho.o_down, odho.o_down]
     )
 
@@ -47,6 +55,14 @@ def test_restricted_odho():
     v_res = slice(odho_res.n // 2, odho_res.l // 2)
 
     np.testing.assert_allclose(
+        odho_res.spf[o_res], odho.spf[odho.o_up],
+    )
+
+    np.testing.assert_allclose(
+        odho_res.spf[v_res], odho.spf[odho.v_up],
+    )
+
+    np.testing.assert_allclose(
         odho_res.h[o_res, o_res], odho.h[odho.o_up, odho.o_up]
     )
 
@@ -74,6 +90,14 @@ def test_open_odqd():
 
     odho = ODQD(n, l, 11, 201, n_up=n_up)
     odho.setup_system()
+
+    np.testing.assert_allclose(
+        odho_res.spf[:n_up], odho.spf[odho.o_up],
+    )
+
+    np.testing.assert_allclose(
+        odho_res.spf[: n - n_up], odho.spf[odho.o_down],
+    )
 
     np.testing.assert_allclose(
         odho_res.h[:n_up, :n_up], odho.h[odho.o_up, odho.o_up]
