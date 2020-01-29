@@ -249,8 +249,8 @@ class ODQD(QuantumSystem):
     def setup_system(self, potential=None, add_spin=True, anti_symmetrize=True):
         if potential is None:
             omega = (
-                0.25
-            )  # Default frequency corresponding to Zanghellini article
+                0.25  # Default frequency corresponding to Zanghellini article
+            )
             potential = HOPotential(omega)
 
         self.potential = potential

@@ -83,7 +83,7 @@ class GaussianPotential(OneDimPotential):
 
     def __call__(self, x):
         return -self.weight * self.np.exp(
-            -(x - self.center) ** 2 / (2.0 * self.deviation ** 2)
+            -((x - self.center) ** 2) / (2.0 * self.deviation ** 2)
         )
 
 
@@ -108,7 +108,7 @@ class GaussianPotentialHardWall(OneDimPotential):
 
         return (
             -self.weight
-            * np.exp(-(x - self.center) ** 2 / (2.0 * self.deviation ** 2))
+            * np.exp(-((x - self.center) ** 2) / (2.0 * self.deviation ** 2))
             + wall
         )
 
