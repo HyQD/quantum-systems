@@ -14,11 +14,6 @@ def delta(p, q):
     return p == q
 
 
-@numba.njit(cache=True)
-def spin_delta(p, q):
-    return ((p & 0x1) ^ (q & 0x1)) ^ 0x1
-
-
 def transform_spf(spf, c, np):
     return np.tensordot(c, spf, axes=((0), (0)))
 
