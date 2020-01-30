@@ -28,10 +28,10 @@ def construct_pyscf_system_ao(
     n = mol.nelectron
     l = mol.nao * 2
 
-    n_up = (mol.nelectron + mol.spin) // 2
-    n_down = n_up - mol.spin
+    n_a = (mol.nelectron + mol.spin) // 2
+    n_b = n_a - mol.spin
 
-    assert n_down == n - n_up
+    assert n_b == n - n_a
 
     h = pyscf.scf.hf.get_hcore(mol)
     s = mol.intor_symmetric("int1e_ovlp")
@@ -42,7 +42,7 @@ def construct_pyscf_system_ao(
     )
     dipole_integrals = mol.intor("int1e_r").reshape(3, l // 2, l // 2)
 
-    system = QuantumSystem(n, l, n_up=n_up, np=np)
+    system = QuantumSystem(n, l, n_a=n_a, np=np)
     system.set_h(h, add_spin=add_spin)
     system.set_s(s, add_spin=add_spin)
     system.set_u(u, add_spin=add_spin, anti_symmetrize=anti_symmetrize)
@@ -264,9 +264,9 @@ def construct_psi4_system(
     u = np.asarray(molecular_integrals.ao_eri()).transpose(0, 2, 1, 3)
     overlap = np.asarray(molecular_integrals.ao_overlap())
 
-    n_up = wavefunction.nalpha()
-    n_down = wavefunction.nbeta()
-    n = n_up + n_down
+    n_a = wavefunction.nalpha()
+    n_b = wavefunction.nbeta()
+    n = n_a + n_b
     l = 2 * wavefunction.nmo()
 
     dipole_integrals = [
@@ -274,7 +274,7 @@ def construct_psi4_system(
     ]
     dipole_integrals = np.stack(dipole_integrals)
 
-    system = QuantumSystem(n, l, n_up=n_up, np=np)
+    system = QuantumSystem(n, l, n_a=n_a, np=np)
     system.set_h(h, add_spin=add_spin)
     system.set_u(u, add_spin=add_spin, anti_symmetrize=anti_symmetrize)
     system.set_s(overlap, add_spin=add_spin)

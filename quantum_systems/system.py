@@ -13,6 +13,7 @@ from quantum_systems.system_helper import (
     check_axis_lengths,
     change_module,
     compute_particle_density,
+    get_spin_block_slices,
 )
 
 
@@ -21,7 +22,7 @@ class QuantumSystem:
     quantum systems.
     """
 
-    def __init__(self, n, l, n_up=None, np=None):
+    def __init__(self, n, l, n_a=None, np=None):
         assert n <= l
 
         if np is None:
@@ -29,7 +30,7 @@ class QuantumSystem:
 
         self.np = np
 
-        self.set_system_size(n, l, n_up)
+        self.set_system_size(n, l, n_a)
 
         self._h = None
         self._f = None
@@ -44,26 +45,34 @@ class QuantumSystem:
 
         self._nuclear_repulsion_energy = 0
 
-    def set_system_size(self, n, l, n_up=None):
-        if n_up is None:
-            n_up = n // 2
+    def set_system_size(self, n, l, n_a=None):
+        assert n <= l
 
-        assert n_up <= n
+        if n_a is None:
+            n_a = n // 2
 
-        n_down = n - n_up
+        assert n_a <= n
+        assert l % 2 == 0
+        assert n_a <= l // 2
+        assert n - n_a <= l // 2
 
         self.n = n
-        self.n_up = n_up
-        self.n_down = n_down
         self.l = l
         self.m = self.l - self.n
 
         self.o = slice(0, self.n)
-        self.o_up = slice(0, self.n, 2)
-        self.o_down = slice(1, self.n, 2)
         self.v = slice(self.n, self.l)
-        self.v_up = slice(self.n, self.l, 2)
-        self.v_down = slice(self.n + 1, self.l, 2)
+
+        self.n_a = n_a
+        self.n_b = n - n_a
+        self.l_a = l // 2
+        self.l_b = l // 2
+        self.m_a = self.l_a - self.n_a
+        self.m_b = self.l_b - self.n_b
+
+        self.o_a, self.o_b, self.v_a, self.v_b = get_spin_block_slices(
+            self.n, self.n_a, self.l
+        )
 
     def setup_system(self):
         pass
