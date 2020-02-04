@@ -52,7 +52,6 @@ class QuantumSystem:
             n_a = n // 2
 
         assert n_a <= n
-        assert l % 2 == 0
         assert n_a <= l // 2
         assert n - n_a <= l // 2
 
