@@ -225,7 +225,10 @@ class QuantumSystem:
     def change_basis_spf(self, c, c_tilde=None):
         if c_tilde is not None:
             # In case of bi-orthogonal basis sets, we create an extra set
-            # of single-particle functions for the bra-side
+            # of single-particle functions for the bra-side.
+            # Note the use of self.bra_spf instead of self._bra_spf in the
+            # argument to the helper function. This guarantees that
+            # self._bra_spf is not None.
             self._bra_spf = transform_bra_spf(self.bra_spf, c_tilde, self.np)
 
         self._spf = transform_spf(self._spf, c, self.np)
