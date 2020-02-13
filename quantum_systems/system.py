@@ -1,3 +1,4 @@
+import abc
 import copy
 
 from quantum_systems.system_helper import (
@@ -17,7 +18,7 @@ from quantum_systems.system_helper import (
 )
 
 
-class QuantumSystem:
+class QuantumSystem(metaclass=abc.ABCMeta):
     """Base class defining some of the common methods used by all the different
     quantum systems.
     """
