@@ -106,3 +106,20 @@ class LaserField(TimeEvolutionOperator):
             self._system.dipole_moment,
             axes=(0, 0),
         )
+
+
+class AdiabaticSwitching(TimeEvolutionOperator):
+    def __init__(self, envelope):
+        self._envelope = envelope
+
+        if not callable(envelope):
+            self._envelope = lambda t: envelope
+
+    @property
+    def is_two_body_operator(self):
+        return True
+
+    def u_t(self, current_time):
+        np = self._system.np
+
+        return self._envelope(current_time) * self._system.u
