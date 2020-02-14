@@ -139,8 +139,6 @@ class HomogeneousElectronGas(QuantumSystem):
             self.length,
         )
 
-        self._f = self.construct_fock_matrix(self._h, self._u)
-
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
