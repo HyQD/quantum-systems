@@ -1,4 +1,5 @@
 from .system import QuantumSystem
+from .spin_orbital_system import SpinOrbitalSystem
 from .custom_system import (
     construct_psi4_system,
     construct_pyscf_system,
