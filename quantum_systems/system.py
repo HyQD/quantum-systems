@@ -59,9 +59,8 @@ class QuantumSystem(metaclass=abc.ABCMeta):
     def setup_system(self):
         pass
 
-    def change_module(self, np=None):
-        if np is not None:
-            self.np = np
+    def change_module(self, np):
+        self.np = np
 
         self._h = change_module(self._h, self.np)
         self._f = change_module(self._f, self.np)
