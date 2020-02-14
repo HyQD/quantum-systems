@@ -14,7 +14,6 @@ from quantum_systems.system_helper import (
     check_axis_lengths,
     change_module,
     compute_particle_density,
-    get_spin_block_slices,
 )
 
 
