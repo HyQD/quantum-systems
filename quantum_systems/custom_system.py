@@ -1,10 +1,6 @@
 import warnings
 
 from quantum_systems.system import QuantumSystem
-from quantum_systems.system_helper import (
-    transform_one_body_elements,
-    transform_two_body_elements,
-)
 
 
 def construct_pyscf_system_ao(
@@ -182,7 +178,7 @@ def construct_pyscf_system(molecule, basis="cc-pvdz", np=None, verbose=False):
 
     # Note: Should the dipole moments have a negative sign?
     dipole_moment = [
-        -transform_one_body_elements(dm, C, np)
+        -QuantumSystem.transform_one_body_elements(dm, C, np)
         for dm in mol.intor("int1e_r").reshape(3, mol.nao, mol.nao)
     ]
     dipole_moment = np.asarray(dipole_moment)
@@ -190,8 +186,10 @@ def construct_pyscf_system(molecule, basis="cc-pvdz", np=None, verbose=False):
     # Create a tuple with the shape of the AO two-body elements
     u_shape = (mol.nao for i in range(4))
 
-    h = transform_one_body_elements(hf.get_hcore(), C, np)
-    u = transform_two_body_elements(mol.intor("int2e").reshape(*u_shape), C, np)
+    h = QuantumSystem.transform_one_body_elements(hf.get_hcore(), C, np)
+    u = QuantumSystem.transform_two_body_elements(
+        mol.intor("int2e").reshape(*u_shape), C, np
+    )
 
     noa = sum(hf.mo_occ[0] > 0)
     nva = sum(hf.mo_occ[0] == 0)

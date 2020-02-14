@@ -5,10 +5,6 @@ def check_axis_lengths(arr, length):
     return [length == axis for axis in arr.shape]
 
 
-def change_module(arr, np):
-    return np.asarray(arr) if arr is not None else None
-
-
 @numba.njit(cache=True)
 def delta(p, q):
     return p == q
@@ -17,37 +13,6 @@ def delta(p, q):
 @numba.njit(cache=True)
 def spin_delta(p, q):
     return ((p & 0x1) ^ (q & 0x1)) ^ 0x1
-
-
-def transform_spf(spf, c, np):
-    return np.tensordot(c, spf, axes=((0), (0)))
-
-
-def transform_bra_spf(bra_spf, c_tilde, np):
-    return np.tensordot(c_tilde, bra_spf, axes=((1), (0)))
-
-
-def transform_one_body_elements(h, c, np, c_tilde=None):
-    if c_tilde is None:
-        c_tilde = c.conj().T
-
-    return c_tilde @ h @ c
-
-
-def transform_two_body_elements(u, c, np, c_tilde=None):
-    if c_tilde is None:
-        c_tilde = c.conj().T
-
-    # abcd, ds -> abcs
-    _u = np.tensordot(u, c, axes=(3, 0))
-    # abcs, cr -> absr -> abrs
-    _u = np.tensordot(_u, c, axes=(2, 0)).transpose(0, 1, 3, 2)
-    # abrs, qb -> arsq -> aqrs
-    _u = np.tensordot(_u, c_tilde, axes=(1, 1)).transpose(0, 3, 1, 2)
-    # pa, aqrs -> pqrs
-    _u = np.tensordot(c_tilde, _u, axes=(1, 0))
-
-    return _u
 
 
 def add_spin_spf(spf, np):
