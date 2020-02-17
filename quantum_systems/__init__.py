@@ -15,4 +15,3 @@ from quantum_systems.quantum_dots.two_dim.two_dim_ho import (
     TwoDimSmoothDoubleWell,
     TwoDimHarmonicOscB,
 )
-from quantum_systems.electron_gas.heg import HomogeneousElectronGas
