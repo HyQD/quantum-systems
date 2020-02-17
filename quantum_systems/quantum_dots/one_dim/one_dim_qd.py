@@ -3,7 +3,6 @@ import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.linalg as spsl
 import scipy.special as spec
-import time
 
 from quantum_systems import QuantumSystem
 
@@ -114,7 +113,6 @@ class ODHO(QuantumSystem):
         for p in range(self.l // 2):
             self._spf[p] = self.ho_function(self.grid, p)
 
-        tic = time.time()
         inner_integral = _compute_inner_integral(
             self._spf,
             self.l // 2,
@@ -127,8 +125,6 @@ class ODHO(QuantumSystem):
         self._u = _compute_orbital_integrals(
             self._spf, self.l // 2, inner_integral, self.grid
         )
-        toc = time.time()
-        # print(f"Time computing u_pqrs: {toc-tic}")
 
         self.construct_dipole_moment()
         self.cast_to_complex()
@@ -279,7 +275,6 @@ class ODQD(QuantumSystem):
         self._h = np.diag(eigen_energies).astype(np.complex128)
         self._s = np.eye(self.l // 2)
 
-        tic = time.time()
         inner_integral = _compute_inner_integral(
             self._spf,
             self.l // 2,
@@ -292,8 +287,6 @@ class ODQD(QuantumSystem):
         self._u = _compute_orbital_integrals(
             self._spf, self.l // 2, inner_integral, self.grid
         )
-        toc = time.time()
-        # print(f"Time computing u_pqrs: {toc-tic}")
 
         self.construct_dipole_moment()
         self.cast_to_complex()
