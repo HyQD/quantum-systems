@@ -2,11 +2,14 @@ import numpy as np
 import warnings
 
 from quantum_systems import (
+    BasisSet,
+    SpatialOrbitalSystem,
+    GeneralOrbitalSystem,
     # construct_psi4_system,
     # construct_pyscf_system,
-    construct_pyscf_system_ao,
     construct_pyscf_system_rhf,
 )
+from quantum_systems.random_basis import get_random_elements, RandomBasisSet
 
 
 def change_basis_h(h, c):
@@ -26,67 +29,42 @@ def change_basis_u(u, c):
 def test_setters():
     n = 2
     l = 10
+    dim = 3
 
-    h = np.random.random((l, l))
-    u = np.random.random((l, l, l, l))
-    s = np.random.random((l, l))
-    dipole_moment = np.random.random((3, l, l))
+    bs = BasisSet(l, dim)
 
-    cs = QuantumSystem(n, 2 * l)
+    bs.h = RandomBasisSet.make_hermitian(get_random_elements((l, l), np))
+    bs.s = RandomBasisSet.make_hermitian(get_random_elements((l, l), np))
+    bs.u = RandomBasisSet.make_two_body_symmetry(
+        get_random_elements((l, l, l, l), np)
+    )
+    bs.dipole_moment = RandomBasisSet.make_dipole_moment_hermitian(
+        get_random_elements((dim, l, l), np)
+    )
 
-    cs.set_h(h, add_spin=True)
-    cs.set_u(u, add_spin=True, anti_symmetrize=True)
-    cs.set_s(s, add_spin=True)
-    cs.set_dipole_moment(dipole_moment, add_spin=True)
+    _spas = SpatialOrbitalSystem(n, bs)
+    spas = _spas.copy_system()
+    gos = _spas.change_to_general_orbital_basis()
 
-    assert True
+    assert gos.l == 2 * spas.l
 
 
 def test_change_of_basis():
     n = 2
     l = 10
+    dim = 2
+    new_l = 2 * l - n
 
-    h = np.random.random((l, l))
-    u = np.random.random((l, l, l, l))
-    s = np.random.random((l, l))
-    c = np.random.random((l * 2, l * 2))
-    dipole_moment = np.random.random((3, l, l))
+    bs = BasisSet(l, dim)
 
-    cs = QuantumSystem(n, 2 * l)
-
-    cs.set_h(h, add_spin=True)
-    cs.set_u(u, add_spin=True, anti_symmetrize=True)
-    cs.set_s(s, add_spin=True)
-    cs.set_dipole_moment(dipole_moment, add_spin=True)
-
-    h_cs = change_basis_h(cs.h.copy(), c)
-    u_cs = change_basis_u(cs.u.copy(), c)
-
-    cs.change_basis(c)
-
-    np.testing.assert_allclose(h_cs, cs.h, atol=1e-12, rtol=1e-12)
-    np.testing.assert_allclose(u_cs, cs.u, atol=1e-12, rtol=1e-12)
-
-    cs = QuantumSystem(n, 2 * l)
-
-    cs.set_h(h, add_spin=True)
-    cs.set_u(u, add_spin=True, anti_symmetrize=True)
-    cs.set_s(s, add_spin=True)
-    cs.set_dipole_moment(dipole_moment, add_spin=True)
-
-    cs.change_basis(c, c_tilde=c.conj().T)
-
-    np.testing.assert_allclose(h_cs, cs.h, atol=1e-12, rtol=1e-12)
-    np.testing.assert_allclose(u_cs, cs.u, atol=1e-12, rtol=1e-12)
-
-
-def test_psi4_construction():
-    He = """
-        He 0.0 0.0 0.0
-        symmetry c1
-    """
-
-    options = {"basis": "cc-pVDZ", "scf_type": "pk", "e_convergence": 1e-8}
+    bs.h = RandomBasisSet.make_hermitian(get_random_elements((l, l), np))
+    bs.s = RandomBasisSet.make_hermitian(get_random_elements((l, l), np))
+    bs.u = RandomBasisSet.make_two_body_symmetry(
+        get_random_elements((l, l, l, l), np)
+    )
+    bs.dipole_moment = RandomBasisSet.make_dipole_moment_hermitian(
+        get_random_elements((dim, l, l), np)
+    )
 
     _spas = SpatialOrbitalSystem(n, bs)
     spas = _spas.copy_system()
@@ -133,10 +111,6 @@ def test_psi4_construction():
 
 # def test_pyscf_construction():
 #     system = construct_pyscf_system("be 0 0 0")
-
-
-def test_pyscf_ao_construction():
-    system = construct_pyscf_system_ao("be 0 0 0")
 
 
 def test_reference_energy():
