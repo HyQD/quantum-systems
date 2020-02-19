@@ -4,7 +4,7 @@ import warnings
 from quantum_systems import (
     QuantumSystem,
     construct_psi4_system,
-    construct_pyscf_system,
+    # construct_pyscf_system,
     construct_pyscf_system_ao,
     construct_pyscf_system_rhf,
 )
@@ -96,8 +96,8 @@ def test_psi4_construction():
         warnings.warn("Unable to import psi4.")
 
 
-def test_pyscf_construction():
-    system = construct_pyscf_system("be 0 0 0")
+# def test_pyscf_construction():
+#     system = construct_pyscf_system("be 0 0 0")
 
 
 def test_pyscf_ao_construction():
