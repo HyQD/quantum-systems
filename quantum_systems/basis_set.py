@@ -412,8 +412,10 @@ class BasisSet:
         if not self.spf is None:
             self.spf = self.add_spin_spf(self.spf, self.np)
 
-        if not self.bra_spf is None:
-            self.bra_spf = self.add_spin_bra_spf(self.bra_spf, self.np)
+            # Make sure that we check if _bra_spf is not None, otherwise we
+            # potentially construct the dual state.
+            if not self._bra_spf is None:
+                self.bra_spf = self.add_spin_bra_spf(self._bra_spf, self.np)
 
         return self
 
