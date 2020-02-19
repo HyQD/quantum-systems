@@ -1,6 +1,11 @@
 import warnings
 
-from quantum_systems.system import QuantumSystem
+from quantum_systems import (
+    BasisSet,
+    SpatialOrbitalSystem,
+    GeneralOrbitalSystem,
+    QuantumSystem,
+)
 
 
 def construct_pyscf_system_ao(
@@ -11,6 +16,50 @@ def construct_pyscf_system_ao(
     np=None,
     **kwargs,
 ):
+    """Convenience function setting up an atom or a molecule from PySCF as a
+    ``QuantumSystem``.
+
+    Parameters
+    ----------
+    molecule : str
+        String describing the atom or molecule. This gets passed to PySCF which
+        means that we support all the same string options as PySCF.
+    basis : str
+        String describing the basis set. PySCF determines which options are
+        available.
+    add_spin : bool
+        Whether or not to return a ``SpatialOrbitalSystem`` (``False``) or a
+        ``GeneralOrbitalSystem`` (``True``). Default is ``True``.
+    anti_symmetrize : bool
+        Whether or not to anti-symmetrize the two-body elements in a
+        ``GeneralOrbitalSystem``. This only applies if ``add_spin = True``.
+        Default is ``True``.
+    np : module
+        Array- and linear algebra module.
+
+    Returns
+    -------
+    SpatialOrbitalSystem, GeneralOrbitalSystem
+        Depending on the choice of ``add_spin`` we return a
+        ``SpatialOrbitalSystem`` (``add_spin = False``), or a
+        ``GeneralOrbitalSystem`` (``add_spin = True``).
+
+    SeeAlso
+    -------
+    PySCF
+
+    >>> # Set up the Beryllium atom centered at (0, 0, 0)
+    >>> system = construct_pyscf_system_ao(
+    ...     "be 0 0 0", basis="cc-pVDZ", add_spin=False
+    ... )
+    >>> # Compare the number of occupied basis functions
+    >>> system.n == 4 // 2
+    True
+    >>> gos = system.change_to_general_orbital_basis()
+    >>> gos.n == 4
+    True
+    """
+
     import pyscf
 
     if np is None:
@@ -22,43 +71,97 @@ def construct_pyscf_system_ao(
     nuclear_repulsion_energy = mol.energy_nuc()
 
     n = mol.nelectron
-    l = mol.nao * 2
+    l = mol.nao
 
-    n_a = (mol.nelectron + mol.spin) // 2
-    n_b = n_a - mol.spin
+    # n_a = (mol.nelectron + mol.spin) // 2
+    # n_b = n_a - mol.spin
 
-    assert n_b == n - n_a
+    # assert n_b == n - n_a
 
     h = pyscf.scf.hf.get_hcore(mol)
     s = mol.intor_symmetric("int1e_ovlp")
-    u = (
-        mol.intor("int2e")
-        .reshape(l // 2, l // 2, l // 2, l // 2)
-        .transpose(0, 2, 1, 3)
+    u = mol.intor("int2e").reshape(l, l, l, l).transpose(0, 2, 1, 3)
+    dipole_integrals = mol.intor("int1e_r").reshape(3, l, l)
+
+    bs = BasisSet(l, dim=3, np=np)
+    bs.h = h
+    bs.s = s
+    bs.u = u
+    bs.nuclear_repulsion_energy = nuclear_repulsion_energy
+    bs.dipole_moment = dipole_integrals
+    bs.change_module(np=np)
+
+    system = SpatialOrbitalSystem(n, bs)
+
+    return (
+        system.change_to_general_orbital_basis(anti_symmetrize=anti_symmetrize)
+        if add_spin
+        else system
     )
-    dipole_integrals = mol.intor("int1e_r").reshape(3, l // 2, l // 2)
-
-    system = QuantumSystem(n, l, n_a=n_a, np=np)
-    system.set_h(h, add_spin=add_spin)
-    system.set_s(s, add_spin=add_spin)
-    system.set_u(u, add_spin=add_spin, anti_symmetrize=anti_symmetrize)
-    system.set_dipole_moment(dipole_integrals, add_spin=add_spin)
-    system.set_nuclear_repulsion_energy(nuclear_repulsion_energy)
-
-    return system
 
 
 def construct_pyscf_system_rhf(
     molecule,
     basis="cc-pvdz",
-    np=None,
-    verbose=False,
     add_spin=True,
     anti_symmetrize=True,
+    np=None,
+    verbose=False,
     charge=0,
     cart=False,
     **kwargs,
 ):
+    """Convenience function setting up a closed-shell atom or a molecule from
+    PySCF as a ``QuantumSystem`` in RHF-basis using PySCF's RHF-solver.
+
+    Parameters
+    ----------
+    molecule : str
+        String describing the atom or molecule. This gets passed to PySCF which
+        means that we support all the same string options as PySCF.
+    basis : str
+        String describing the basis set. PySCF determines which options are
+        available.
+    add_spin : bool
+        Whether or not to return a ``SpatialOrbitalSystem`` (``False``) or a
+        ``GeneralOrbitalSystem`` (``True``). Default is ``True``.
+    anti_symmetrize : bool
+        Whether or not to anti-symmetrize the two-body elements in a
+        ``GeneralOrbitalSystem``. This only applies if ``add_spin = True``.
+        Default is ``True``.
+    np : module
+        Array- and linear algebra module.
+
+    Returns
+    -------
+    SpatialOrbitalSystem, GeneralOrbitalSystem
+        Depending on the choice of ``add_spin`` we return a
+        ``SpatialOrbitalSystem`` (``add_spin = False``), or a
+        ``GeneralOrbitalSystem`` (``add_spin = True``).
+
+    SeeAlso
+    -------
+    PySCF
+
+    >>> # Set up the Beryllium atom centered at (0, 0, 0)
+    >>> system = construct_pyscf_system_rhf(
+    ...     "be 0 0 0", basis="cc-pVDZ", add_spin=False
+    ... ) # doctest.ELLIPSIS
+    converged SCF energy = -14.5723...
+    >>> # Compare the number of occupied basis functions
+    >>> system.n == 4 // 2
+    True
+    >>> gos = system.change_to_general_orbital_basis()
+    >>> gos.n == 4
+    True
+    >>> system = construct_pyscf_system_rhf(
+    ...     "be 0 0 0", basis="cc-pVDZ"
+    ... ) # doctest.ELLIPSIS
+    converged SCF energy = -14.5723...
+    >>> system.n == gos.n
+    True
+    """
+
     import pyscf
 
     if np is None:
@@ -77,7 +180,7 @@ def construct_pyscf_system_rhf(
         n % 2 == 0
     ), "We require closed shell, with an even number of particles"
 
-    l = mol.nao * 2
+    l = mol.nao
 
     hf = pyscf.scf.RHF(mol)
     hf_energy = hf.kernel()
@@ -100,18 +203,19 @@ def construct_pyscf_system_rhf(
     u = mol.intor("int2e").reshape(l, l, l, l).transpose(0, 2, 1, 3)
     dipole_integrals = mol.intor("int1e_r").reshape(3, l, l)
 
-    system = OrbitalSystem(n, l, np=np)
-    system.set_h(h)
-    system.set_s(s)
-    system.set_u(u)
-    system.set_dipole_moment(dipole_integrals)
-    system.set_nuclear_repulsion_energy(nuclear_repulsion_energy)
+    bs = BasisSet(l, dim=3, np=np)
+    bs.h = h
+    bs.s = s
+    bs.u = u
+    bs.nuclear_repulsion_energy = nuclear_repulsion_energy
+    bs.dipole_moment = dipole_integrals
+    bs.change_module(np=np)
 
+    system = SpatialOrbitalSystem(n, bs)
     system.change_basis(C)
-    system.change_module(np=np)
 
     return (
-        system.change_to_spin_orbital_basis(anti_symmetrize=anti_symmetrize)
+        system.change_to_general_orbital_basis(anti_symmetrize=anti_symmetrize)
         if add_spin
         else system
     )
