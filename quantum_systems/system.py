@@ -103,7 +103,7 @@ class QuantumSystem(metaclass=abc.ABCMeta):
     @property
     def spf(self):
         """Getter returning the single particle functions.  """
-        return self._spf
+        return self._basis_set.spf
 
     @property
     def bra_spf(self):
