@@ -2,7 +2,7 @@ from .system import QuantumSystem
 from .spin_orbital_system import SpinOrbitalSystem
 from .orbital_system import OrbitalSystem
 from .custom_system import (
-    construct_psi4_system,
+    # construct_psi4_system,
     # construct_pyscf_system,
     construct_pyscf_system_ao,
     construct_pyscf_system_rhf,

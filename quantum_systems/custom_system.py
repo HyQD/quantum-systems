@@ -236,48 +236,54 @@ def construct_pyscf_system_rhf(
 #     return system
 
 
-def construct_psi4_system(
-    molecule, options, np=None, add_spin=True, anti_symmetrize=True
-):
-    import psi4
-
-    if np is None:
-        import numpy as np
-
-    psi4.core.be_quiet()
-    psi4.set_options(options)
-
-    mol = psi4.geometry(molecule)
-    nuclear_repulsion_energy = mol.nuclear_repulsion_energy()
-
-    wavefunction = psi4.core.Wavefunction.build(
-        mol, psi4.core.get_global_option("BASIS")
-    )
-
-    molecular_integrals = psi4.core.MintsHelper(wavefunction.basisset())
-
-    kinetic = np.asarray(molecular_integrals.ao_kinetic())
-    potential = np.asarray(molecular_integrals.ao_potential())
-    h = kinetic + potential
-
-    u = np.asarray(molecular_integrals.ao_eri()).transpose(0, 2, 1, 3)
-    overlap = np.asarray(molecular_integrals.ao_overlap())
-
-    n_a = wavefunction.nalpha()
-    n_b = wavefunction.nbeta()
-    n = n_a + n_b
-    l = 2 * wavefunction.nmo()
-
-    dipole_integrals = [
-        np.asarray(mu) for mu in molecular_integrals.ao_dipole()
-    ]
-    dipole_integrals = np.stack(dipole_integrals)
-
-    system = QuantumSystem(n, l, n_a=n_a, np=np)
-    system.set_h(h, add_spin=add_spin)
-    system.set_u(u, add_spin=add_spin, anti_symmetrize=anti_symmetrize)
-    system.set_s(overlap, add_spin=add_spin)
-    system.set_dipole_moment(dipole_integrals, add_spin=add_spin)
-    system.set_nuclear_repulsion_energy(nuclear_repulsion_energy)
-
-    return system
+# def construct_psi4_system(
+#     molecule, options, np=None, add_spin=True, anti_symmetrize=True
+# ):
+#     import psi4
+#
+#     if np is None:
+#         import numpy as np
+#
+#     psi4.core.be_quiet()
+#     psi4.set_options(options)
+#
+#     mol = psi4.geometry(molecule)
+#     nuclear_repulsion_energy = mol.nuclear_repulsion_energy()
+#
+#     wavefunction = psi4.core.Wavefunction.build(
+#         mol, psi4.core.get_global_option("BASIS")
+#     )
+#
+#     molecular_integrals = psi4.core.MintsHelper(wavefunction.basisset())
+#
+#     kinetic = np.asarray(molecular_integrals.ao_kinetic())
+#     potential = np.asarray(molecular_integrals.ao_potential())
+#     h = kinetic + potential
+#
+#     u = np.asarray(molecular_integrals.ao_eri()).transpose(0, 2, 1, 3)
+#     overlap = np.asarray(molecular_integrals.ao_overlap())
+#
+#     n_a = wavefunction.nalpha()
+#     n_b = wavefunction.nbeta()
+#     n = n_a + n_b
+#     l = wavefunction.nmo()
+#
+#     dipole_integrals = [
+#         np.asarray(mu) for mu in molecular_integrals.ao_dipole()
+#     ]
+#     dipole_integrals = np.stack(dipole_integrals)
+#
+#     system = OrbitalSystem(n, l, n_a=n_a, np=np)
+#     system.set_h(h)
+#     system.set_u(u)
+#     system.set_s(overlap)
+#     system.set_dipole_moment(dipole_integrals)
+#     system.set_nuclear_repulsion_energy(nuclear_repulsion_energy)
+#
+#     system.change_module(np=np)
+#
+#     return (
+#         system.change_to_spin_orbital_basis(anti_symmetrize=anti_symmetrize)
+#         if add_spin
+#         else system
+#     )

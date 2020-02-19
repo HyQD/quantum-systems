@@ -2,8 +2,7 @@ import numpy as np
 import warnings
 
 from quantum_systems import (
-    QuantumSystem,
-    construct_psi4_system,
+    # construct_psi4_system,
     # construct_pyscf_system,
     construct_pyscf_system_ao,
     construct_pyscf_system_rhf,
@@ -89,11 +88,47 @@ def test_psi4_construction():
 
     options = {"basis": "cc-pVDZ", "scf_type": "pk", "e_convergence": 1e-8}
 
-    try:
-        system = construct_psi4_system(He, options)
-        assert True
-    except ImportError:
-        warnings.warn("Unable to import psi4.")
+    _spas = SpatialOrbitalSystem(n, bs)
+    spas = _spas.copy_system()
+    gos = _spas.change_to_general_orbital_basis()
+
+    C_spas = get_random_elements((spas.l, new_l), np)
+    C_gos = get_random_elements((gos.l, new_l), np)
+
+    h_spas = change_basis_h(spas.h.copy(), C_spas)
+    u_spas = change_basis_u(spas.u.copy(), C_spas)
+    h_gos = change_basis_h(gos.h.copy(), C_gos)
+    u_gos = change_basis_u(gos.u.copy(), C_gos)
+
+    spas.change_basis(C_spas)
+    gos.change_basis(C_gos)
+
+    assert spas.l == new_l
+    assert all([new_l == s for s in spas.h.shape])
+    assert all([new_l == s for s in spas.u.shape])
+    np.testing.assert_allclose(h_spas, spas.h, atol=1e-12, rtol=1e-12)
+    np.testing.assert_allclose(u_spas, spas.u, atol=1e-12, rtol=1e-12)
+
+    assert gos.l == new_l
+    assert all([new_l == s for s in gos.h.shape])
+    assert all([new_l == s for s in gos.u.shape])
+    np.testing.assert_allclose(h_gos, gos.h, atol=1e-12, rtol=1e-12)
+    np.testing.assert_allclose(u_gos, gos.u, atol=1e-12, rtol=1e-12)
+
+
+# def test_psi4_construction():
+#     He = """
+#         He 0.0 0.0 0.0
+#         symmetry c1
+#     """
+#
+#     options = {"basis": "cc-pVDZ", "scf_type": "pk", "e_convergence": 1e-8}
+#
+#     try:
+#         system = construct_psi4_system(He, options)
+#         assert True
+#     except ImportError:
+#         warnings.warn("Unable to import psi4.")
 
 
 # def test_pyscf_construction():
