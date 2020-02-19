@@ -156,12 +156,8 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
 
     """
 
-    def __init__(
-        self, *args, barrier_strength=1, **kwargs,
-    ):
-        super().__init__(
-            *args, **kwargs,
-        )
+    def __init__(self, *args, barrier_strength=1, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.barrier_strength = barrier_strength
 
@@ -195,9 +191,7 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
 
 
 class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
-    def __init__(
-        self, *args, a=2, b=2, l_ho_factor=1, **kwargs,
-    ):
+    def __init__(self, *args, a=2, b=2, l_ho_factor=1, **kwargs):
 
         assert l_ho_factor >= 1, (
             "Ensure number of harmonic oscillator functions are higher than"
@@ -205,9 +199,7 @@ class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
         )
 
         l_ho = math.floor(l * l_ho_factor)
-        super().__init__(
-            *args, **kwargs,
-        )
+        super().__init__(*args, **kwargs)
 
         self.l_dw = l
         self.a = a
@@ -283,12 +275,8 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
         setup_basis().
     """
 
-    def __init__(
-        self, *args, omega_c=0, **kwargs,
-    ):
-        super().__init__(
-            *args, **kwargs,
-        )
+    def __init__(self, *args, omega_c=0, **kwargs):
+        super().__init__(*args, **kwargs)
 
         omega_0 = self.omega
         self.omega_c = omega_c

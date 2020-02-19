@@ -35,7 +35,7 @@ class GeneralOrbitalSystem(QuantumSystem):
             ) and anti_symmetrize
 
             basis_set = basis_set.change_to_general_orbital_system(
-                anti_symmetrize=anti_symmetrize_u,
+                anti_symmetrize=anti_symmetrize_u
             )
 
         super().__init__(n, basis_set, **kwargs)

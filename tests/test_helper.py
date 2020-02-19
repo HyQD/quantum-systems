@@ -31,7 +31,7 @@ def test_transform_one_body_elements():
         _h, BasisSet.transform_one_body_elements(h, C, np)
     )
     np.testing.assert_allclose(
-        _h, BasisSet.transform_one_body_elements(h, C, np, C_tilde=C.conj().T),
+        _h, BasisSet.transform_one_body_elements(h, C, np, C_tilde=C.conj().T)
     )
 
 
@@ -65,7 +65,7 @@ def test_transform_two_body_elements():
         _u, BasisSet.transform_two_body_elements(u, C, np)
     )
     np.testing.assert_allclose(
-        _u, BasisSet.transform_two_body_elements(u, C, np, C_tilde=C.conj().T),
+        _u, BasisSet.transform_two_body_elements(u, C, np, C_tilde=C.conj().T)
     )
 
 
