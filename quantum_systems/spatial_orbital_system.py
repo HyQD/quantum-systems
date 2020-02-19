@@ -1,10 +1,9 @@
-from quantum_systems import QuantumSystem, SpinOrbitalSystem
+from quantum_systems import QuantumSystem, GeneralOrbitalSystem
 
 
-class OrbitalSystem(QuantumSystem):
+class SpatialOrbitalSystem(QuantumSystem):
     r"""Quantum system containing orbital matrix elements, i.e., we only keep
-    the spatial orbitals as they are degenerate in each spin direction. This
-    means that
+    the spatial orbitals as they are degenerate in each spin direction. We have
 
     .. math:: \psi(x, t) = \psi(\mathbf{r}, t) \sigma(m_s),
 
@@ -12,74 +11,69 @@ class OrbitalSystem(QuantumSystem):
     and spin, and :math:`sigma(m_s)` is either :math:`\alpha(m_s)` or
     :math:`\beta(m_s)` as the two-dimensional spin basis states. This means
     that we only store :math:`psi(mathbf{r}, t)`.
+
+    Parameters
+    ----------
+    n : int
+        Number of occupied basis functions. Note that this should correspond to
+        the number of particles in the system. Internally
+        ``SpatialOrbitalSystem`` converts ``n`` to ``n // 2`` such that ``n``
+        denotes the number of occupied basis functions (half the number of
+        particles).
+    basis_set : BasisSet
+        Spatial orbital basis set without explicit spin-dependence.
+
+    SeeAlso
+    -------
+    QuantumSystem.__init__
     """
 
-    def __init__(self, n, *args, **kwargs):
+    def __init__(self, n, basis_set, **kwargs):
         assert (
             n % 2 == 0
         ), "n must be divisable by 2 to be a closed-shell system"
 
-        super().__init__(n // 2, *args, **kwargs)
+        assert not basis_set.includes_spin, (
+            f"{self.__class__.__name__} only supports basis sets without "
+            + "spin-dependence."
+        )
 
-    # def set_system_size(self, n, l):
-    #     """Function setting the number of occupied orbitals `n // 2` and the
-    #     number of orbital basis functions `l`. Note that `n` corresponds to
-    #     the number of particles, i.e., the number of occupied _spin-orbitals_.
-    #     This means that the occupied orbital indices in matrix elements
-    #     correspond to `n // 2`, and we therefore require that `n % 2 == 0` to
-    #     be a closed-shell system.
+        super().__init__(n // 2, basis_set, **kwargs)
 
-    #     Parameters
-    #     ----------
-    #     n : int
-    #         The number of particles.
-    #     l : int
-    #         The number of orbital functions.
-
-    #     See Also
-    #     --------
-    #     QuantumSystem.set_system_size
-    #     """
-
-    #     assert n % 2, "n must be divisable by 2 to be a closed-shell system"
-
-    #     super().set_system_size(n // 2, l)
-
-    def change_to_spin_orbital_basis(self, anti_symmetrize=True, n_a=None):
-        r"""Function converting ``OrbitalSystem`` to a ``SpinOrbitalSystem`` by
+    def change_to_general_orbital_basis(self, anti_symmetrize=True):
+        r"""Function converting ``SpatialOrbitalSystem`` to a ``GeneralOrbitalSystem`` by
         duplicating every basis element. That is,
 
         .. math:: \psi(\mathbf{r}, t)
             \to \psi(x, t) = \psi(\mathbf{r}, t) \sigma(m_2),
 
-        where $x = (\mathbf{r}, m_s)$ is a generalized coordinate of both
-        position $\mathbf{r}$ and spin $m_s$, with $\sigma(m_s)$ one of the two
-        spin-functions.
+        where :math:`x = (\mathbf{r}, m_s)` is a generalized coordinate of both
+        position :math:`\mathbf{r}` and spin :math:`m_s`, with
+        :math:`\sigma(m_s)` one of the two spin-functions.
+
+        Note that this function changes the basis set inplace thus rendering
+        the current ``SpatialOrbitalSystem`` invalid. If both systems are
+        needed make sure that you create a copy of the current system.
 
         Parameters
         ----------
         anti_symmetrize : bool
             Whether or not to create the anti-symmetrized two-body elements.
             Default is ``True``.
-        n_a : int
-            Number of occupied particles with :math:`\alpha`-spin.
 
         Returns
         -------
-        SpinOrbitalSystem
-            The doubly degenerate spin-orbital system.
+        GeneralOrbitalSystem
+            The doubly degenerate general spin-orbital system.
+
+        SeeAlso
+        -------
+        BasisSet.change_to_general_orbital_basis
         """
 
-        so_system = SpinOrbitalSystem(self.n * 2, self.l * 2, n_a, np=self.np)
-        so_system.set_h(self.h, add_spin=True)
-        so_system.set_u(self.u, add_spin=True, anti_symmetrize=anti_symmetrize)
-        so_system.set_s(self.s, add_spin=True)
-        so_system.set_dipole_moment(self.dipole_moment, add_spin=True)
-        so_system.set_spf(self.spf, add_spin=True)
-        so_system.set_bra_spf(self.bra_spf, add_spin=True)
-        so_system.set_nuclear_repulsion_energy(self.nuclear_repulsion_energy)
-
-        return so_system
+        return GeneralOrbitalSystem(
+            self.n * 2, self._basis_set, anti_symmetrize=anti_symmetrize
+        )
 
     def compute_reference_energy(self):
         r"""Function computing the reference energy in an orbital system.
@@ -100,14 +94,10 @@ class OrbitalSystem(QuantumSystem):
         o, v = self.o, self.v
 
         return (
-            2 * self.np.trace(self._h[o, o])
+            2 * self.np.trace(self.h[o, o])
             + 2
-            * self.np.trace(
-                self.np.trace(self._u[o, o, o, o], axis1=1, axis2=3)
-            )
-            - self.np.trace(
-                self.np.trace(self._u[o, o, o, o], axis1=1, axis2=2)
-            )
+            * self.np.trace(self.np.trace(self.u[o, o, o, o], axis1=1, axis2=3))
+            - self.np.trace(self.np.trace(self.u[o, o, o, o], axis1=1, axis2=2))
         )
 
     def construct_fock_matrix(self, h, u, f=None):
