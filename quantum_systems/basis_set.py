@@ -434,7 +434,7 @@ class BasisSet:
         if bra_spf is None:
             return None
 
-        return add_spin_spf(bra_spf, np)
+        return BasisSet.add_spin_spf(bra_spf, np)
 
     @staticmethod
     def add_spin_one_body(h, np):
