@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-from quantum_systems import OrbitalSystem
+from quantum_systems import BasisSet
 from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
     get_coulomb_elements,
     get_one_body_elements,
@@ -20,9 +20,8 @@ from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
 )
 
 
-class TwoDimensionalHarmonicOscillator(OrbitalSystem):
-    """Create 2D harmonic oscillator, using
-    polar coordinates
+class TwoDimensionalHarmonicOscillator(BasisSet):
+    """Create 2D harmonic oscillator, using polar coordinates
 
     Parameters
     ----------
@@ -51,20 +50,20 @@ class TwoDimensionalHarmonicOscillator(OrbitalSystem):
 
     Methods
     -------
-    setup_system()
+    setup_basis()
         Must be called to set up quantum system.
     setup_spf()
         Constructs single-particle functions. This method is called
-        by setup_system().
+        by setup_basis().
     construct_dipole_moment()
         Constructs dipole moment. This method is called by
-        setup_system().
+        setup_basis().
     """
 
     def __init__(
-        self, n, l, radius_length, num_grid_points, omega=1, mass=1, **kwargs
+        self, l, radius_length, num_grid_points, omega=1, mass=1, **kwargs
     ):
-        super().__init__(n, l, **kwargs)
+        super().__init__(l, dim=2, **kwargs)
 
         self.omega = omega
         self.mass = mass
@@ -75,9 +74,7 @@ class TwoDimensionalHarmonicOscillator(OrbitalSystem):
         self.radius = np.linspace(0, self.radius_length, self.num_grid_points)
         self.theta = np.linspace(0, 2 * np.pi, self.num_grid_points)
 
-    def setup_system(
-        self, verbose=True, cast_to_complex=True,
-    ):
+    def setup_basis(self,):
         self._h = self.omega * get_one_body_elements(self.l)
         self._u = np.sqrt(self.omega) * get_coulomb_elements(
             self.l, verbose=verbose
@@ -86,9 +83,6 @@ class TwoDimensionalHarmonicOscillator(OrbitalSystem):
 
         self.setup_spf()
         self.construct_dipole_moment()
-
-        if cast_to_complex:
-            self.cast_to_complex()
 
         if self.np is not np:
             self.change_module(self.np)
@@ -146,8 +140,6 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
 
     Parameters
     ----------
-    n : int
-        Number of occupied spin-orbitals.
     l : int
         Number of spin-orbitals.
     radius : float
@@ -165,23 +157,15 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
     """
 
     def __init__(
-        self,
-        n,
-        l,
-        radius,
-        num_grid_points,
-        barrier_strength=1,
-        omega=1,
-        mass=1,
-        **kwargs,
+        self, *args, barrier_strength=1, **kwargs,
     ):
         super().__init__(
-            n, l, radius, num_grid_points, omega=omega, mass=mass, **kwargs
+            *args, **kwargs,
         )
 
         self.barrier_strength = barrier_strength
 
-    def setup_system(self, axis=0):
+    def setup_basis(self, axis=0):
         """Function setting up the one- and two-body elements, the
         single-particle functions, dipole moments and other quantities used by
         second quantization methods.
@@ -193,7 +177,7 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
             axis the well barrier is aligned to. (0, 1) = (x, y).
         """
 
-        super().setup_system()
+        super().setup_basis()
 
         self._h = get_double_well_one_body_elements(
             self.l,
@@ -212,17 +196,7 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
 
 class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
     def __init__(
-        self,
-        n,
-        l,
-        radius,
-        num_grid_points,
-        a=2,
-        b=2,
-        l_ho_factor=1,
-        omega=1,
-        mass=1,
-        **kwargs,
+        self, *args, a=2, b=2, l_ho_factor=1, **kwargs,
     ):
 
         assert l_ho_factor >= 1, (
@@ -232,18 +206,18 @@ class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
 
         l_ho = math.floor(l * l_ho_factor)
         super().__init__(
-            n, l_ho, radius, num_grid_points, omega=omega, mass=mass, **kwargs
+            *args, **kwargs,
         )
 
         self.l_dw = l
         self.a = a
         self.b = b
 
-    def setup_system(self):
+    def setup_basis(self):
         """The wells are divided by x-axis by default.
         """
 
-        super().setup_system()
+        super().setup_basis()
 
         h_dw = get_smooth_double_well_one_body_elements(
             self.l,
@@ -302,38 +276,25 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
 
     Methods
     -------
-    setup_system()
+    setup_basis()
         Must be called to set up quantum system.
     construct_dipole_moment()
         Constructs dipole moment. This method is called by
-        setup_system().
+        setup_basis().
     """
 
     def __init__(
-        self,
-        n,
-        l,
-        radius_length,
-        num_grid_points,
-        omega_0=1,
-        mass=1,
-        omega_c=0,
-        **kwargs,
+        self, *args, omega_c=0, **kwargs,
     ):
         super().__init__(
-            n,
-            l,
-            radius_length,
-            num_grid_points,
-            omega=omega_0,
-            mass=mass,
-            **kwargs,
+            *args, **kwargs,
         )
 
+        omega_0 = self.omega
         self.omega_c = omega_c
         self.omega = np.sqrt(omega_0 * omega_0 + omega_c * omega_c / 4)
 
-    def setup_system(self):
+    def setup_basis(self):
         num_orbitals = self.l // 2
         n_array = np.arange(num_orbitals)
         m_array = np.arange(-num_orbitals - 5, num_orbitals + 6)
