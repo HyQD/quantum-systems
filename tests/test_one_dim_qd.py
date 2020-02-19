@@ -2,26 +2,24 @@ import os
 import pytest
 import numpy as np
 
-from quantum_systems import ODQD
-from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
-    HOPotential,
-    DWPotential,
-    GaussianPotential,
-    DWPotentialSmooth,
-)
+from quantum_systems import ODQD, GeneralOrbitalSystem, SpatialOrbitalSystem
 
 
 @pytest.fixture(scope="module")
 def get_odho():
     n = 2
-    l = 20
+    l = 10
 
     grid_length = 5
     num_grid_points = 1001
     omega = 1
 
-    odho = ODQD(n, l, grid_length, num_grid_points)
-    odho.setup_system(potential=HOPotential(omega))
+    odho = GeneralOrbitalSystem(
+        n,
+        ODQD(
+            l, grid_length, num_grid_points, potential=ODQD.HOPotential(omega)
+        ),
+    )
 
     return odho
 
@@ -35,9 +33,11 @@ def get_odho_ao():
     num_grid_points = 1001
     omega = 1
 
-    odho = ODQD(n, l, grid_length, num_grid_points)
-    odho.setup_system(
-        potential=HOPotential(omega), add_spin=False, anti_symmetrize=False
+    odho = SpatialOrbitalSystem(
+        n,
+        ODQD(
+            l, grid_length, num_grid_points, potential=ODQD.HOPotential(omega)
+        ),
     )
 
     return odho
@@ -46,7 +46,7 @@ def get_odho_ao():
 @pytest.fixture(scope="module")
 def get_oddw():
     n = 2
-    l = 20
+    l = 10
 
     grid_length = 6
     num_grid_points = 1001
@@ -54,8 +54,15 @@ def get_oddw():
     omega = 1
     length_of_dw = 5
 
-    oddw = ODQD(n, l, grid_length, num_grid_points)
-    oddw.setup_system(potential=DWPotential(omega, length_of_dw))
+    oddw = GeneralOrbitalSystem(
+        n,
+        ODQD(
+            l,
+            grid_length,
+            num_grid_points,
+            potential=ODQD.DWPotential(omega, length_of_dw),
+        ),
+    )
 
     return oddw
 
@@ -63,7 +70,7 @@ def get_oddw():
 @pytest.fixture(scope="module")
 def get_odgauss():
     n = 2
-    l = 20
+    l = 10
 
     grid_length = 20
     num_grid_points = 1001
@@ -72,9 +79,14 @@ def get_odgauss():
     center = 0
     deviation = 2.5
 
-    odgauss = ODQD(n, l, grid_length, num_grid_points)
-    odgauss.setup_system(
-        potential=GaussianPotential(weight, center, deviation, np=np)
+    odgauss = GeneralOrbitalSystem(
+        n,
+        ODQD(
+            l,
+            grid_length,
+            num_grid_points,
+            potential=ODQD.GaussianPotential(weight, center, deviation, np=np),
+        ),
     )
 
     return odgauss
@@ -83,14 +95,21 @@ def get_odgauss():
 @pytest.fixture(scope="module")
 def get_oddw_smooth():
     n = 2
-    l = 20
+    l = 10
 
     grid_length = 5
     num_grid_points = 1001
     a = 5
 
-    oddw_smooth = ODQD(n, l, grid_length, num_grid_points)
-    oddw_smooth.setup_system(potential=DWPotentialSmooth(a=a))
+    oddw_smooth = GeneralOrbitalSystem(
+        n,
+        ODQD(
+            l,
+            grid_length,
+            num_grid_points,
+            potential=ODQD.DWPotentialSmooth(a=a),
+        ),
+    )
 
     return oddw_smooth
 
