@@ -20,16 +20,16 @@ class RandomBasisSet(BasisSet):
 
     def setup_basis(self):
         self.h = self.make_hermitian(
-            get_random_elements((self.l, self.l), self.np)
+            self.get_random_elements((self.l, self.l), self.np)
         )
         self.s = self.make_hermitian(
-            get_random_elements((self.l, self.l), self.np)
+            self.get_random_elements((self.l, self.l), self.np)
         )
         self.u = self.make_two_body_symmetry(
-            get_random_elements((self.l, self.l, self.l, self.l), self.np)
+            self.get_random_elements((self.l, self.l, self.l, self.l), self.np)
         )
         self.dipole_moment = self.make_dipole_moment_hermitian(
-            get_random_elements((self.dim, self.l, self.l), self.np)
+            self.get_random_elements((self.dim, self.l, self.l), self.np)
         )
         self.nuclear_repulsion_energy = self.np.random.random()
 
@@ -48,21 +48,21 @@ class RandomBasisSet(BasisSet):
     def make_two_body_symmetry(u):
         return 0.5 * (u + u.transpose(1, 0, 3, 2))
 
+    @staticmethod
+    def get_random_elements(shape, np):
+        """Function creating a complex array representing random matrix
+        elements of a given shape.
 
-def get_random_elements(shape, np):
-    """Function creating a complex array representing random matrix elements of
-    a given shape.
+        Parameters
+        ----------
+        shape : tuple or int
+            The shape of the array.
+        np : array module
 
-    Parameters
-    ----------
-    shape : tuple or int
-        The shape of the array.
-    np : array module
+        Returns
+        -------
+        out : ndarray
+            A complex, random array of given shape.
+        """
 
-    Returns
-    -------
-    out : ndarray
-        A complex, random array of given shape.
-    """
-
-    return np.random.random(shape) + 1j * np.random.random(shape)
+        return np.random.random(shape) + 1j * np.random.random(shape)

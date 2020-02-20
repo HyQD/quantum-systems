@@ -8,7 +8,7 @@ from quantum_systems import (
     # construct_pyscf_system,
     construct_pyscf_system_rhf,
 )
-from quantum_systems.random_basis import get_random_elements, RandomBasisSet
+from quantum_systems.random_basis import RandomBasisSet
 
 
 def change_basis_h(h, c):
@@ -47,8 +47,8 @@ def test_change_of_basis():
     spas = _spas.copy_system()
     gos = _spas.change_to_general_orbital_basis()
 
-    C_spas = get_random_elements((spas.l, new_l), np)
-    C_gos = get_random_elements((gos.l, new_l), np)
+    C_spas = RandomBasisSet.get_random_elements((spas.l, new_l), np)
+    C_gos = RandomBasisSet.get_random_elements((gos.l, new_l), np)
 
     h_spas = change_basis_h(spas.h.copy(), C_spas)
     u_spas = change_basis_u(spas.u.copy(), C_spas)
