@@ -2,7 +2,6 @@ import numpy as np
 import warnings
 
 from quantum_systems import (
-    BasisSet,
     SpatialOrbitalSystem,
     GeneralOrbitalSystem,
     # construct_psi4_system,
@@ -31,18 +30,7 @@ def test_setters():
     l = 10
     dim = 3
 
-    bs = BasisSet(l, dim)
-
-    bs.h = RandomBasisSet.make_hermitian(get_random_elements((l, l), np))
-    bs.s = RandomBasisSet.make_hermitian(get_random_elements((l, l), np))
-    bs.u = RandomBasisSet.make_two_body_symmetry(
-        get_random_elements((l, l, l, l), np)
-    )
-    bs.dipole_moment = RandomBasisSet.make_dipole_moment_hermitian(
-        get_random_elements((dim, l, l), np)
-    )
-
-    _spas = SpatialOrbitalSystem(n, bs)
+    _spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
     spas = _spas.copy_system()
     gos = _spas.change_to_general_orbital_basis()
 
@@ -55,18 +43,7 @@ def test_change_of_basis():
     dim = 2
     new_l = 2 * l - n
 
-    bs = BasisSet(l, dim)
-
-    bs.h = RandomBasisSet.make_hermitian(get_random_elements((l, l), np))
-    bs.s = RandomBasisSet.make_hermitian(get_random_elements((l, l), np))
-    bs.u = RandomBasisSet.make_two_body_symmetry(
-        get_random_elements((l, l, l, l), np)
-    )
-    bs.dipole_moment = RandomBasisSet.make_dipole_moment_hermitian(
-        get_random_elements((dim, l, l), np)
-    )
-
-    _spas = SpatialOrbitalSystem(n, bs)
+    _spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
     spas = _spas.copy_system()
     gos = _spas.change_to_general_orbital_basis()
 
