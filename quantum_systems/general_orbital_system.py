@@ -26,17 +26,16 @@ class GeneralOrbitalSystem(QuantumSystem):
 
     def __init__(self, n, basis_set, anti_symmetrize=True, **kwargs):
         if not basis_set.includes_spin:
-            # Make sure that anti-symmetrization only occurs if the system has
-            # not already been anti-symmetrized (for some strange reason as the
-            # system is not in a general orbital form) and that the user wishes
-            # the anti-symmetrization.
-            anti_symmetrize_u = (
-                not basis_set.anti_symmetrized_u
-            ) and anti_symmetrize
 
             basis_set = basis_set.change_to_general_orbital_system(
-                anti_symmetrize=anti_symmetrize_u
+                anti_symmetrize=anti_symmetrize
             )
+
+        if anti_symmetrize:
+            # Anti-symmetrize in case of a basis set containing general
+            # orbitals (i.e., basis_set.includes_spin == True), without the
+            # two-body elements being anti-symmetric.
+            basis_set.anti_symmetrize_two_body_elements()
 
         super().__init__(n, basis_set, **kwargs)
 

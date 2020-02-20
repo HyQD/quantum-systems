@@ -357,6 +357,21 @@ class BasisSet:
 
         return compute_particle_density(rho_qp, ket_spf, bra_spf, self.np)
 
+    def anti_symmetrize_two_body_elements(self):
+        r"""Function making the two-body matrix elements anti-symmetric. This
+        corresponds to
+
+        .. math:: \langle \phi_p \phi_q \rvert \hat{u}
+            \lvert \phi_r \phi_s \rangle_{AS}
+            \equiv
+            \langle \phi_p \phi_q \rvert \hat{u} \lvert \phi_r \phi_s \rangle
+            -
+            \langle \phi_p \phi_q \rvert \hat{u} \lvert \phi_s \phi_r \rangle.
+        """
+        if not self._anti_symmetrized_u:
+            self.u = self.anti_symmetrize_u(self.u)
+            self._anti_symmetrized_u = True
+
     def change_to_general_orbital_system(self, anti_symmetrize=True):
         r"""Function converting a spatial orbital basis set to a general orbital
         basis. That is, the function duplicates every element by adding a
@@ -379,6 +394,7 @@ class BasisSet:
             Whether or not to anti-symmetrize the elements in the two-body
             Hamiltonian. By default we perform an anti-symmetrization.
         """
+
         if self._includes_spin:
             warnings.warn(
                 "The basis has already been spin-doubled. Avoiding a second "
@@ -395,11 +411,7 @@ class BasisSet:
         self.u = self.add_spin_two_body(self.u, np=self.np)
 
         if anti_symmetrize:
-            # TODO: Anti-symmetrization should be moved elsewhere.  There can
-            # potentially be situations where the user wishes to
-            # anti-symmetrize after the spin-doubling has been performed.
-            self.u = self.anti_symmetrize_u(self.u)
-            self._anti_symmetrized_u = True
+            self.anti_symmetrize_two_body_elements()
 
         if not self.dipole_moment is None:
             dipole_moment = [
