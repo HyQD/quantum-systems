@@ -145,6 +145,16 @@ class QuantumSystem(metaclass=abc.ABCMeta):
 
         return self._time_evolution_operator.u_t(current_time)
 
+    def transform_one_body_elements(self, h, C, C_tilde=None):
+        return self._basis_set.transform_one_body_elements(
+            h, C, np=self.np, C_tilde=C_tilde
+        )
+
+    def transform_two_body_elements(self, u, C, C_tilde=None):
+        return self._basis_set.transform_two_body_elements(
+            u, C, np=self.np, C_tilde=C_tilde
+        )
+
     def copy_system(self):
         """Function creating a deep copy of the current system. This function
         is a hack as we have to temporarily remove the stored module before
