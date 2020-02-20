@@ -63,8 +63,8 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         self.np = np
         self._basis_set.change_module(self.np)
 
-    def change_basis(self, c, c_tilde=None):
-        self._basis_set.change_basis(c, c_tilde)
+    def change_basis(self, C, C_tilde=None):
+        self._basis_set.change_basis(C, C_tilde)
         self.set_system_size(self.n, self._basis_set.l)
 
     @abc.abstractmethod
@@ -75,9 +75,9 @@ class QuantumSystem(metaclass=abc.ABCMeta):
     def compute_reference_energy(self):
         pass
 
-    def compute_particle_density(self, rho_qp, c=None, c_tilde=None):
+    def compute_particle_density(self, rho_qp, C=None, C_tilde=None):
         return self._basis_set.compute_particle_density(
-            rho_qp, c=c, c_tilde=c_tilde
+            rho_qp, C=C, C_tilde=C_tilde
         )
 
     @property
