@@ -15,17 +15,24 @@ class SpatialOrbitalSystem(QuantumSystem):
     Parameters
     ----------
     n : int
-        Number of occupied basis functions. Note that this should correspond to
-        the number of particles in the system. Internally
-        ``SpatialOrbitalSystem`` converts ``n`` to ``n // 2`` such that ``n``
-        denotes the number of occupied basis functions (half the number of
-        particles).
+        Number of particles.  Internally ``SpatialOrbitalSystem`` converts
+        ``n`` to ``n // 2`` such that ``n`` denotes the number of occupied
+        basis functions (half the number of particles). See example in doctest
+        below.
     basis_set : BasisSet
         Spatial orbital basis set without explicit spin-dependence.
 
     SeeAlso
     -------
     QuantumSystem.__init__
+
+    >>> n = 4 # Four particles
+    >>> l = 20 # Twenty basis functions
+    >>> dim = 2
+    >>> from quantum_systems import RandomBasisSet
+    >>> spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
+    >>> spas.n == n // 2
+    True
     """
 
     def __init__(self, n, basis_set, **kwargs):
