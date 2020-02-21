@@ -61,23 +61,32 @@ class TwoDimensionalHarmonicOscillator(BasisSet):
     """
 
     def __init__(
-        self, l, radius_length, num_grid_points, omega=1, mass=1, **kwargs
+        self,
+        l,
+        radius_length,
+        num_grid_points,
+        omega=1,
+        mass=1,
+        verbose=False,
+        **kwargs
     ):
         super().__init__(l, dim=2, **kwargs)
 
         self.omega = omega
         self.mass = mass
+        self.verbose = verbose
 
         self.radius_length = radius_length
         self.num_grid_points = num_grid_points
 
         self.radius = np.linspace(0, self.radius_length, self.num_grid_points)
         self.theta = np.linspace(0, 2 * np.pi, self.num_grid_points)
+        self.setup_basis()
 
-    def setup_basis(self,):
+    def setup_basis(self):
         self._h = self.omega * get_one_body_elements(self.l)
         self._u = np.sqrt(self.omega) * get_coulomb_elements(
-            self.l, verbose=verbose
+            self.l, verbose=self.verbose
         )
         self._s = np.eye(self.l)
 
