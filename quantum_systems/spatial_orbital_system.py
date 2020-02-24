@@ -75,7 +75,7 @@ class SpatialOrbitalSystem(QuantumSystem):
         GeneralOrbitalSystem
             The doubly degenerate general spin-orbital system.
 
-        SeeAlso
+        See Also
         -------
         BasisSet.change_to_general_orbital_basis
         """

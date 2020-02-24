@@ -44,10 +44,12 @@ def construct_pyscf_system_ao(
         ``SpatialOrbitalSystem`` (``add_spin = False``), or a
         ``GeneralOrbitalSystem`` (``add_spin = True``).
 
-    SeeAlso
+    See Also
     -------
     PySCF
 
+    Example
+    -------
     >>> # Set up the Beryllium atom centered at (0, 0, 0)
     >>> system = construct_pyscf_system_ao(
     ...     "be 0 0 0", basis="cc-pVDZ", add_spin=False
@@ -139,10 +141,12 @@ def construct_pyscf_system_rhf(
         ``SpatialOrbitalSystem`` (``add_spin = False``), or a
         ``GeneralOrbitalSystem`` (``add_spin = True``).
 
-    SeeAlso
+    See Also
     -------
     PySCF
 
+    Example
+    -------
     >>> # Set up the Beryllium atom centered at (0, 0, 0)
     >>> system = construct_pyscf_system_rhf(
     ...     "be 0 0 0", basis="cc-pVDZ", add_spin=False
