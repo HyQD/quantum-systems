@@ -275,7 +275,7 @@ class BasisSet:
         (:math:`\langle \tilde{\chi}_{\alpha} \rvert`) be the current basis set
         with :math:`\alpha \in \{1, \dots, N_{\alpha}\}`, and :math:`\lvert
         \phi_p \rangle` (:math:`\langle \tilde{\phi}_p \rvert`)the new basis
-        with :math:`p \in \{1, \dots, N_p}`. Then, for a given coefficient
+        with :math:`p \in \{1, \dots, N_p\}`. Then, for a given coefficient
         matrix :math:`C \in \mathbb{C}^{N_{p}\times N_{\alpha}}`
         (:math:`\tilde{C} \in \mathbb{C}^{N_{\alpha} \times N_p}`) the basis
         change for a single particle state is given by
@@ -331,12 +331,13 @@ class BasisSet:
         rho_qp : np.ndarray
             One-body density matrix
         C : np.ndarray
-            Coefficient matrix for basis change. Default is `None` and hence no
-            transformation occurs.
+            Coefficient matrix for basis change. Default is ``None`` and hence
+            no transformation occurs.
         C_tilde : np.ndarray
-            Bra-state coefficient matrix. Default is `None` which leads to one
-            of two situations. If `C != None` `C_tilde` is assumed to be the
-            conjugated transpose of `C`. Otherwise, no transformation occurs.
+            Bra-state coefficient matrix. Default is ``None`` which leads to
+            one of two situations. If ``C != None`` ``C_tilde`` is assumed to
+            be the conjugated transpose of ``C``. Otherwise, no transformation
+            occurs.
 
         Returns
         -------

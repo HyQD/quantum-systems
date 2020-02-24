@@ -18,7 +18,7 @@ class GeneralOrbitalSystem(QuantumSystem):
     system size grows quickly. Furthermore, we are unable to categorize a
     general spin-orbital as having a definitive spin-direction.
 
-    SeeAlso
+    See Also
     -------
     QuantumSystem
         Parent class with constructor and main interface functions.

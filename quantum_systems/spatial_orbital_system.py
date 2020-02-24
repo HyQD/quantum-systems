@@ -8,9 +8,9 @@ class SpatialOrbitalSystem(QuantumSystem):
     .. math:: \psi(x, t) = \psi(\mathbf{r}, t) \sigma(m_s),
 
     where :math:`x = (\mathbf{r}, m_s)` is a generalized coordinate of position
-    and spin, and :math:`sigma(m_s)` is either :math:`\alpha(m_s)` or
+    and spin, and :math:`\sigma(m_s)` is either :math:`\alpha(m_s)` or
     :math:`\beta(m_s)` as the two-dimensional spin basis states. This means
-    that we only store :math:`psi(mathbf{r}, t)`.
+    that we only store :math:`\psi(\mathbf{r}, t)`.
 
     Parameters
     ----------
@@ -22,10 +22,12 @@ class SpatialOrbitalSystem(QuantumSystem):
     basis_set : BasisSet
         Spatial orbital basis set without explicit spin-dependence.
 
-    SeeAlso
+    See Also
     -------
-    QuantumSystem.__init__
+    QuantumSystem
 
+    Example
+    -------
     >>> n = 4 # Four particles
     >>> l = 20 # Twenty basis functions
     >>> dim = 2
