@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Basis set &mdash; Quantum Systems  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quantum System" href="system.html" />
+    <link rel="prev" title="Getting started" href="get_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Quantum Systems
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Basis set</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system.html">Quantum System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantum_dots.html">Quantum Dots</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Quantum Systems</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Basis set</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/basis_set.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="basis-set">
+<h1>Basis set<a class="headerlink" href="#basis-set" title="Permalink to this headline">¶</a></h1>
+<p>A basis set is the collection of matrix elements and associated functions.</p>
+<dl class="class">
+<dt id="quantum_systems.BasisSet">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">BasisSet</code><span class="sig-paren">(</span><em class="sig-param">l</em>, <em class="sig-param">dim</em>, <em class="sig-param">np=None</em>, <em class="sig-param">includes_spin=False</em>, <em class="sig-param">anti_symmetrized_u=False</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class serving as a container for matrix elements for various systems. The
+purpose of <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> after a set has been constructed is to be passed to
+a subclass of <code class="docutils literal notranslate"><span class="pre">QuantumSystem</span></code>. From there on the <code class="docutils literal notranslate"><span class="pre">QuantumSystem</span></code> takes
+ownership of the matrix elements and provides methods and functionality to
+be used by second-quantized many-body methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l</strong> (<em>int</em>) – Number of basis functions.</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – Dimensionality of the systems.</p></li>
+<li><p><strong>np</strong> (<em>module</em>) – Matrix and linear algebra module. Currently only <cite>numpy</cite> is supported.</p></li>
+<li><p><strong>includes_spin</strong> (<em>bool</em>) – Toggle to determine if the basis set to be created includes explicitly
+in the basis functions. By default we assume that <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> only
+contains spatial orbitals thus there are no explicit spin-dependence in
+the elements.</p></li>
+<li><p><strong>anti_symmetrized_u</strong> (<em>bool</em>) – Toggle to determine if the two-body matrix elements have been
+anti_symmetrized. By default we assume that this is not the case.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="quantum_systems.BasisSet.anti_symmetrize_two_body_elements">
+<code class="sig-name descname">anti_symmetrize_two_body_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.anti_symmetrize_two_body_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function making the two-body matrix elements anti-symmetric. This
+corresponds to</p>
+<div class="math notranslate nohighlight">
+\[\langle \phi_p \phi_q \rvert \hat{u}
+\lvert \phi_r \phi_s \rangle_{AS}
+\equiv
+\langle \phi_p \phi_q \rvert \hat{u} \lvert \phi_r \phi_s \rangle
+-
+\langle \phi_p \phi_q \rvert \hat{u} \lvert \phi_s \phi_r \rangle.\]</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.BasisSet.cast_to_complex">
+<code class="sig-name descname">cast_to_complex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.cast_to_complex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function converting all matrix elements to <code class="docutils literal notranslate"><span class="pre">np.complex128</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">np</span></code> is the member array module.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.BasisSet.change_basis">
+<code class="sig-name descname">change_basis</code><span class="sig-paren">(</span><em class="sig-param">C</em>, <em class="sig-param">C_tilde=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_basis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function using coefficient matrices to change basis of the matrix
+elements and the single-particle functions. This function also supports
+rectangular coefficient matrices meaning that the number of basis
+functions can be updated. Let :math`lvert chi_{alpha} rangle`
+(<span class="math notranslate nohighlight">\(\langle \tilde{\chi}_{\alpha} \rvert\)</span>) be the current basis set
+with <span class="math notranslate nohighlight">\(\alpha \in \{1, \dots, N_{\alpha}\}\)</span>, and <span class="math notranslate nohighlight">\(\lvert
+\phi_p \rangle\)</span> (<span class="math notranslate nohighlight">\(\langle \tilde{\phi}_p \rvert\)</span>)the new basis
+with <span class="math notranslate nohighlight">\(p \in \{1, \dots, N_p\}\)</span>. Then, for a given coefficient
+matrix <span class="math notranslate nohighlight">\(C \in \mathbb{C}^{N_{p}\times N_{\alpha}}\)</span>
+(<span class="math notranslate nohighlight">\(\tilde{C} \in \mathbb{C}^{N_{\alpha} \times N_p}\)</span>) the basis
+change for a single particle state is given by</p>
+<div class="math notranslate nohighlight">
+\[\lvert \phi_p \rangle = C^{\alpha}_{p}
+\lvert\chi_{\alpha}\rangle,\]</div>
+<p>where the Einstein summation convention is assumed. Similarly for the
+dual state we have</p>
+<div class="math notranslate nohighlight">
+\[\langle\tilde{\phi}_p\rvert = \tilde{C}^{p}_{\alpha}
+\langle\tilde{\chi}_{\alpha}\rvert.\]</div>
+<p>In case of a Hermitian basis we have <span class="math notranslate nohighlight">\(\tilde{C} = C^{\dagger}\)</span>,
+and the dual states are the Hermitian adjoint of one another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>C</strong> (<em>np.ndarray</em>) – Coefficient matrix for “ket”-states.</p></li>
+<li><p><strong>C_tilde</strong> (<em>np.ndarray</em>) – Coefficient matrix for “bra”-states, by default <code class="docutils literal notranslate"><span class="pre">C_tilde</span></code> is
+<code class="docutils literal notranslate"><span class="pre">None</span></code> and we treat <code class="docutils literal notranslate"><span class="pre">C_tilde</span></code> as the Hermitian conjugate of
+<code class="docutils literal notranslate"><span class="pre">C</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.BasisSet.change_module">
+<code class="sig-name descname">change_module</code><span class="sig-paren">(</span><em class="sig-param">np</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function converting all matrix elements to a new module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>np</strong> (<em>module</em>) – Array- and linalg-module.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.BasisSet.change_to_general_orbital_system">
+<code class="sig-name descname">change_to_general_orbital_system</code><span class="sig-paren">(</span><em class="sig-param">anti_symmetrize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_to_general_orbital_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function converting a spatial orbital basis set to a general orbital
+basis. That is, the function duplicates every element by adding a
+spin-function to each spatial orbital. This leads to an
+orbital-restricted spin-orbital where each spatial orbital is included
+in each spin-direction.</p>
+<div class="math notranslate nohighlight">
+\[\phi_p(\mathbf{r}) \to
+\psi_p(x) = \phi_p(\mathbf{r}) \sigma(m_s),\]</div>
+<p>where <span class="math notranslate nohighlight">\(x = (\mathbf{r}, m_s)\)</span> is a generalized coordinate of both
+position <span class="math notranslate nohighlight">\(\mathbf{r}\)</span> and spin <span class="math notranslate nohighlight">\(m_s\)</span>. Here
+<span class="math notranslate nohighlight">\(\phi_p(\mathbf{r})\)</span> is a spatial orbital and <span class="math notranslate nohighlight">\(\sigma(m_s)\)</span>
+a spin-function with <span class="math notranslate nohighlight">\(\sigma \in \{\alpha, \beta\}\)</span>. The
+conversion happens in place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>anti_symmetrize</strong> (<em>bool</em>) – Whether or not to anti-symmetrize the elements in the two-body
+Hamiltonian. By default we perform an anti-symmetrization.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.BasisSet.compute_particle_density">
+<code class="sig-name descname">compute_particle_density</code><span class="sig-paren">(</span><em class="sig-param">rho_qp</em>, <em class="sig-param">C=None</em>, <em class="sig-param">C_tilde=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.compute_particle_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function computing the particle density for a given one-body
+density matrix. This function (optionally) changes the basis of the
+single-particle states for given coefficient matrices. The one-body
+density is given by</p>
+<div class="math notranslate nohighlight">
+\[\rho(\mathbf{r}) = \tilde{\phi}_{q}(\mathbf{r})
+\rho^{q}_{p} \phi_{p}(\mathbf{r}),\]</div>
+<p>where <span class="math notranslate nohighlight">\(\rho^{q}_{p}\)</span> is the one-body density matrix,
+<span class="math notranslate nohighlight">\(\phi_p(\mathbf{r})\)</span> the spin-orbitals, and
+<span class="math notranslate nohighlight">\(\tilde{\phi}_p(\mathbf{r})\)</span> the dual spin-orbital.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_qp</strong> (<em>np.ndarray</em>) – One-body density matrix</p></li>
+<li><p><strong>C</strong> (<em>np.ndarray</em>) – Coefficient matrix for basis change. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> and hence
+no transformation occurs.</p></li>
+<li><p><strong>C_tilde</strong> (<em>np.ndarray</em>) – Bra-state coefficient matrix. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> which leads to
+one of two situations. If <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">!=</span> <span class="pre">None</span></code> <code class="docutils literal notranslate"><span class="pre">C_tilde</span></code> is assumed to
+be the conjugated transpose of <code class="docutils literal notranslate"><span class="pre">C</span></code>. Otherwise, no transformation
+occurs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Particle density with the same dimensions as the grid.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="system.html" class="btn btn-neutral float-right" title="Quantum System" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="get_started.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Schoyen, gregwinther
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

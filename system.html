@@ -25,6 +25,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -36,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Quantum Dots" href="quantum_dots.html" />
-    <link rel="prev" title="Getting started" href="get_started.html" /> 
+    <link rel="prev" title="Basis set" href="basis_set.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,6 +84,7 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="get_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basis_set.html">Basis set</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quantum System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quantum_dots.html">Quantum Dots</a></li>
 </ul>
@@ -164,7 +166,7 @@ system. The class is used to further specify a system beyond a general
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<em>int</em>) – Number of occupied basis functions.</p></li>
-<li><p><strong>basis_set</strong> (<em>BasisSet</em>) – A <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code>-class or subclass containing matrix elements and basis
+<li><p><strong>basis_set</strong> (<a class="reference internal" href="basis_set.html#quantum_systems.BasisSet" title="quantum_systems.BasisSet"><em>BasisSet</em></a>) – A <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code>-class or subclass containing matrix elements and basis
 states.</p></li>
 </ul>
 </dd>
@@ -249,6 +251,201 @@ correspond to the length of each axis of the matrix elements.</p>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="quantum_systems.SpatialOrbitalSystem">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">SpatialOrbitalSystem</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">basis_set</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quantum system containing orbital matrix elements, i.e., we only keep
+the spatial orbitals as they are degenerate in each spin direction. We have</p>
+<div class="math notranslate nohighlight">
+\[\psi(x, t) = \psi(\mathbf{r}, t) \sigma(m_s),\]</div>
+<p>where <span class="math notranslate nohighlight">\(x = (\mathbf{r}, m_s)\)</span> is a generalized coordinate of position
+and spin, and <span class="math notranslate nohighlight">\(\sigma(m_s)\)</span> is either <span class="math notranslate nohighlight">\(\alpha(m_s)\)</span> or
+<span class="math notranslate nohighlight">\(\beta(m_s)\)</span> as the two-dimensional spin basis states. This means
+that we only store <span class="math notranslate nohighlight">\(\psi(\mathbf{r}, t)\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – Number of particles.  Internally <code class="docutils literal notranslate"><span class="pre">SpatialOrbitalSystem</span></code> converts
+<code class="docutils literal notranslate"><span class="pre">n</span></code> to <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">//</span> <span class="pre">2</span></code> such that <code class="docutils literal notranslate"><span class="pre">n</span></code> denotes the number of occupied
+basis functions (half the number of particles). See example in doctest
+below.</p></li>
+<li><p><strong>basis_set</strong> (<a class="reference internal" href="basis_set.html#quantum_systems.BasisSet" title="quantum_systems.BasisSet"><em>BasisSet</em></a>) – Spatial orbital basis set without explicit spin-dependence.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#quantum_systems.QuantumSystem" title="quantum_systems.QuantumSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantumSystem</span></code></a></p>
+</div>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># Four particles</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="mi">20</span> <span class="c1"># Twenty basis functions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">quantum_systems</span> <span class="kn">import</span> <span class="n">RandomBasisSet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spas</span> <span class="o">=</span> <span class="n">SpatialOrbitalSystem</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">RandomBasisSet</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spas</span><span class="o">.</span><span class="n">n</span> <span class="o">==</span> <span class="n">n</span> <span class="o">//</span> <span class="mi">2</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="quantum_systems.SpatialOrbitalSystem.change_to_general_orbital_basis">
+<code class="sig-name descname">change_to_general_orbital_basis</code><span class="sig-paren">(</span><em class="sig-param">anti_symmetrize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.change_to_general_orbital_basis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function converting <code class="docutils literal notranslate"><span class="pre">SpatialOrbitalSystem</span></code> to a <code class="docutils literal notranslate"><span class="pre">GeneralOrbitalSystem</span></code> by
+duplicating every basis element. That is,</p>
+<div class="math notranslate nohighlight">
+\[\psi(\mathbf{r}, t)
+\to \psi(x, t) = \psi(\mathbf{r}, t) \sigma(m_2),\]</div>
+<p>where <span class="math notranslate nohighlight">\(x = (\mathbf{r}, m_s)\)</span> is a generalized coordinate of both
+position <span class="math notranslate nohighlight">\(\mathbf{r}\)</span> and spin <span class="math notranslate nohighlight">\(m_s\)</span>, with
+<span class="math notranslate nohighlight">\(\sigma(m_s)\)</span> one of the two spin-functions.</p>
+<p>Note that this function changes the basis set inplace thus rendering
+the current <code class="docutils literal notranslate"><span class="pre">SpatialOrbitalSystem</span></code> invalid. If both systems are
+needed make sure that you create a copy of the current system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>anti_symmetrize</strong> (<em>bool</em>) – Whether or not to create the anti-symmetrized two-body elements.
+Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>GeneralOrbitalSystem</em> – The doubly degenerate general spin-orbital system.</p></li>
+<li><p><em>SeeAlso</em></p></li>
+<li><p><em>——-</em></p></li>
+<li><p><em>BasisSet.change_to_general_orbital_basis</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.SpatialOrbitalSystem.compute_reference_energy">
+<code class="sig-name descname">compute_reference_energy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.compute_reference_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function computing the reference energy in an orbital system.
+This is given by</p>
+<div class="math notranslate nohighlight">
+\[E_0 = \langle \Phi_0 \rvert \hat{H} \lvert \Phi_0 \rangle
+= 2 h^{i}_{i} + 2 u^{ij}_{ij} - u^{ij}_{ji},\]</div>
+<p>where <span class="math notranslate nohighlight">\(\lvert \Phi_0 \rangle\)</span> is the reference determinant, and
+<span class="math notranslate nohighlight">\(i, j\)</span> are occupied indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The reference energy.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>complex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.SpatialOrbitalSystem.construct_fock_matrix">
+<code class="sig-name descname">construct_fock_matrix</code><span class="sig-paren">(</span><em class="sig-param">h</em>, <em class="sig-param">u</em>, <em class="sig-param">f=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.construct_fock_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function setting up the restricted Fock matrix in a closed-shell
+orbital basis.</p>
+<p>In an orbital basis we compute:</p>
+<div class="math notranslate nohighlight">
+\[f^{p}_{q} = h^{p}_{q} + 2 u^{pi}_{qi} - u^{pi}_{iq},\]</div>
+<p>where <span class="math notranslate nohighlight">\(p, q, r, s, ...\)</span> run over all indices and <span class="math notranslate nohighlight">\(i, j, k,
+l, ...\)</span> correspond to the occupied indices. The two-body elements are
+assumed to not be anti-symmetric.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h</strong> (<em>np.ndarray</em>) – The one-body matrix elements.</p></li>
+<li><p><strong>u</strong> (<em>np.ndarray</em>) – The two-body matrix elements.</p></li>
+<li><p><strong>f</strong> (<em>np.ndarray</em>) – An empty array of the same shape as <cite>h</cite> to be filled with the Fock
+matrix elements. Default is <cite>None</cite> which means that we allocate a
+new matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The filled Fock matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="quantum_systems.GeneralOrbitalSystem">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">GeneralOrbitalSystem</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">basis_set</em>, <em class="sig-param">anti_symmetrize=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quantum system containing matrix elements represented as general
+spin-orbitals, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\psi(x, t) = \psi^{\alpha}(\mathbf{r}, t) \alpha(m_s)
++ \psi^{\beta}(\mathbf{r}, t) \beta(m_s),\]</div>
+<p>where <span class="math notranslate nohighlight">\(x = (\mathbf{r}, m_s)\)</span> is a generalized coordinate of position
+and spin, and <span class="math notranslate nohighlight">\(\alpha(m_s)\)</span> and <span class="math notranslate nohighlight">\(\beta(m_s)\)</span> are the
+two-dimensional spin basis states. Using general spin-orbitals allows
+mixing between different spin-directions, furthermore the spatial orbitals
+<span class="math notranslate nohighlight">\(\psi^{\alpha}(\mathbf{r}, t)\)</span> and <span class="math notranslate nohighlight">\(\psi^{\beta}(\mathbf{r},
+t)\)</span> are allowed to vary freely. The spin-orbital representation is the most
+general representation of the single-particle states, but note that the
+system size grows quickly. Furthermore, we are unable to categorize a
+general spin-orbital as having a definitive spin-direction.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#quantum_systems.QuantumSystem" title="quantum_systems.QuantumSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantumSystem</span></code></a></dt><dd><p>Parent class with constructor and main interface functions.</p>
+</dd>
+</dl>
+</div>
+<dl class="method">
+<dt id="quantum_systems.GeneralOrbitalSystem.compute_reference_energy">
+<code class="sig-name descname">compute_reference_energy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem.compute_reference_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function computing the reference energy in a general spin-orbital
+system.  This is given by</p>
+<div class="math notranslate nohighlight">
+\[E_0 = \langle \Phi_0 \rvert \hat{H} \lvert \Phi_0 \rangle
+= h^{i}_{i} + \frac{1}{2} u^{ij}_{ij},\]</div>
+<p>where <span class="math notranslate nohighlight">\(\lvert \Phi_0 \rangle\)</span> is the reference determinant, and
+<span class="math notranslate nohighlight">\(i, j\)</span> are occupied indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The reference energy.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>complex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.GeneralOrbitalSystem.construct_fock_matrix">
+<code class="sig-name descname">construct_fock_matrix</code><span class="sig-paren">(</span><em class="sig-param">h</em>, <em class="sig-param">u</em>, <em class="sig-param">f=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem.construct_fock_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function setting up the Fock matrix, that is, the normal-ordered
+one-body elements, in a general spin-orbital basis. This function
+assumes that the two-body elements are anti-symmetrized.</p>
+<p>In a general spin-orbital basis we compute:</p>
+<div class="math notranslate nohighlight">
+\[f^{p}_{q} = h^{p}_{q} + u^{pi}_{qi},\]</div>
+<p>where <span class="math notranslate nohighlight">\(p, q, r, s, ...\)</span> run over all indices and <span class="math notranslate nohighlight">\(i, j, k,
+l, ...\)</span> correspond to the occupied indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h</strong> (<em>np.ndarray</em>) – The one-body matrix elements.</p></li>
+<li><p><strong>u</strong> (<em>np.ndarray</em>) – The two-body matrix elements.</p></li>
+<li><p><strong>f</strong> (<em>np.ndarray</em>) – An empty array of the same shape as <code class="docutils literal notranslate"><span class="pre">h</span></code> to be filled with the
+Fock matrix elements. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> which means that we
+allocate a new matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The filled Fock matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -262,7 +459,7 @@ correspond to the length of each axis of the matrix elements.</p>
         <a href="quantum_dots.html" class="btn btn-neutral float-right" title="Quantum Dots" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="get_started.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="basis_set.html" class="btn btn-neutral float-left" title="Basis set" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

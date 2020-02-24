@@ -11,6 +11,7 @@ Welcome to Quantum Systems's documentation!
     :caption: Contents:
 
     get_started
+    basis_set
     system
     quantum_dots
 

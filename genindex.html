@@ -26,6 +26,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -82,6 +83,7 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="get_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basis_set.html">Basis set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="system.html">Quantum System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quantum_dots.html">Quantum Dots</a></li>
 </ul>
@@ -150,10 +152,12 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#B"><strong>B</strong></a>
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#Q"><strong>Q</strong></a>
@@ -162,8 +166,20 @@
  | <a href="#U"><strong>U</strong></a>
  
 </div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="basis_set.html#quantum_systems.BasisSet.anti_symmetrize_two_body_elements">anti_symmetrize_two_body_elements() (quantum_systems.BasisSet method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="basis_set.html#quantum_systems.BasisSet">BasisSet (class in quantum_systems)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="system.html#quantum_systems.QuantumSystem.bra_spf">bra_spf() (quantum_systems.QuantumSystem property)</a>
 </li>
@@ -173,8 +189,30 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="system.html#quantum_systems.QuantumSystem.change_module">change_module() (quantum_systems.QuantumSystem method)</a>
+      <li><a href="basis_set.html#quantum_systems.BasisSet.cast_to_complex">cast_to_complex() (quantum_systems.BasisSet method)</a>
 </li>
+      <li><a href="basis_set.html#quantum_systems.BasisSet.change_basis">change_basis() (quantum_systems.BasisSet method)</a>
+</li>
+      <li><a href="basis_set.html#quantum_systems.BasisSet.change_module">change_module() (quantum_systems.BasisSet method)</a>
+
+      <ul>
+        <li><a href="system.html#quantum_systems.QuantumSystem.change_module">(quantum_systems.QuantumSystem method)</a>
+</li>
+      </ul></li>
+      <li><a href="system.html#quantum_systems.SpatialOrbitalSystem.change_to_general_orbital_basis">change_to_general_orbital_basis() (quantum_systems.SpatialOrbitalSystem method)</a>
+</li>
+      <li><a href="basis_set.html#quantum_systems.BasisSet.change_to_general_orbital_system">change_to_general_orbital_system() (quantum_systems.BasisSet method)</a>
+</li>
+      <li><a href="basis_set.html#quantum_systems.BasisSet.compute_particle_density">compute_particle_density() (quantum_systems.BasisSet method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="system.html#quantum_systems.GeneralOrbitalSystem.compute_reference_energy">compute_reference_energy() (quantum_systems.GeneralOrbitalSystem method)</a>
+
+      <ul>
+        <li><a href="system.html#quantum_systems.SpatialOrbitalSystem.compute_reference_energy">(quantum_systems.SpatialOrbitalSystem method)</a>
+</li>
+      </ul></li>
       <li><a href="quantum_dots.html#quantum_systems.ODQD.construct_dipole_moment">construct_dipole_moment() (quantum_systems.ODQD method)</a>
 
       <ul>
@@ -183,8 +221,12 @@
         <li><a href="quantum_dots.html#quantum_systems.TwoDimHarmonicOscB.construct_dipole_moment">(quantum_systems.TwoDimHarmonicOscB method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="system.html#quantum_systems.GeneralOrbitalSystem.construct_fock_matrix">construct_fock_matrix() (quantum_systems.GeneralOrbitalSystem method)</a>
+
+      <ul>
+        <li><a href="system.html#quantum_systems.SpatialOrbitalSystem.construct_fock_matrix">(quantum_systems.SpatialOrbitalSystem method)</a>
+</li>
+      </ul></li>
       <li><a href="system.html#quantum_systems.QuantumSystem.copy_system">copy_system() (quantum_systems.QuantumSystem method)</a>
 </li>
   </ul></td>
@@ -209,6 +251,14 @@
         <li><a href="quantum_dots.html#quantum_systems.TwoDimHarmonicOscB.f">(quantum_systems.TwoDimHarmonicOscB attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="system.html#quantum_systems.GeneralOrbitalSystem">GeneralOrbitalSystem (class in quantum_systems)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -274,6 +324,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="quantum_dots.html#quantum_systems.TwoDimensionalHarmonicOscillator.setup_spf">setup_spf() (quantum_systems.TwoDimensionalHarmonicOscillator method)</a>
+</li>
+      <li><a href="system.html#quantum_systems.SpatialOrbitalSystem">SpatialOrbitalSystem (class in quantum_systems)</a>
 </li>
       <li><a href="system.html#quantum_systems.QuantumSystem.spf">spf() (quantum_systems.QuantumSystem property)</a>
 </li>
