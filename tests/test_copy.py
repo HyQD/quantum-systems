@@ -1,11 +1,10 @@
 import numpy as np
 
-from quantum_systems import ODQD
+from quantum_systems import ODQD, GeneralOrbitalSystem
 
 
 def test_copy():
-    odho = ODQD(2, 12, 11, 201)
-    odho.setup_system()
+    odho = GeneralOrbitalSystem(2, ODQD(12, 11, 201))
 
     odho_2 = odho.copy_system()
 

@@ -10,13 +10,11 @@ from quantum_systems.quantum_dots.two_dim.two_dim_helper import (
     get_coulomb_elements,
 )
 
-from quantum_systems.system_helper import (
-    add_spin_one_body,
-    add_spin_two_body,
-    anti_symmetrize_u,
+from quantum_systems import (
+    GeneralOrbitalSystem,
+    TwoDimensionalHarmonicOscillator,
+    BasisSet,
 )
-
-from quantum_systems import TwoDimensionalHarmonicOscillator
 
 
 def test_two_body_symmetry():
@@ -71,7 +69,7 @@ def test_one_body_elements(hi):
 
 def test_antisymmetric_one_body_elements(h):
     l = len(h)
-    _h = add_spin_one_body(get_one_body_elements(l // 2), np=np)
+    _h = BasisSet.add_spin_one_body(get_one_body_elements(l // 2), np=np)
 
     np.testing.assert_allclose(h, _h, atol=1e-6, rtol=1e-6)
 
@@ -85,8 +83,8 @@ def test_two_body_elements(orbital_integrals):
 
 def test_antisymmetric_two_body_elements(u):
     l = len(u)
-    _u = anti_symmetrize_u(
-        add_spin_two_body(get_coulomb_elements(l // 2), np=np)
+    _u = BasisSet.anti_symmetrize_u(
+        BasisSet.add_spin_two_body(get_coulomb_elements(l // 2), np=np)
     )
 
     np.testing.assert_allclose(u, _u, atol=1e-6, rtol=1e-6)
@@ -95,8 +93,7 @@ def test_antisymmetric_two_body_elements(u):
 def test_spf(spf_2dho):
     n, l, radius, num_grid_points, spf_test = spf_2dho
 
-    tdho = TwoDimensionalHarmonicOscillator(n, l, radius, num_grid_points)
-    tdho.setup_spf()
+    tdho = TwoDimensionalHarmonicOscillator(l, radius, num_grid_points)
 
     for p in range(l // 2):
         np.testing.assert_allclose(spf_test[p], tdho.spf[p])

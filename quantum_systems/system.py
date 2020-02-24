@@ -1,60 +1,44 @@
+import abc
 import copy
 
-from quantum_systems.system_helper import (
-    transform_spf,
-    transform_bra_spf,
-    transform_one_body_elements,
-    transform_two_body_elements,
-    add_spin_spf,
-    add_spin_bra_spf,
-    add_spin_one_body,
-    add_spin_two_body,
-    anti_symmetrize_u,
-    check_axis_lengths,
-    change_module,
-    compute_particle_density,
-    get_spin_block_slices,
-)
 
+class QuantumSystem(metaclass=abc.ABCMeta):
+    """Abstract base class defining general methods and data on a quantum
+    system. The class is used to further specify a system beyond a general
+    ``BasisSet`` by specifying the number of particles in the system.
 
-class QuantumSystem:
-    """Base class defining some of the common methods used by all the different
-    quantum systems.
+    Parameters
+    ----------
+    n : int
+        Number of occupied basis functions.
+    basis_set : BasisSet
+        A ``BasisSet``-class or subclass containing matrix elements and basis
+        states.
     """
 
-    def __init__(self, n, l, n_a=None, np=None):
-        assert n <= l
+    def __init__(self, n, basis_set):
+        self._basis_set = basis_set
 
-        if np is None:
-            import numpy as np
+        assert n <= self._basis_set.l
 
-        self.np = np
-
-        self.set_system_size(n, l, n_a)
-
-        self._h = None
-        self._f = None
-        self._u = None
-        self._s = None
-        self._dipole_moment = None
+        self.np = self._basis_set.np
+        self.set_system_size(n, self._basis_set.l)
 
         self._time_evolution_operator = None
 
-        self._spf = None
-        self._bra_spf = None
+    def set_system_size(self, n, l):
+        """Function setting the system size. Note that ``l`` should
+        correspond to the length of each axis of the matrix elements.
 
-        self._nuclear_repulsion_energy = 0
+        Parameters
+        ----------
+        n : int
+            Number of basis functions.
+        l : int
+            Number of basis functions.
+        """
 
-    def set_system_size(self, n, l, n_a=None):
         assert n <= l
-
-        if n_a is None:
-            n_a = n // 2
-
-        assert n_a <= n
-        assert l % 2 == 0
-        assert n_a <= l // 2
-        assert n - n_a <= l // 2
 
         self.n = n
         self.l = l
@@ -63,303 +47,75 @@ class QuantumSystem:
         self.o = slice(0, self.n)
         self.v = slice(self.n, self.l)
 
-        self.n_a = n_a
-        self.n_b = n - n_a
-        self.l_a = l // 2
-        self.l_b = l // 2
-        self.m_a = self.l_a - self.n_a
-        self.m_b = self.l_b - self.n_b
-
-        self.o_a, self.o_b, self.v_a, self.v_b = get_spin_block_slices(
-            self.n, self.n_a, self.l
-        )
-
-    def setup_system(self):
+    @abc.abstractmethod
+    def construct_fock_matrix(self, h, u, f=None):
         pass
 
-    def change_module(self, np=None):
-        if np is not None:
-            self.np = np
-
-        self._h = change_module(self._h, self.np)
-        self._f = change_module(self._f, self.np)
-        self._s = change_module(self._s, self.np)
-        self._u = change_module(self._u, self.np)
-        self._spf = change_module(self._spf, self.np)
-        self._bra_spf = change_module(self._bra_spf, self.np)
-        self._dipole_moment = change_module(self._dipole_moment, self.np)
-
-    def change_to_spin_orbital_basis(self, anti_symmetrize=True):
-        self._h = add_spin_one_body(self._h, np=self.np)
-        assert all(check_axis_lengths(self._h, self.l))
-
-        self._s = add_spin_one_body(self._s, np=self.np)
-        assert all(check_axis_lengths(self._s, self.l))
-
-        self._u = add_spin_two_body(self._u, np=self.np)
-
-        if anti_symmetrize:
-            self._u = anti_symmetrize_u(self._u)
-
-        assert all(check_axis_lengths(self._u, self.l))
-
-        self._f = self.construct_fock_matrix(self._h, self._u)
-
-        if not self._dipole_moment is None:
-            dipole_moment = [
-                add_spin_one_body(self._dipole_moment[i], np=self.np)
-                for i in range(len(self._dipole_moment))
-            ]
-
-            self._dipole_moment = self.np.array(dipole_moment)
-            assert all(check_axis_lengths(self._dipole_moment[0], self.l))
-
-        if not self._spf is None:
-            self._spf = add_spin_spf(self._spf, self.np)
-            assert self._spf.shape[0] == self.l
-
-        if not self._bra_spf is None:
-            self._bra_spf = add_spin_bra_spf(self._bra_spf, self.np)
-            assert self._bra_spf.shape[0] == self.l
-
-    def construct_fock_matrix(self, h, u, f=None):
-        """Function setting up the Fock matrix, that is, the normal-ordered
-        one-body elements. If the axis lengths of the two-body elements are
-        half of the number of spin-orbitals, i.e., we are in the
-        spin-restricted regime, we assume that the user wishes to compute the
-        restricted Fock matrix and that the two-body elements are not
-        antisymmetric.
-
-        In a spin-orbital basis we compute:
-
-        .. math:: f^{p}_{q} = h^{p}_{q} + u^{pi}_{qi},
-
-        where :math:`p, q, r, s, ...` run over all indices and `i, j, k, l,
-        ...` correspond to the occupied indices.
-        For an orbital basis we return:
-
-        .. math:: f^{p}_{q} = h^{p}_{q} + 2 u^{pi}_{qi} - u^{pi}_{iq},
-
-        where the two-body elements are assumed to not be antisymmetric.
+    def change_module(self, np):
+        """Function converting between modules.
 
         Parameters
         ----------
-        h : np.ndarray
-            The one-body matrix elements.
-        u : np.ndarray
-            The two-body matrix elements.
-        f : np.ndarray
-            An empty array of the same shape as `h` to be filled with the Fock
-            matrix elements. Default is `None` which means that we allocate a
-            new matrix.
-
-        Returns
-        -------
-        np.ndarray
-            The filled Fock matrix.
+        np : module
+            Array- and linalg-module.
         """
-        np = self.np
-        o, v = (self.o, self.v)
 
-        if f is None:
-            f = np.zeros_like(h)
+        self.np = np
+        self._basis_set.change_module(self.np)
 
-        f.fill(0)
+    def change_basis(self, C, C_tilde=None):
+        self._basis_set.change_basis(C, C_tilde)
+        self.set_system_size(self.n, self._basis_set.l)
 
-        if all(check_axis_lengths(u, self.l // 2)):
-            o = slice(0, self.n // 2)
-            v = slice(self.n // 2, self.n // 2 + self.m // 2)
-            f += 2 * np.einsum("piqi -> pq", u[:, o, :, o])
-            f -= np.einsum("piiq -> pq", u[:, o, o, :])
-        else:
-            f += np.einsum("piqi -> pq", u[:, o, :, o])
+    @abc.abstractmethod
+    def change_to_hf_basis(self, *args, **kwargs):
+        pass
 
-        f += h
-
-        return f
-
-    def cast_to_complex(self):
-        np = self.np
-
-        self._h = self._h.astype(np.complex128)
-        self._u = self._u.astype(np.complex128)
-
-        if self._f is not None:
-            self._f = self._f.astype(np.complex128)
-
-        if self._s is not None:
-            self._s = self._s.astype(np.complex128)
-
-    def transform_one_body_elements(self, h, c, c_tilde=None):
-        return transform_one_body_elements(h, c, np=self.np, c_tilde=c_tilde)
-
-    def transform_two_body_elements(self, u, c, c_tilde=None):
-        return transform_two_body_elements(u, c, np=self.np, c_tilde=c_tilde)
-
-    def change_basis_one_body_elements(self, c, c_tilde=None):
-        self._h = transform_one_body_elements(
-            self._h, c, np=self.np, c_tilde=c_tilde
-        )
-
-        if self._s is not None:
-            self._s = transform_one_body_elements(
-                self._s, c, c_tilde=c_tilde, np=self.np
-            )
-
-    def change_basis_two_body_elements(self, c, c_tilde=None):
-        self._u = transform_two_body_elements(
-            self._u, c, np=self.np, c_tilde=c_tilde
-        )
-
-    def change_basis_dipole_moment(self, c, c_tilde=None):
-        dipole_moment = []
-        for i in range(self._dipole_moment.shape[0]):
-            dipole_moment.append(
-                transform_one_body_elements(
-                    self._dipole_moment[i], c, np=self.np, c_tilde=c_tilde
-                )
-            )
-
-        self._dipole_moment = self.np.asarray(dipole_moment)
-
-    def change_basis_spf(self, c, c_tilde=None):
-        if c_tilde is not None:
-            # In case of bi-orthogonal basis sets, we create an extra set
-            # of single-particle functions for the bra-side.
-            # Note the use of self.bra_spf instead of self._bra_spf in the
-            # argument to the helper function. This guarantees that
-            # self._bra_spf is not None.
-            self._bra_spf = transform_bra_spf(self.bra_spf, c_tilde, self.np)
-
-        self._spf = transform_spf(self._spf, c, self.np)
-
-    def change_basis(self, c, c_tilde=None):
-        self.change_basis_one_body_elements(c, c_tilde)
-        self.change_basis_two_body_elements(c, c_tilde)
-        self._f = self.construct_fock_matrix(self._h, self._u)
-
-        if self._dipole_moment is not None:
-            self.change_basis_dipole_moment(c, c_tilde)
-
-        if self._spf is not None:
-            self.change_basis_spf(c, c_tilde)
-
-    def change_to_hf_basis(self, *args, verbose=False, **kwargs):
-        from tdhf import HartreeFock
-
-        hf = HartreeFock(system=self, verbose=verbose, np=self.np)
-        c = hf.scf(*args, **kwargs)
-        self.change_basis(c)
-
+    @abc.abstractmethod
     def compute_reference_energy(self):
-        """Function computing the reference energy."""
+        pass
 
-        o, v = self.o, self.v
-
-        return self.np.trace(self._h[o, o]) + 0.5 * self.np.trace(
-            self.np.trace(self._u[o, o, o, o], axis1=1, axis2=3)
+    def compute_particle_density(self, rho_qp, C=None, C_tilde=None):
+        return self._basis_set.compute_particle_density(
+            rho_qp, C=C, C_tilde=C_tilde
         )
-
-    def compute_particle_density(self, rho_qp, c=None, c_tilde=None):
-        """Function computing the particle density for a given one-body density
-        matrix. This function (optionally) changes the basis of the
-        single-particle states for given coefficient matrices.
-
-        Parameters
-        ----------
-        rho_qp : np.ndarray
-            One-body density matrix
-        c : np.ndarray
-            Coefficient matrix for basis change. Default is `None` and hence no
-            transformation occurs.
-        c_tilde : np.ndarray
-            Bra-state coefficient matrix. Default is `None` which leads to one
-            of two situations. If `c != None` `c_tilde` is assumed to be the
-            conjugated transpose of `c`. Otherwise, no transformation occurs.
-
-        Returns
-        -------
-        np.ndarray
-            Particle density with the same dimensions as the grid.
-        """
-        assert (
-            self._spf is not None
-        ), "Set up single-particle functions prior to calling this function"
-
-        ket_spf = self.spf
-        bra_spf = self.bra_spf
-
-        if c is not None:
-            ket_spf = transform_spf(ket_spf, c, self.np)
-            c_tilde = c_tilde if c_tilde is not None else c.conj().T
-            bra_spf = transform_bra_spf(bra_spf, c_tilde, self.np)
-
-        return compute_particle_density(rho_qp, ket_spf, bra_spf, self.np)
 
     @property
     def h(self):
-        """Getter returning one-body matrix."""
-        return self._h
-
-    @property
-    def f(self):
-        """Getter returning one-body Fock matrix."""
-        return self._f
-
-    @f.setter
-    def f(self, f):
-        self._f = f
+        """Getter returning the one-body Hamiltonian."""
+        return self._basis_set.h
 
     @property
     def u(self):
-        """Getter returning the antisymmetric two-body matrix."""
-        return self._u
+        """Getter returning the two-body Hamiltonian."""
+        return self._basis_set.u
 
     @property
     def s(self):
-        """Getter returning the overlap matrix of the atomic orbitals. If the
-        overlap elements don't yet exist, we assume that the overlap is the
-        identity.
-        """
-        np = self.np
-
-        if self._s is None:
-            self._s = np.eye(*self._h.shape)
-
-        return self._s
+        """Getter returning the overlap matrix."""
+        return self._basis_set.s
 
     @property
     def dipole_moment(self):
-        return self._dipole_moment
+        """Getter returning the dipole moment elements."""
+        return self._basis_set.dipole_moment
 
     @property
     def spf(self):
-        """Getter returning the single particle functions, i.e, the eigenstates
-        of the non-interacting Hamiltonian.
-        """
-        return self._spf
+        """Getter returning the single particle functions.  """
+        return self._basis_set.spf
 
     @property
     def bra_spf(self):
-        """Getter returning the conjugate single particle functions. This is
-        `None`, unless we are working with a bi-variational basis.
-        """
-        if self._bra_spf is None:
-            self._bra_spf = self._spf.conj()
-
-        return self._bra_spf
+        """Getter returning the conjugate single particle functions.  """
+        return self._basis_set.bra_spf
 
     @property
     def nuclear_repulsion_energy(self):
-        return self._nuclear_repulsion_energy
-
-    def get_transformed_h(self, c):
-        return transform_one_body_elements(self._h, c, np=self.np)
-
-    def get_transformed_u(self, c):
-        return transform_two_body_elements(self._u, c, np=self.np)
+        return self._basis_set.nuclear_repulsion_energy
 
     def set_time_evolution_operator(self, time_evolution_operator):
+        # TODO: Support list of time-evolution operators
         self._time_evolution_operator = time_evolution_operator
         self._time_evolution_operator.set_system(self)
 
@@ -389,68 +145,20 @@ class QuantumSystem:
 
         return self._time_evolution_operator.u_t(current_time)
 
-    def set_h(self, h, add_spin=False):
-        if add_spin:
-            h = add_spin_one_body(h, np=self.np)
-
-        self._h = h
-
-    def set_u(self, u, add_spin=False, anti_symmetrize=False):
-        if add_spin:
-            u = add_spin_two_body(u, np=self.np)
-
-        if anti_symmetrize:
-            u = anti_symmetrize_u(u)
-
-        self._u = u
-
-    def set_s(self, s, add_spin=False):
-        if add_spin:
-            s = add_spin_one_body(s, np=self.np)
-
-        self._s = s
-
-    def set_dipole_moment(self, dipole_moment, add_spin=False):
-        np = self.np
-
-        if len(dipole_moment.shape) < 3:
-            dipole_moment = np.array([dipole_moment])
-
-        if not add_spin:
-            self._dipole_moment = dipole_moment
-            return
-
-        new_shape = [dipole_moment.shape[0]]
-        new_shape.extend(list(map(lambda x: x * 2, dipole_moment.shape[1:])))
-
-        self._dipole_moment = np.zeros(
-            tuple(new_shape), dtype=dipole_moment.dtype
+    def transform_one_body_elements(self, h, C, C_tilde=None):
+        return self._basis_set.transform_one_body_elements(
+            h, C, np=self.np, C_tilde=C_tilde
         )
 
-        for i in range(len(dipole_moment)):
-            self._dipole_moment[i] = add_spin_one_body(dipole_moment[i], np=np)
-
-    def set_spf(self, spf, add_spin=False):
-        if not add_spin:
-            self._spf = spf
-            return
-
-        self._spf = add_spin_spf(spf, self.np)
-
-    def set_bra_spf(self, bra_spf, add_spin=False):
-        if not add_spin:
-            self._bra_spf = bra_spf
-            return
-
-        self._bra_spf = add_spin_bra_spf(bra_spf, self.np)
-
-    def set_nuclear_repulsion_energy(self, nuclear_repulsion_energy):
-        self._nuclear_repulsion_energy = nuclear_repulsion_energy
+    def transform_two_body_elements(self, u, C, C_tilde=None):
+        return self._basis_set.transform_two_body_elements(
+            u, C, np=self.np, C_tilde=C_tilde
+        )
 
     def copy_system(self):
         """Function creating a deep copy of the current system. This function
         is a hack as we have to temporarily remove the stored module before
-        using Python's `copy.deepcopy`-function.
+        using Python's ``copy.deepcopy``-function.
 
         Returns
         -------
@@ -460,9 +168,14 @@ class QuantumSystem:
 
         np = self.np
         self.np = None
+        self._basis_set.np = None
 
         new_system = copy.deepcopy(self)
-        new_system.np = np
-        self.np = np
+
+        new_system.change_module(np)
+        self.change_module(np)
+
+        assert self.np is np
+        assert self._basis_set.np is np
 
         return new_system

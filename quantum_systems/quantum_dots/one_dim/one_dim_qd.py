@@ -3,15 +3,8 @@ import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.linalg as spsl
 import scipy.special as spec
-import time
 
-from quantum_systems import QuantumSystem
-
-from quantum_systems.system_helper import (
-    add_spin_one_body,
-    add_spin_two_body,
-    anti_symmetrize_u,
-)
+from quantum_systems import BasisSet
 
 from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
     HOPotential,
@@ -73,26 +66,30 @@ def _compute_orbital_integrals(spf, l, inner_integral, grid):
     return u
 
 
-class ODHO(QuantumSystem):
-    """
-    Create matrix elements and grid representation associated with the harmonic 
+class ODHO(BasisSet):
+    """Create matrix elements and grid representation associated with the harmonic
     oscillator basis.
+
+    >>> odho = ODHO(20, 11, 201, omega=1)
+    >>> odho.l == 20
+    True
+    >>> abs(0.5 - odho.h[0, 0]) # doctest.ELLIPSIS
+    0.0
     """
 
     def __init__(
         self,
-        n,
         l,
-        omega,
         grid_length,
         num_grid_points,
+        omega=0.25,
         a=0.25,
         alpha=1.0,
         beta=0,
-        **kwargs
+        **kwargs,
     ):
 
-        super().__init__(n, l, **kwargs)
+        super().__init__(l, dim=1, **kwargs)
 
         self.omega = omega
         self.a = a
@@ -105,37 +102,32 @@ class ODHO(QuantumSystem):
         )
         self.beta = beta
 
-    def setup_system(self, potential=None, add_spin=True, anti_symmetrize=True):
-        dx = self.grid[1] - self.grid[0]
-        self.eigen_energies = self.omega * (np.arange(self.l // 2) + 0.5)
-        self._h = np.diag(self.eigen_energies).astype(np.complex128)
-        self._s = np.eye(self.l // 2)
-        self._spf = np.zeros((self.l // 2, self.num_grid_points))
-        for p in range(self.l // 2):
-            self._spf[p] = self.ho_function(self.grid, p)
+        self.setup_basis()
 
-        tic = time.time()
+    def setup_basis(self):
+        dx = self.grid[1] - self.grid[0]
+        self.eigen_energies = self.omega * (np.arange(self.l) + 0.5)
+        self.h = np.diag(self.eigen_energies).astype(np.complex128)
+        self.s = np.eye(self.l)
+        self.spf = np.zeros((self.l, self.num_grid_points))
+
+        for p in range(self.l):
+            self.spf[p] = self.ho_function(self.grid, p)
+
         inner_integral = _compute_inner_integral(
-            self._spf,
-            self.l // 2,
+            self.spf,
+            self.l,
             self.num_grid_points,
             self.grid,
             self.alpha,
             self.a,
         )
 
-        self._u = _compute_orbital_integrals(
-            self._spf, self.l // 2, inner_integral, self.grid
+        self.u = _compute_orbital_integrals(
+            self.spf, self.l, inner_integral, self.grid
         )
-        toc = time.time()
-        # print(f"Time computing u_pqrs: {toc-tic}")
 
         self.construct_dipole_moment()
-        self.cast_to_complex()
-        self.change_module()
-
-        if add_spin:
-            self.change_to_spin_orbital_basis(anti_symmetrize=anti_symmetrize)
 
     def ho_function(self, x, n):
         return (
@@ -152,11 +144,9 @@ class ODHO(QuantumSystem):
         )
 
     def construct_dipole_moment(self):
-        self._dipole_moment = np.zeros(
-            (1, self.l // 2, self.l // 2), dtype=self._spf.dtype
-        )
+        self.dipole_moment = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
 
-        for n in range(self.l // 2 - 1):
+        for n in range(self.l - 1):
             Nn = self.normalization(n)
             Nn_up = self.normalization(n + 1)
             dip_mom = (
@@ -168,19 +158,17 @@ class ODHO(QuantumSystem):
                 * spec.factorial(n)
                 / self.omega
             )
-            self._dipole_moment[0, n, n + 1] = dip_mom
-            self._dipole_moment[0, n + 1, n] = dip_mom
+            self.dipole_moment[0, n, n + 1] = dip_mom
+            self.dipole_moment[0, n + 1, n] = dip_mom
 
 
-class ODQD(QuantumSystem):
+class ODQD(BasisSet):
     """Create 1D quantum dot system
 
     Parameters
     ----------
-    n : int
-        Number of electrons
     l : int
-        Number of spinorbitals
+        Number of basis functions
     grid_length : int or float
         Space over which to model wavefunction
     num_grid_points : int or float
@@ -204,14 +192,18 @@ class ODQD(QuantumSystem):
 
     Methods
     -------
-    setup_system(potential=None)
-        Must be called to set up quantum system.
-        The method will revert to regular harmonic oscillator
-        potential if no potential is provided. It is also
-        possible to use double well potentials.
+    setup_basis()
+        Must be called to set up quantum system.  The method will revert to
+        regular harmonic oscillator potential if no potential is provided. It
+        is also possible to use double well potentials.
     construct_dipole_moment()
-        Constructs dipole moment. This method is called by
-        setup_system().
+        Constructs dipole moment. This method is called by setup_basis().
+
+    >>> odqd = ODQD(20, 11, 201, potential=ODQD.HOPotential(omega=1))
+    >>> odqd.l == 20
+    True
+    >>> abs(0.5 - odqd.h[0, 0]) # doctest.ELLIPSIS
+    0.0003...
     """
 
     HOPotential = HOPotential
@@ -224,17 +216,17 @@ class ODQD(QuantumSystem):
 
     def __init__(
         self,
-        n,
         l,
         grid_length,
         num_grid_points,
         a=0.25,
         alpha=1.0,
         beta=0,
-        **kwargs
+        potential=None,
+        **kwargs,
     ):
 
-        super().__init__(n, l, **kwargs)
+        super().__init__(l, dim=1, **kwargs)
 
         self.a = a
         self.alpha = alpha
@@ -246,7 +238,6 @@ class ODQD(QuantumSystem):
         )
         self.beta = beta
 
-    def setup_system(self, potential=None, add_spin=True, anti_symmetrize=True):
         if potential is None:
             omega = (
                 0.25  # Default frequency corresponding to Zanghellini article
@@ -255,9 +246,12 @@ class ODQD(QuantumSystem):
 
         self.potential = potential
 
+        self.setup_basis()
+
+    def setup_basis(self):
         dx = self.grid[1] - self.grid[0]
 
-        h_diag = 1.0 / (dx ** 2) + potential(self.grid[1:-1])
+        h_diag = 1.0 / (dx ** 2) + self.potential(self.grid[1:-1])
         h_off_diag = -1.0 / (2 * dx ** 2) * np.ones(self.num_grid_points - 3)
 
         h = (
@@ -267,51 +261,39 @@ class ODQD(QuantumSystem):
         )
 
         eigen_energies, eigen_states = np.linalg.eigh(h)
-        eigen_energies = eigen_energies[: self.l // 2]
-        eigen_states = eigen_states[:, : self.l // 2]
+        eigen_energies = eigen_energies[: self.l]
+        eigen_states = eigen_states[:, : self.l]
 
-        self._spf = np.zeros(
-            (self.l // 2, self.num_grid_points), dtype=np.complex128
-        )
-        self._spf[:, 1:-1] = eigen_states.T / np.sqrt(dx)
+        self.spf = np.zeros((self.l, self.num_grid_points), dtype=np.complex128)
+        self.spf[:, 1:-1] = eigen_states.T / np.sqrt(dx)
         self.eigen_energies = eigen_energies
 
-        self._h = np.diag(eigen_energies).astype(np.complex128)
-        self._s = np.eye(self.l // 2)
+        self.h = np.diag(eigen_energies).astype(np.complex128)
+        self.s = np.eye(self.l)
 
-        tic = time.time()
         inner_integral = _compute_inner_integral(
-            self._spf,
-            self.l // 2,
+            self.spf,
+            self.l,
             self.num_grid_points,
             self.grid,
             self.alpha,
             self.a,
         )
 
-        self._u = _compute_orbital_integrals(
-            self._spf, self.l // 2, inner_integral, self.grid
+        self.u = _compute_orbital_integrals(
+            self.spf, self.l, inner_integral, self.grid
         )
-        toc = time.time()
-        # print(f"Time computing u_pqrs: {toc-tic}")
 
         self.construct_dipole_moment()
-        self.cast_to_complex()
-        self.change_module()
-
-        if add_spin:
-            self.change_to_spin_orbital_basis(anti_symmetrize=anti_symmetrize)
 
     def construct_dipole_moment(self):
-        self._dipole_moment = np.zeros(
-            (1, self.l // 2, self.l // 2), dtype=self._spf.dtype
-        )
+        self.dipole_moment = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
 
-        for p in range(self.l // 2):
-            for q in range(self.l // 2):
-                self._dipole_moment[0, p, q] = np.trapz(
-                    self._spf[p].conj()
+        for p in range(self.l):
+            for q in range(self.l):
+                self.dipole_moment[0, p, q] = np.trapz(
+                    self.spf[p].conj()
                     * (self.grid + self.beta * self.grid ** 2)
-                    * self._spf[q],
+                    * self.spf[q],
                     self.grid,
                 )
