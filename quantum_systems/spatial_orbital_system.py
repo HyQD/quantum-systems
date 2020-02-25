@@ -86,9 +86,10 @@ class SpatialOrbitalSystem(QuantumSystem):
 
         import copy
 
-        gos.set_time_evolution_operator(
-            copy.deepcopy(self._time_evolution_operator)
-        )
+        if not self._time_evolution_operator is None:
+            gos.set_time_evolution_operator(
+                copy.deepcopy(self._time_evolution_operator)
+            )
 
         return gos
 

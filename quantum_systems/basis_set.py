@@ -1,4 +1,5 @@
 import warnings
+import copy
 
 from quantum_systems.system_helper import compute_particle_density
 
