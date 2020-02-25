@@ -275,13 +275,13 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
     """
 
     def __init__(self, *args, omega_c=0, **kwargs):
+        self.omega_c = omega_c
+
         super().__init__(*args, **kwargs)
 
-        omega_0 = self.omega
-        self.omega_c = omega_c
-        self.omega = np.sqrt(omega_0 * omega_0 + omega_c * omega_c / 4)
-
     def setup_basis(self):
+        self.omega = np.sqrt(self.omega ** 2 + self.omega_c ** 2 / 4)
+
         num_orbitals = self.l
         n_array = np.arange(num_orbitals)
         m_array = np.arange(-num_orbitals - 5, num_orbitals + 6)
