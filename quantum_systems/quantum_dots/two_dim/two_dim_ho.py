@@ -25,8 +25,6 @@ class TwoDimensionalHarmonicOscillator(BasisSet):
 
     Parameters
     ----------
-    n : int
-        Number of electrons
     l : int
         Number of basis functions
     radius_length : int or float
@@ -250,8 +248,6 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
 
     Parameters
     ----------
-    n : int
-        Number of electrons
     l : int
         Number of spinorbitals
     radius_length : int or float
