@@ -81,6 +81,10 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         )
 
     @property
+    def grid(self):
+        return self._basis_set.grid
+
+    @property
     def h(self):
         """Getter returning the one-body Hamiltonian."""
         return self._basis_set.h
