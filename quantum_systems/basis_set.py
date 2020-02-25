@@ -470,3 +470,26 @@ class BasisSet:
     @staticmethod
     def check_axis_lengths(arr, length):
         return [length == axis for axis in arr.shape]
+
+    def copy_basis(self):
+        """Function creating a deep copy of the current basis. This function
+        is a hack as we have to temporarily remove the stored module before
+        using Python's ``copy.deepcopy``-function.
+
+        Returns
+        -------
+        BasisSet
+            A deep copy of the current basis.
+        """
+
+        np = self.np
+        self.np = None
+
+        new_basis = copy.deepcopy(self)
+
+        new_basis.change_module(np)
+        self.change_module(np)
+
+        assert self.np is np
+
+        return new_basis

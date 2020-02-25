@@ -49,9 +49,9 @@ class SpatialOrbitalSystem(QuantumSystem):
 
         super().__init__(n // 2, basis_set, **kwargs)
 
-    def change_to_general_orbital_basis(self, anti_symmetrize=True):
-        r"""Function converting ``SpatialOrbitalSystem`` to a ``GeneralOrbitalSystem`` by
-        duplicating every basis element. That is,
+    def construct_general_orbital_basis(self, anti_symmetrize=True):
+        r"""Function constructing a ``GeneralOrbitalSystem`` by 
+        duplicating every basis element of current system. That is,
 
         .. math:: \psi(\mathbf{r}, t)
             \to \psi(x, t) = \psi(\mathbf{r}, t) \sigma(m_2),
@@ -60,9 +60,7 @@ class SpatialOrbitalSystem(QuantumSystem):
         position :math:`\mathbf{r}` and spin :math:`m_s`, with
         :math:`\sigma(m_s)` one of the two spin-functions.
 
-        Note that this function changes the basis set inplace thus rendering
-        the current ``SpatialOrbitalSystem`` invalid. If both systems are
-        needed make sure that you create a copy of the current system.
+        Note that this function creates a copy of the basis set.
 
         Parameters
         ----------
@@ -80,9 +78,19 @@ class SpatialOrbitalSystem(QuantumSystem):
         BasisSet.change_to_general_orbital_basis
         """
 
-        return GeneralOrbitalSystem(
-            self.n * 2, self._basis_set, anti_symmetrize=anti_symmetrize
+        gos = GeneralOrbitalSystem(
+            self.n * 2,
+            self._basis_set.copy_basis(),
+            anti_symmetrize=anti_symmetrize,
         )
+
+        import copy
+
+        gos.set_time_evolution_operator(
+            copy.deepcopy(self._time_evolution_operator)
+        )
+
+        return gos
 
     def compute_reference_energy(self):
         r"""Function computing the reference energy in an orbital system.
