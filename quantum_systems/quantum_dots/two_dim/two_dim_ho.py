@@ -96,13 +96,13 @@ class TwoDimensionalHarmonicOscillator(BasisSet):
 
     def setup_spf(self):
         self._spf = np.zeros(
-            (self.l // 2, self.num_grid_points, self.num_grid_points),
+            (self.l, self.num_grid_points, self.num_grid_points),
             dtype=np.complex128,
         )
 
         self.R, self.T = np.meshgrid(self.radius, self.theta)
 
-        for p in range(self.l // 2):
+        for p in range(self.l):
             self._spf[p] += spf_state(
                 self.R, self.T, p, self.mass, self.omega, self.get_indices_nm
             )
@@ -112,16 +112,16 @@ class TwoDimensionalHarmonicOscillator(BasisSet):
 
     def construct_dipole_moment(self):
         self._dipole_moment = np.zeros(
-            (2, self.l // 2, self.l // 2), dtype=self._spf.dtype
+            (2, self.l, self.l), dtype=self._spf.dtype
         )
 
-        for p in range(self.l // 2):
+        for p in range(self.l):
             n_p, m_p = self.get_indices_nm(p)
 
             norm_p = spf_norm(n_p, m_p, self.mass, self.omega)
             r_p = spf_radial_function(n_p, m_p, self.mass, self.omega)
 
-            for q in range(self.l // 2):
+            for q in range(self.l):
                 n_q, m_q = self.get_indices_nm(q)
 
                 if abs(m_p - m_q) != 1:
@@ -288,7 +288,7 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
         self.omega = np.sqrt(omega_0 * omega_0 + omega_c * omega_c / 4)
 
     def setup_basis(self):
-        num_orbitals = self.l // 2
+        num_orbitals = self.l
         n_array = np.arange(num_orbitals)
         m_array = np.arange(-num_orbitals - 5, num_orbitals + 6)
         self.df = construct_dataframe(
