@@ -27,7 +27,7 @@ class GeneralOrbitalSystem(QuantumSystem):
     def __init__(self, n, basis_set, anti_symmetrize=True, **kwargs):
         if not basis_set.includes_spin:
 
-            basis_set = basis_set.change_to_general_orbital_system(
+            basis_set = basis_set.change_to_general_orbital_basis(
                 anti_symmetrize=anti_symmetrize
             )
 
