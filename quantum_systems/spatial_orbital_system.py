@@ -49,7 +49,7 @@ class SpatialOrbitalSystem(QuantumSystem):
 
         super().__init__(n // 2, basis_set, **kwargs)
 
-    def construct_general_orbital_basis(self, anti_symmetrize=True):
+    def construct_general_orbital_system(self, anti_symmetrize=True):
         r"""Function constructing a ``GeneralOrbitalSystem`` by 
         duplicating every basis element of current system. That is,
 

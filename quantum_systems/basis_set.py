@@ -373,7 +373,7 @@ class BasisSet:
             self.u = self.anti_symmetrize_u(self.u)
             self._anti_symmetrized_u = True
 
-    def change_to_general_orbital_system(self, anti_symmetrize=True):
+    def change_to_general_orbital_basis(self, anti_symmetrize=True):
         r"""Function converting a spatial orbital basis set to a general orbital
         basis. That is, the function duplicates every element by adding a
         spin-function to each spatial orbital. This leads to an
