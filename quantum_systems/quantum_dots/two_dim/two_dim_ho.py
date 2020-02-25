@@ -160,24 +160,21 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
         Frequency of the oscillator potential.
     mass: float
         Mass of the particles.
-
+    axis : int
+        The axis argument specifies which
+        axis the well barrier is aligned to. (0, 1) = (x, y).
     """
 
-    def __init__(self, *args, barrier_strength=1, **kwargs):
+    def __init__(self, *args, barrier_strength=1, axis=0, **kwargs):
+        self.barrier_strength = barrier_strength
+        self.axis = axis
+
         super().__init__(*args, **kwargs)
 
-        self.barrier_strength = barrier_strength
-
-    def setup_basis(self, axis=0):
+    def setup_basis(self):
         """Function setting up the one- and two-body elements, the
         single-particle functions, dipole moments and other quantities used by
         second quantization methods.
-
-        Parameters
-        ----------
-        axis : int
-            The axis argument specifies which
-            axis the well barrier is aligned to. (0, 1) = (x, y).
         """
 
         super().setup_basis()
@@ -188,12 +185,9 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
             self.mass,
             self.barrier_strength,
             dtype=np.complex128,
-            axis=axis,
+            axis=self.axis,
         )
 
-        self._s = np.eye(self.l)
-
-        self.cast_to_complex()
         self.change_module(self.np)
 
 
