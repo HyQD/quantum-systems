@@ -163,7 +163,7 @@ def test_change_of_basis():
 @pytest.fixture(scope="module")
 def get_tddw():
     n = 2
-    l = 20
+    l = 10
     axis = 0
 
     radius = 8
