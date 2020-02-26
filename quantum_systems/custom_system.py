@@ -57,7 +57,7 @@ def construct_pyscf_system_ao(
     >>> # Compare the number of occupied basis functions
     >>> system.n == 4 // 2
     True
-    >>> gos = system.change_to_general_orbital_basis()
+    >>> gos = system.construct_general_orbital_system()
     >>> gos.n == 4
     True
     """
@@ -96,7 +96,7 @@ def construct_pyscf_system_ao(
     system = SpatialOrbitalSystem(n, bs)
 
     return (
-        system.change_to_general_orbital_basis(anti_symmetrize=anti_symmetrize)
+        system.construct_general_orbital_system(anti_symmetrize=anti_symmetrize)
         if add_spin
         else system
     )
@@ -155,7 +155,7 @@ def construct_pyscf_system_rhf(
     >>> # Compare the number of occupied basis functions
     >>> system.n == 4 // 2
     True
-    >>> gos = system.change_to_general_orbital_basis()
+    >>> gos = system.construct_general_orbital_system()
     >>> gos.n == 4
     True
     >>> system = construct_pyscf_system_rhf(
@@ -219,7 +219,7 @@ def construct_pyscf_system_rhf(
     system.change_basis(C)
 
     return (
-        system.change_to_general_orbital_basis(anti_symmetrize=anti_symmetrize)
+        system.construct_general_orbital_system(anti_symmetrize=anti_symmetrize)
         if add_spin
         else system
     )
