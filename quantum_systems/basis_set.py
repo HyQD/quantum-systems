@@ -1,4 +1,5 @@
 import warnings
+import copy
 
 from quantum_systems.system_helper import compute_particle_density
 
@@ -373,7 +374,7 @@ class BasisSet:
             self.u = self.anti_symmetrize_u(self.u)
             self._anti_symmetrized_u = True
 
-    def change_to_general_orbital_system(self, anti_symmetrize=True):
+    def change_to_general_orbital_basis(self, anti_symmetrize=True):
         r"""Function converting a spatial orbital basis set to a general orbital
         basis. That is, the function duplicates every element by adding a
         spin-function to each spatial orbital. This leads to an
@@ -470,3 +471,26 @@ class BasisSet:
     @staticmethod
     def check_axis_lengths(arr, length):
         return [length == axis for axis in arr.shape]
+
+    def copy_basis(self):
+        """Function creating a deep copy of the current basis. This function
+        is a hack as we have to temporarily remove the stored module before
+        using Python's ``copy.deepcopy``-function.
+
+        Returns
+        -------
+        BasisSet
+            A deep copy of the current basis.
+        """
+
+        np = self.np
+        self.np = None
+
+        new_basis = copy.deepcopy(self)
+
+        new_basis.change_module(np)
+        self.change_module(np)
+
+        assert self.np is np
+
+        return new_basis
