@@ -30,9 +30,8 @@ def test_setters():
     l = 10
     dim = 3
 
-    _spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
-    spas = _spas.copy_system()
-    gos = _spas.change_to_general_orbital_basis()
+    spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
+    gos = spas.construct_general_orbital_system()
 
     assert gos.l == 2 * spas.l
 
@@ -43,9 +42,8 @@ def test_change_of_basis():
     dim = 2
     new_l = 2 * l - n
 
-    _spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
-    spas = _spas.copy_system()
-    gos = _spas.change_to_general_orbital_basis()
+    spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
+    gos = spas.construct_general_orbital_system()
 
     C_spas = RandomBasisSet.get_random_elements((spas.l, new_l), np)
     C_gos = RandomBasisSet.get_random_elements((gos.l, new_l), np)
