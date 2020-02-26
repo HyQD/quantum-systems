@@ -246,8 +246,8 @@ and the dual states are the Hermitian adjoint of one another.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="quantum_systems.BasisSet.change_to_general_orbital_system">
-<code class="sig-name descname">change_to_general_orbital_system</code><span class="sig-paren">(</span><em class="sig-param">anti_symmetrize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_to_general_orbital_system" title="Permalink to this definition">¶</a></dt>
+<dt id="quantum_systems.BasisSet.change_to_general_orbital_basis">
+<code class="sig-name descname">change_to_general_orbital_basis</code><span class="sig-paren">(</span><em class="sig-param">anti_symmetrize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_to_general_orbital_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function converting a spatial orbital basis set to a general orbital
 basis. That is, the function duplicates every element by adding a
 spin-function to each spatial orbital. This leads to an
@@ -299,6 +299,22 @@ occurs.</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.BasisSet.copy_basis">
+<code class="sig-name descname">copy_basis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.copy_basis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function creating a deep copy of the current basis. This function
+is a hack as we have to temporarily remove the stored module before
+using Python’s <code class="docutils literal notranslate"><span class="pre">copy.deepcopy</span></code>-function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A deep copy of the current basis.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#quantum_systems.BasisSet" title="quantum_systems.BasisSet">BasisSet</a></p>
 </dd>
 </dl>
 </dd></dl>

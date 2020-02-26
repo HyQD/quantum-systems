@@ -288,38 +288,6 @@ below.</p></li>
 </pre></div>
 </div>
 <dl class="method">
-<dt id="quantum_systems.SpatialOrbitalSystem.change_to_general_orbital_basis">
-<code class="sig-name descname">change_to_general_orbital_basis</code><span class="sig-paren">(</span><em class="sig-param">anti_symmetrize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.change_to_general_orbital_basis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function converting <code class="docutils literal notranslate"><span class="pre">SpatialOrbitalSystem</span></code> to a <code class="docutils literal notranslate"><span class="pre">GeneralOrbitalSystem</span></code> by
-duplicating every basis element. That is,</p>
-<div class="math notranslate nohighlight">
-\[\psi(\mathbf{r}, t)
-\to \psi(x, t) = \psi(\mathbf{r}, t) \sigma(m_2),\]</div>
-<p>where <span class="math notranslate nohighlight">\(x = (\mathbf{r}, m_s)\)</span> is a generalized coordinate of both
-position <span class="math notranslate nohighlight">\(\mathbf{r}\)</span> and spin <span class="math notranslate nohighlight">\(m_s\)</span>, with
-<span class="math notranslate nohighlight">\(\sigma(m_s)\)</span> one of the two spin-functions.</p>
-<p>Note that this function changes the basis set inplace thus rendering
-the current <code class="docutils literal notranslate"><span class="pre">SpatialOrbitalSystem</span></code> invalid. If both systems are
-needed make sure that you create a copy of the current system.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>anti_symmetrize</strong> (<em>bool</em>) – Whether or not to create the anti-symmetrized two-body elements.
-Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The doubly degenerate general spin-orbital system.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_systems.GeneralOrbitalSystem" title="quantum_systems.GeneralOrbitalSystem">GeneralOrbitalSystem</a></p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><code class="xref py py-meth docutils literal notranslate"><span class="pre">BasisSet.change_to_general_orbital_basis()</span></code></p>
-</div>
-</dd></dl>
-
-<dl class="method">
 <dt id="quantum_systems.SpatialOrbitalSystem.compute_reference_energy">
 <code class="sig-name descname">compute_reference_energy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.compute_reference_energy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function computing the reference energy in an orbital system.
@@ -367,6 +335,36 @@ new matrix.</p></li>
 <dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="quantum_systems.SpatialOrbitalSystem.construct_general_orbital_system">
+<code class="sig-name descname">construct_general_orbital_system</code><span class="sig-paren">(</span><em class="sig-param">anti_symmetrize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.construct_general_orbital_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function constructing a <code class="docutils literal notranslate"><span class="pre">GeneralOrbitalSystem</span></code> by
+duplicating every basis element of current system. That is,</p>
+<div class="math notranslate nohighlight">
+\[\psi(\mathbf{r}, t)
+\to \psi(x, t) = \psi(\mathbf{r}, t) \sigma(m_2),\]</div>
+<p>where <span class="math notranslate nohighlight">\(x = (\mathbf{r}, m_s)\)</span> is a generalized coordinate of both
+position <span class="math notranslate nohighlight">\(\mathbf{r}\)</span> and spin <span class="math notranslate nohighlight">\(m_s\)</span>, with
+<span class="math notranslate nohighlight">\(\sigma(m_s)\)</span> one of the two spin-functions.</p>
+<p>Note that this function creates a copy of the basis set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>anti_symmetrize</strong> (<em>bool</em>) – Whether or not to create the anti-symmetrized two-body elements.
+Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The doubly degenerate general spin-orbital system.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#quantum_systems.GeneralOrbitalSystem" title="quantum_systems.GeneralOrbitalSystem">GeneralOrbitalSystem</a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="basis_set.html#quantum_systems.BasisSet.change_to_general_orbital_basis" title="quantum_systems.BasisSet.change_to_general_orbital_basis"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BasisSet.change_to_general_orbital_basis()</span></code></a></p>
+</div>
 </dd></dl>
 
 </dd></dl>
