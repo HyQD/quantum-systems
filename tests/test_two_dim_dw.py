@@ -191,9 +191,9 @@ def test_tddw(get_tddw):
 
     h_dw = get_double_well_one_body_elements(
         tddw.l // 2,
-        tddw.omega,
-        tddw.mass,
-        tddw.barrier_strength,
+        tddw._basis_set.omega,
+        tddw._basis_set.mass,
+        tddw._basis_set.barrier_strength,
         dtype=np.complex128,
         axis=0,
     )
