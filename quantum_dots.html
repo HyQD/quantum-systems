@@ -279,7 +279,6 @@ used by Wadehra et. al: <a class="reference external" href="https://aip.scitatio
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> (<em>int</em>) – Number of electrons</p></li>
 <li><p><strong>l</strong> (<em>int</em>) – Number of basis functions</p></li>
 <li><p><strong>radius_length</strong> (<em>int</em><em> or </em><em>float</em>) – Radius of space over which to model wavefunction</p></li>
 <li><p><strong>num_grid_points</strong> (<em>int</em><em> or </em><em>float</em>) – Defines resolution of numerical representation
@@ -346,7 +345,7 @@ setup_basis().</p>
 
 <dl class="class">
 <dt id="quantum_systems.TwoDimensionalDoubleWell">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalDoubleWell</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">barrier_strength=1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalDoubleWell" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalDoubleWell</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">barrier_strength=1</em>, <em class="sig-param">axis=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalDoubleWell" title="Permalink to this definition">¶</a></dt>
 <dd><p>System constructing two-dimensional quantum dots with a double well
 potential barrier.</p>
 <dl class="field-list simple">
@@ -359,21 +358,17 @@ the angular part of the room.</p></li>
 <li><p><strong>barrier_strength</strong> (<em>float</em>) – Barrier strength in the double well potential.</p></li>
 <li><p><strong>omega</strong> (<em>float</em>) – Frequency of the oscillator potential.</p></li>
 <li><p><strong>mass</strong> (<em>float</em>) – Mass of the particles.</p></li>
+<li><p><strong>axis</strong> (<em>int</em>) – The axis argument specifies which
+axis the well barrier is aligned to. (0, 1) = (x, y).</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="quantum_systems.TwoDimensionalDoubleWell.setup_basis">
-<code class="sig-name descname">setup_basis</code><span class="sig-paren">(</span><em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalDoubleWell.setup_basis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setup_basis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalDoubleWell.setup_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function setting up the one- and two-body elements, the
 single-particle functions, dipole moments and other quantities used by
 second quantization methods.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>axis</strong> (<em>int</em>) – The axis argument specifies which
-axis the well barrier is aligned to. (0, 1) = (x, y).</p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>
@@ -386,7 +381,6 @@ magnetic field, using polar coordinates</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> (<em>int</em>) – Number of electrons</p></li>
 <li><p><strong>l</strong> (<em>int</em>) – Number of spinorbitals</p></li>
 <li><p><strong>radius_length</strong> (<em>int</em><em> or </em><em>float</em>) – Radius of space over which to model wavefunction</p></li>
 <li><p><strong>num_grid_points</strong> (<em>int</em><em> or </em><em>float</em>) – Defines resolution of numerical representation
