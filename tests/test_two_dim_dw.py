@@ -96,7 +96,7 @@ def test_spf_energies():
     )
 
     n = 2
-    l = 12
+    l = 6
     radius = 10
     num_grid_points = 401
     omega = 1
@@ -105,7 +105,7 @@ def test_spf_energies():
     axis = 1
 
     h_dw = get_double_well_one_body_elements(
-        l // 2, omega, mass, barrier_strength, dtype=np.complex128, axis=axis
+        l, omega, mass, barrier_strength, dtype=np.complex128, axis=axis
     )
 
     epsilon, C = np.linalg.eigh(h_dw)
