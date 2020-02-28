@@ -139,13 +139,13 @@ class QuantumSystem(metaclass=abc.ABCMeta):
 
     def h_t(self, current_time):
         if self._time_evolution_operator is None:
-            return self._h
+            return self._basis_set.h
 
         return self._time_evolution_operator.h_t(current_time)
 
     def u_t(self, current_time):
         if self._time_evolution_operator is None:
-            return self._u
+            return self._basis_set.u
 
         return self._time_evolution_operator.u_t(current_time)
 
