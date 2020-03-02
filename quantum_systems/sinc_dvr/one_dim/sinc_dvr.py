@@ -24,7 +24,7 @@ class ODSincDVR(BasisSet):
 
     Parameters
     ----------
-    Ndvr : int
+    l_dvr : int
         Number of sinc-dvr functions
     grid_length : int or float
         Space over which to model wavefunction
@@ -46,7 +46,7 @@ class ODSincDVR(BasisSet):
 
     def __init__(
         self,
-        Ndvr,
+        l_dvr,
         grid_length,
         a=0.25,
         alpha=1.0,
@@ -55,17 +55,17 @@ class ODSincDVR(BasisSet):
         sparse_u=True,
         **kwargs,
     ):
-        super().__init__(Ndvr, dim=1, **kwargs)
+        super().__init__(l_dvr, dim=1, **kwargs)
 
         self.sparse_u = sparse_u
         self.alpha = alpha
         self.a = a
         self.beta = beta
 
-        self.Ndvr = Ndvr
+        self.l_dvr = l_dvr
         self.grid_length = grid_length
 
-        self.grid = np.linspace(-self.grid_length, self.grid_length, self.Ndvr)
+        self.grid = np.linspace(-self.grid_length, self.grid_length, self.l_dvr)
 
         if potential is None:
             omega = (
@@ -82,10 +82,10 @@ class ODSincDVR(BasisSet):
     def setup_basis(self):
         self.dx = self.grid[1] - self.grid[0]
 
-        self.h = np.zeros((self.Ndvr, self.Ndvr))
+        self.h = np.zeros((self.l_dvr, self.l_dvr))
 
         # create multi_dim index for speedy calculations
-        ind = np.arange(self.Ndvr)
+        ind = np.arange(self.l_dvr)
         diff_grid = ind[:, None] - ind
 
         # mask diagonal to edit offdiagonal elements
@@ -119,12 +119,12 @@ class ODSincDVR(BasisSet):
         x = self.grid
 
         if self.sparse_u:
-            self.u = np.zeros((self.Ndvr, self.Ndvr))
+            self.u = np.zeros((self.l_dvr, self.l_dvr))
         else:
-            self.u = np.zeros((self.Ndvr, self.Ndvr, self.Ndvr, self.Ndvr))
+            self.u = np.zeros((self.l_dvr, self.l_dvr, self.l_dvr, self.l_dvr))
 
-        for p in range(self.Ndvr):
-            for q in range(self.Ndvr):
+        for p in range(self.l_dvr):
+            for q in range(self.l_dvr):
                 if self.sparse_u:
                     self.u[p, q] = _shielded_coulomb(
                         x[p], x[q], self.alpha, self.a
@@ -137,4 +137,4 @@ class ODSincDVR(BasisSet):
         return self.u
 
     def construct_s(self):
-        return np.eye(self.Ndvr)
+        return np.eye(self.l_dvr)
