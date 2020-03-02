@@ -145,5 +145,6 @@ class ODSincDVR(BasisSet):
 
         _u = np.einsum('bs,ar,qb,pa,ab->pqrs', C, C, C_tilde, C_tilde, u,
                 optimize=True)
+        self.sparse_u = False
 
         return _u
