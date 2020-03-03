@@ -2,7 +2,11 @@ import os
 import pytest
 import numpy as np
 
-from quantum_systems import ODQD, GeneralOrbitalSystem, SpatialOrbitalSystem
+from quantum_systems import (
+    ODSincDVR,
+    GeneralOrbitalSystem,
+    SpatialOrbitalSystem,
+)
 
 
 @pytest.fixture(scope="module")
