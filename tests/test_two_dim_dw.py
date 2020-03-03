@@ -80,7 +80,7 @@ def test_zero_barrier():
     num_grid_points = 401
 
     tddw = TwoDimensionalDoubleWell(
-        l, radius, num_grid_points, barrier_strength=0, axis=0,
+        l, radius, num_grid_points, barrier_strength=0, axis=0
     )
 
     tdho = TwoDimensionalHarmonicOscillator(l, radius, num_grid_points)
