@@ -138,3 +138,16 @@ class ODSincDVR(BasisSet):
 
     def construct_s(self):
         return np.eye(self.l_dvr)
+
+    def add_spin_two_body(self, _u, np):
+        u = _u.transpose(1, 3, 0, 2)
+        u = np.kron(u, np.eye(2))
+        u = u.transpose(2, 3, 0, 1)
+        u = np.kron(u, np.eye(2))
+        u = u.transpose(0, 2, 1, 3)
+
+        return u
+
+    def anti_symmetrize_u(self, _u):
+        return _u - _u.transpose(0, 1)
+
