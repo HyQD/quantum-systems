@@ -5,6 +5,11 @@ import scipy.sparse.linalg as spsl
 import scipy.special as spec
 
 from ... import BasisSet
+from .sincdvr_helper import (
+    add_spin_two_body,
+    anti_symmetrize_u,
+    transform_two_body_elements,
+)
 
 from quantum_systems.quantum_dots.one_dim.one_dim_qd import _shielded_coulomb
 from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
@@ -55,9 +60,11 @@ class ODSincDVR(BasisSet):
         sparse_u=True,
         **kwargs,
     ):
+
         super().__init__(l_dvr, dim=1, **kwargs)
 
-        self.sparse_u = sparse_u
+        self._sparse_u = sparse_u
+
         self.alpha = alpha
         self.a = a
         self.beta = beta
@@ -65,7 +72,9 @@ class ODSincDVR(BasisSet):
         self.l_dvr = l_dvr
         self.grid_length = grid_length
 
-        self.grid = np.linspace(-self.grid_length, self.grid_length, self.l_dvr)
+        self.grid = np.linspace(
+            -self.grid_length, self.grid_length, self.l_dvr
+        )
 
         if potential is None:
             omega = (
@@ -76,8 +85,6 @@ class ODSincDVR(BasisSet):
         self.potential = potential
 
         self.setup_basis()
-
-        # self.hamiltonian = self._setup_hamiltonian()
 
     def setup_basis(self):
         self.dx = self.grid[1] - self.grid[0]
@@ -110,7 +117,9 @@ class ODSincDVR(BasisSet):
         return 1 / np.sqrt(self.dx) * np.sinc((x - x[:, None]) / self.dx)
 
     def construct_dipole_moment(self):
-        self.dipole_moment = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
+        self.dipole_moment = np.zeros(
+            (1, self.l, self.l), dtype=self.spf.dtype
+        )
         self.dipole_moment[0] = np.diag(self.grid + self.beta * self.grid ** 2)
 
     def construct_coulomb_elements(self):
@@ -118,14 +127,14 @@ class ODSincDVR(BasisSet):
         operator u. """
         x = self.grid
 
-        if self.sparse_u:
+        if self._sparse_u:
             self.u = np.zeros((self.l_dvr, self.l_dvr))
         else:
             self.u = np.zeros((self.l_dvr, self.l_dvr, self.l_dvr, self.l_dvr))
 
         for p in range(self.l_dvr):
             for q in range(self.l_dvr):
-                if self.sparse_u:
+                if self._sparse_u:
                     self.u[p, q] = _shielded_coulomb(
                         x[p], x[q], self.alpha, self.a
                     )
@@ -140,24 +149,21 @@ class ODSincDVR(BasisSet):
         return np.eye(self.l_dvr)
 
     def add_spin_two_body(self, _u, np):
-        u = _u.transpose(1, 3, 0, 2)
-        u = np.kron(u, np.eye(2))
-        u = u.transpose(2, 3, 0, 1)
-        u = np.kron(u, np.eye(2))
-        u = u.transpose(0, 2, 1, 3)
-
-        return u
+        if self._sparse_u:
+            return add_spin_two_body(_u, np)
+        else:
+            return super().add_spin_two_body(_u, np)
 
     def anti_symmetrize_u(self, _u):
-        return _u - _u.transpose(0, 1)
+        if self._sparse_u:
+            return anti_symmetrize_u(_u)
+        else:
+            return super().anti_symmetrize_u(_u)
 
     def transform_two_body_elements(self, u, C, np, C_tilde=None):
-        if C_tilde is None:
-            C_tilde = C.conj().T
-
-        _u = np.einsum(
-            "bs,ar,qb,pa,ab->pqrs", C, C, C_tilde, C_tilde, u, optimize=True
-        )
-        self.sparse_u = False
-
-        return _u
+        if self._sparse_u:
+            # currently forces sparsity change
+            self._sparse_u = False
+            return transform_two_body_elements(u, C, np, C_tilde)
+        else:
+            return super().transform_two_body_elements(u, C, np, C_tilde)
