@@ -162,8 +162,10 @@ class ODSincDVR(BasisSet):
 
     def transform_two_body_elements(self, u, C, np, C_tilde=None):
         if self._sparse_u:
-            # currently forces sparsity change
-            self._sparse_u = False
             return transform_two_body_elements(u, C, np, C_tilde)
         else:
             return super().transform_two_body_elements(u, C, np, C_tilde)
+
+    def change_basis(self, *args, **kwargs):
+        super().change_basis(*args, **kwargs)
+        self._sparse_u = False
