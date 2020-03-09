@@ -2,8 +2,10 @@ def add_spin_two_body(_u, np):
     u = np.kron(_u, np.eye(2))
     return u
 
+
 def anti_symmetrize_u(_u):
     return _u - _u.transpose(0, 1)
+
 
 def transform_two_body_elements(u, C, np, C_tilde=None):
     if C_tilde is None:
