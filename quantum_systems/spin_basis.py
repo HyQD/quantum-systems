@@ -7,7 +7,13 @@ class SpinBasis:
     [1.+0.j 0.+0.j]
     >>> print(sb.b)
     [0.+0.j 1.+0.j]
+    >>> sq_2 = 1 / np.sqrt(2)
+    >>> sb = SpinBasis(np, a=[sq_2, sq_2], b=[sq_2, -sq_2])
+    >>> np.allclose(sb.I_2, sb._I_2_mat)
+    True
     """
+
+    DIRECTIONS = [0, 1, 2, 3]
 
     def __init__(self, np, a=None, b=None):
         self.np = np
@@ -23,12 +29,19 @@ class SpinBasis:
         self.b = self.np.array(b).astype(self.np.complex128)
 
         # Check that spin basis elements are orthonormal
-        assert self.np.dot(self.a.conj().T, self.a) == 1
-        assert self.np.dot(self.b.conj().T, self.b) == 1
-        assert self.np.dot(self.a.conj().T, self.b) == 0
+        assert abs(self.np.dot(self.a.conj().T, self.a) - 1) < 1e-12
+        assert abs(self.np.dot(self.b.conj().T, self.b) - 1) < 1e-12
+        assert abs(self.np.dot(self.a.conj().T, self.b)) < 1e-12
 
         self._setup_pauli_matrices()
         self._setup_spin_matrix_elements()
+
+        self.MATRICES = {
+            0: self.I_2,
+            1: self.sigma_x,
+            2: self.sigma_y,
+            3: self.sigma_z,
+        }
 
     def _setup_pauli_matrices(self):
         """
@@ -109,3 +122,8 @@ class SpinBasis:
     @property
     def sigma_z(self):
         return self._sigma_z
+
+    def create_gos_matrix_elements(self, overlap, direction):
+        assert direction in self.DIRECTIONS
+
+        sigma = self.MATRICES[direction]
