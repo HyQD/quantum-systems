@@ -123,7 +123,45 @@ class SpinBasis:
     def sigma_z(self):
         return self._sigma_z
 
-    def create_gos_matrix_elements(self, overlap, direction):
+    def construct_spas_to_gos_spin_matrix_elements(self, overlap, direction):
+        r"""
+        Parameters
+        ----------
+        overlap : np.ndarray
+            The spatial orbital overlap matrix elements.
+        direction : int
+            An integer in ``[0, 1, 2, 3]``, where the number refers to the
+            different Pauli matrices (``0`` is the two-by-two identity matrix).
+
+        Returns
+        -------
+        np.ndarray
+            The spin matrix elements :math:`(\sigma_i)^p_q` where :math:`i` is
+            the direction index.
+
+        >>> import numpy as np
+        >>> sb = SpinBasis(np)
+        >>> l = 6
+        >>> for direction in sb.DIRECTIONS:
+        ...     s = np.arange(l ** 2).reshape(l, l) + 1
+        ...     sigma = sb.construct_spas_to_gos_spin_matrix_elements(s, direction)
+        ...     sigma_2 = np.zeros((l * 2, l * 2), dtype=np.complex128)
+        ...     for i in range(l * 2):
+        ...         a = i % 2
+        ...         g = i // 2
+        ...         for j in range(l * 2):
+        ...             b = j % 2
+        ...             d = j // 2
+        ...             sigma_2[i, j] = s[g, d] * sb.MATRICES[direction][a, b]
+        ...     np.allclose(sigma, sigma_2)
+        True
+        True
+        True
+        True
+        """
+
         assert direction in self.DIRECTIONS
 
         sigma = self.MATRICES[direction]
+
+        return self.np.kron(overlap, sigma)
