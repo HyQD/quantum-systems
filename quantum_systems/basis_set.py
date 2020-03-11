@@ -124,6 +124,7 @@ class BasisSet:
 
     @sigma_x.setter
     def sigma_x(self, sigma_x):
+        assert self.includes_spin
         assert all(self.check_axis_lengths(sigma_x, self.l))
 
         self._sigma_x = sigma_x
@@ -134,6 +135,7 @@ class BasisSet:
 
     @sigma_y.setter
     def sigma_y(self, sigma_y):
+        assert self.includes_spin
         assert all(self.check_axis_lengths(sigma_y, self.l))
 
         self._sigma_y = sigma_y
@@ -144,6 +146,7 @@ class BasisSet:
 
     @sigma_z.setter
     def sigma_z(self, sigma_z):
+        assert self.includes_spin
         assert all(self.check_axis_lengths(sigma_z, self.l))
 
         self._sigma_z = sigma_z
