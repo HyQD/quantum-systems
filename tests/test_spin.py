@@ -1,7 +1,12 @@
 import pytest
 import numpy as np
 
-from quantum_systems import BasisSet
+from quantum_systems import (
+    BasisSet,
+    RandomBasisSet,
+    GeneralOrbitalSystem,
+    SpatialOrbitalSystem,
+)
 
 
 def test_add_spin_spf():
@@ -45,3 +50,34 @@ def test_add_spin_spf():
     np.testing.assert_allclose(spf[3], new_spf[7])
 
     np.testing.assert_allclose(spf[4], new_spf[9])
+
+
+def test_gos_spin_matrices():
+    n = 4
+    l = 10
+    dim = 2
+
+    spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
+    gos = spas.construct_general_orbital_system()
+
+    for sigma, pauli in zip(
+        [gos.sigma_x, gos.sigma_y, gos.sigma_z],
+        [
+            gos._basis_set._pauli_x,
+            gos._basis_set._pauli_y,
+            gos._basis_set._pauli_z,
+        ],
+    ):
+        sigma_2 = np.zeros((gos.l, gos.l), dtype=np.complex128)
+
+        for i in range(gos.l):
+            a = i % 2
+            g = i // 2
+
+            for j in range(gos.l):
+                b = j % 2
+                d = j // 2
+
+                sigma_2[i, j] = spas.s[g, d] * pauli[a, b]
+
+        np.testing.assert_allclose(sigma, sigma_2)
