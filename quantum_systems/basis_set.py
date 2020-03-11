@@ -276,6 +276,12 @@ class BasisSet:
                 self.s, C, C_tilde=C_tilde, np=self.np
             )
 
+        for sigma in [self.sigma_x, self.sigma_y, self.sigma_z]:
+            if sigma is not None:
+                sigma = self.transform_one_body_elements(
+                    sigma, C, C_tilde=C_tilde, np=self.np
+                )
+
     def _change_basis_two_body_elements(self, C, C_tilde=None):
         self.u = self.transform_two_body_elements(
             self.u, C, np=self.np, C_tilde=C_tilde
