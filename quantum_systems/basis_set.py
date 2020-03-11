@@ -47,6 +47,10 @@ class BasisSet:
         self._s = None
         self._dipole_moment = None
 
+        self._sigma_x = None
+        self._sigma_y = None
+        self._sigma_z = None
+
         self._spf = None
         self._bra_spf = None
 
@@ -113,6 +117,36 @@ class BasisSet:
             assert all(self.check_axis_lengths(dipole_moment[i], self.l))
 
         self._dipole_moment = dipole_moment
+
+    @property
+    def sigma_x(self):
+        return self._sigma_x
+
+    @sigma_x.setter
+    def sigma_x(self, sigma_x):
+        assert all(self.check_axis_lengths(sigma_x, self.l))
+
+        self._sigma_x = sigma_x
+
+    @property
+    def sigma_y(self):
+        return self._sigma_y
+
+    @sigma_y.setter
+    def sigma_y(self, sigma_y):
+        assert all(self.check_axis_lengths(sigma_y, self.l))
+
+        self._sigma_y = sigma_y
+
+    @property
+    def sigma_z(self):
+        return self._sigma_z
+
+    @sigma_z.setter
+    def sigma_z(self, sigma_z):
+        assert all(self.check_axis_lengths(sigma_z, self.l))
+
+        self._sigma_z = sigma_z
 
     @property
     def spf(self):
@@ -374,7 +408,9 @@ class BasisSet:
             self.u = self.anti_symmetrize_u(self.u)
             self._anti_symmetrized_u = True
 
-    def change_to_general_orbital_basis(self, anti_symmetrize=True):
+    def change_to_general_orbital_basis(
+        self, a=[1, 0], b=[0, 1], anti_symmetrize=True
+    ):
         r"""Function converting a spatial orbital basis set to a general orbital
         basis. That is, the function duplicates every element by adding a
         spin-function to each spatial orbital. This leads to an
@@ -392,6 +428,12 @@ class BasisSet:
 
         Parameters
         ----------
+        a : list, np.array
+            The :math:`\alpha` (up) spin basis vector. Default is :math:`\alpha
+            = (1, 0)^T`.
+        b : list, np.array
+            The :math:`\beta` (down) spin basis vector. Default is :math:`\beta
+            = (0, 1)^T`. Note that ``a`` and ``b`` are assumed orthonormal.
         anti_symmetrize : bool
             Whether or not to anti-symmetrize the elements in the two-body
             Hamiltonian. By default we perform an anti-symmetrization.
@@ -407,6 +449,24 @@ class BasisSet:
         self._includes_spin = True
 
         self.l = 2 * self.l
+
+        self.a = self.np.array(a).astype(self.np.complex128).reshape(-1, 1)
+        self.b = self.np.array(b).astype(self.np.complex128).reshape(-1, 1)
+
+        # Check that spin basis elements are orthonormal
+        assert abs(self.np.dot(self.a.conj().T, self.a) - 1) < 1e-12
+        assert abs(self.np.dot(self.b.conj().T, self.b) - 1) < 1e-12
+        assert abs(self.np.dot(self.a.conj().T, self.b)) < 1e-12
+
+        (
+            self._pauli_x,
+            self._pauli_y,
+            self._pauli_z,
+        ) = self.setup_pauli_matrices(self.a, self.b, self.np)
+
+        self.sigma_x = self.np.kron(self.s, self._pauli_x)
+        self.sigma_y = self.np.kron(self.s, self._pauli_y)
+        self.sigma_z = self.np.kron(self.s, self._pauli_z)
 
         self.h = self.add_spin_one_body(self.h, np=self.np)
         self.s = self.add_spin_one_body(self.s, np=self.np)
@@ -432,6 +492,64 @@ class BasisSet:
                 self.bra_spf = self.add_spin_bra_spf(self._bra_spf, self.np)
 
         return self
+
+    @staticmethod
+    def setup_pauli_matrices(a, b, np):
+        r"""Static method computing matrix elements of the Pauli spin-matrices
+        in a given orthonormal basis of spin functions :math:`\{\alpha,
+        \beta\}`.
+
+        .. math:: (\sigma_i)^{\rho}_{\gamma}
+            = \langle \rho \rvert \hat{\sigma}_i \lvert \gamma \rangle,
+
+        where :math:`\rho, \gamma \in \{\alpha, \beta\}` and :math:`i \in \{x,
+        y, z\}` for the three Pauli matrices.
+
+        Parameters
+        ----------
+        a : np.ndarray
+            The :math:`\alpha` basis vector as a column vector.
+        b : np.ndarray
+            The :math:`\beta` basis vector as a column vector. Note that the
+            two basis vectors are assumed to be orthonormal.
+        np : module
+            An appropriate array and linalg module.
+
+        Returns
+        -------
+        tuple
+            The three Pauli matrices in the order :math:`\sigma_x, \sigma_y,
+            \sigma_z`.
+
+        >>> import numpy as np
+        >>> a = np.array([1, 0]).reshape(-1, 1)
+        >>> b = np.array([0, 1]).reshape(-1, 1)
+        >>> sigma_x, sigma_y, sigma_z = BasisSet.setup_pauli_matrices(a, b, np)
+        >>> print(sigma_x)
+        [[0.+0.j 1.+0.j]
+         [1.+0.j 0.+0.j]]
+        >>> print(sigma_y)
+        [[0.+0.j 0.-1.j]
+         [0.+1.j 0.+0.j]]
+        >>> print(sigma_z)
+        [[ 1.+0.j  0.+0.j]
+         [ 0.+0.j -1.+0.j]]
+        """
+        sigma_x_mat = np.array([[0, 1], [1, 0]]).astype(np.complex128)
+        sigma_y_mat = np.array([[0, -1j], [1j, 0]])
+        sigma_z_mat = np.array([[1, 0], [0, -1]]).astype(np.complex128)
+
+        sigma_x = np.zeros_like(sigma_x_mat)
+        sigma_y = np.zeros_like(sigma_y_mat)
+        sigma_z = np.zeros_like(sigma_z_mat)
+
+        for i, s in enumerate([a, b]):
+            for j, t in enumerate([a, b]):
+                sigma_x[i, j] = np.dot(s.conj().T, np.dot(sigma_x_mat, t))
+                sigma_y[i, j] = np.dot(s.conj().T, np.dot(sigma_y_mat, t))
+                sigma_z[i, j] = np.dot(s.conj().T, np.dot(sigma_z_mat, t))
+
+        return sigma_x, sigma_y, sigma_z
 
     @staticmethod
     def add_spin_spf(spf, np):
