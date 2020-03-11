@@ -54,16 +54,16 @@ class GeneralOrbitalSystem(QuantumSystem):
         super().__init__(n, basis_set, **kwargs)
 
     @property
-    def sigma_x(self):
-        return self._basis_set.sigma_x
+    def spin_x(self):
+        return self._basis_set.spin_x
 
     @property
-    def sigma_y(self):
-        return self._basis_set.sigma_y
+    def spin_y(self):
+        return self._basis_set.spin_y
 
     @property
-    def sigma_z(self):
-        return self._basis_set.sigma_z
+    def spin_z(self):
+        return self._basis_set.spin_z
 
     def compute_reference_energy(self):
         r"""Function computing the reference energy in a general spin-orbital

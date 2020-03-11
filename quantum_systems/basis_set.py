@@ -51,6 +51,10 @@ class BasisSet:
         self._sigma_y = None
         self._sigma_z = None
 
+        self._spin_x = None
+        self._spin_y = None
+        self._spin_z = None
+
         self._spf = None
         self._bra_spf = None
 
@@ -119,13 +123,45 @@ class BasisSet:
         self._dipole_moment = dipole_moment
 
     @property
+    def spin_x(self):
+        return self._spin_x
+
+    @spin_x.setter
+    def spin_x(self, spin_x):
+        assert self.includes_spin
+        assert all(self.check_axis_lengths(spin_x, self.l))
+
+        self._spin_x = spin_x
+
+    @property
+    def spin_y(self):
+        return self._spin_y
+
+    @spin_y.setter
+    def spin_y(self, spin_y):
+        assert self.includes_spin
+        assert all(self.check_axis_lengths(spin_y, self.l))
+
+        self._spin_y = spin_y
+
+    @property
+    def spin_z(self):
+        return self._spin_z
+
+    @spin_z.setter
+    def spin_z(self, spin_z):
+        assert self.includes_spin
+        assert all(self.check_axis_lengths(spin_z, self.l))
+
+        self._spin_z = spin_z
+
+    @property
     def sigma_x(self):
         return self._sigma_x
 
     @sigma_x.setter
     def sigma_x(self, sigma_x):
         assert self.includes_spin
-        assert all(self.check_axis_lengths(sigma_x, self.l))
 
         self._sigma_x = sigma_x
 
@@ -136,7 +172,6 @@ class BasisSet:
     @sigma_y.setter
     def sigma_y(self, sigma_y):
         assert self.includes_spin
-        assert all(self.check_axis_lengths(sigma_y, self.l))
 
         self._sigma_y = sigma_y
 
@@ -147,7 +182,6 @@ class BasisSet:
     @sigma_z.setter
     def sigma_z(self, sigma_z):
         assert self.includes_spin
-        assert all(self.check_axis_lengths(sigma_z, self.l))
 
         self._sigma_z = sigma_z
 
@@ -276,10 +310,10 @@ class BasisSet:
                 self.s, C, C_tilde=C_tilde, np=self.np
             )
 
-        for sigma in [self.sigma_x, self.sigma_y, self.sigma_z]:
-            if sigma is not None:
-                sigma = self.transform_one_body_elements(
-                    sigma, C, C_tilde=C_tilde, np=self.np
+        for spin in [self.spin_x, self.spin_y, self.spin_z]:
+            if spin is not None:
+                spin = self.transform_one_body_elements(
+                    spin, C, C_tilde=C_tilde, np=self.np
                 )
 
     def _change_basis_two_body_elements(self, C, C_tilde=None):
@@ -467,15 +501,13 @@ class BasisSet:
         assert abs(self.np.dot(self.b.conj().T, self.b) - 1) < 1e-12
         assert abs(self.np.dot(self.a.conj().T, self.b)) < 1e-12
 
-        (
-            self._pauli_x,
-            self._pauli_y,
-            self._pauli_z,
-        ) = self.setup_pauli_matrices(self.a, self.b, self.np)
+        (self.sigma_x, self.sigma_y, self.sigma_z,) = self.setup_pauli_matrices(
+            self.a, self.b, self.np
+        )
 
-        self.sigma_x = self.np.kron(self.s, self._pauli_x)
-        self.sigma_y = self.np.kron(self.s, self._pauli_y)
-        self.sigma_z = self.np.kron(self.s, self._pauli_z)
+        self.spin_x = 0.5 * self.np.kron(self.s, self.sigma_x)
+        self.spin_y = 0.5 * self.np.kron(self.s, self.sigma_y)
+        self.spin_z = 0.5 * self.np.kron(self.s, self.sigma_z)
 
         self.h = self.add_spin_one_body(self.h, np=self.np)
         self.s = self.add_spin_one_body(self.s, np=self.np)

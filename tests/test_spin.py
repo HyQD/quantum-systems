@@ -60,15 +60,15 @@ def test_gos_spin_matrices():
     spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
     gos = spas.construct_general_orbital_system()
 
-    for sigma, pauli in zip(
-        [gos.sigma_x, gos.sigma_y, gos.sigma_z],
+    for spin, sigma in zip(
+        [gos.spin_x, gos.spin_y, gos.spin_z],
         [
-            gos._basis_set._pauli_x,
-            gos._basis_set._pauli_y,
-            gos._basis_set._pauli_z,
+            gos._basis_set.sigma_x,
+            gos._basis_set.sigma_y,
+            gos._basis_set.sigma_z,
         ],
     ):
-        sigma_2 = np.zeros((gos.l, gos.l), dtype=np.complex128)
+        spin_2 = np.zeros((gos.l, gos.l), dtype=np.complex128)
 
         for i in range(gos.l):
             a = i % 2
@@ -78,6 +78,6 @@ def test_gos_spin_matrices():
                 b = j % 2
                 d = j // 2
 
-                sigma_2[i, j] = spas.s[g, d] * pauli[a, b]
+                spin_2[i, j] = 0.5 * spas.s[g, d] * sigma[a, b]
 
-        np.testing.assert_allclose(sigma, sigma_2)
+        np.testing.assert_allclose(spin, spin_2)
