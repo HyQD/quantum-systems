@@ -388,7 +388,7 @@ class BasisSet:
         position :math:`\mathbf{r}` and spin :math:`m_s`. Here
         :math:`\phi_p(\mathbf{r})` is a spatial orbital and :math:`\sigma(m_s)`
         a spin-function with :math:`\sigma \in \{\alpha, \beta\}`. The
-        conversion happens in place.
+        conversion happens in-place.
 
         Parameters
         ----------
