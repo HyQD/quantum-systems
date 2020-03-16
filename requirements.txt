@@ -1,26 +1,8 @@
 # Install progress bar
 tqdm
 
-# Install numpy
-numpy
-
-# Install scipy
-scipy
-
-# Install pandas
-pandas
-
 # Install pytest
 pytest
-
-# Install numba
-numba
-
-# Install PySCF
-pyscf
-
-# Install sympy for symbolic expressions
-sympy
 
 # Install matplotlib for plotting of scripts
 matplotlib
