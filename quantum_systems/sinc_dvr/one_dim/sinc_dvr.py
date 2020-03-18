@@ -137,7 +137,11 @@ class ODSincDVR(BasisSet):
         data = np.array(data)
 
         if self._sparse_u:
-            import sparse
+            try:
+                import sparse
+            except ModuleNotFoundError as e:
+                print("Please install package sparse to use `sparse_u = True`")
+                raise
             self.u = sparse.COO(coords, data)
         else:
             self.u = np.zeros((self.l_dvr, self.l_dvr, self.l_dvr, self.l_dvr))
