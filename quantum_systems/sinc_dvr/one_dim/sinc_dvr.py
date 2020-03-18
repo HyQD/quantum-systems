@@ -127,22 +127,21 @@ class ODSincDVR(BasisSet):
         operator u. """
         x = self.grid
 
-        if self._sparse_u:
-            self.u = np.zeros((self.l_dvr, self.l_dvr))
-        else:
-            self.u = np.zeros((self.l_dvr, self.l_dvr, self.l_dvr, self.l_dvr))
-
+        coords = []
+        data = []
         for p in range(self.l_dvr):
             for q in range(self.l_dvr):
-                if self._sparse_u:
-                    self.u[p, q] = _shielded_coulomb(
-                        x[p], x[q], self.alpha, self.a
-                    )
-                else:
-                    self.u[p, q, p, q] = _shielded_coulomb(
-                        x[p], x[q], self.alpha, self.a
-                    )
+                data.append(_shielded_coulomb(x[p], x[q], self.alpha, self.a))
+                coords.append((p, q, p, q))
+        coords = np.array(coords).T
+        data = np.array(data)
 
+        if self._sparse_u:
+            import sparse
+            self.u = sparse.COO(coords, data)
+        else:
+            self.u = np.zeros((self.l_dvr, self.l_dvr, self.l_dvr, self.l_dvr))
+            self.u[coords[0], coords[1], coords[2], coords[3]] = data
         return self.u
 
     def construct_s(self):
