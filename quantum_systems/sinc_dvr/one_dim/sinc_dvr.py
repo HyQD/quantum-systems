@@ -151,23 +151,16 @@ class ODSincDVR(BasisSet):
     def construct_s(self):
         return np.eye(self.l_dvr)
 
-    def add_spin_two_body(self, _u, np):
+    def change_module(self, np):
         if self._sparse_u:
-            return add_spin_two_body(_u, np)
-        else:
-            return super().add_spin_two_body(_u, np)
+            import warnings
 
-    def anti_symmetrize_u(self, _u):
-        if self._sparse_u:
-            return anti_symmetrize_u(_u)
+            self.np = np
+            warnings.warn(
+                "change_module not implemented for sparse u, doing nothing"
+            )
         else:
-            return super().anti_symmetrize_u(_u)
-
-    def transform_two_body_elements(self, u, C, np, C_tilde=None):
-        if self._sparse_u:
-            return transform_two_body_elements(u, C, np, C_tilde)
-        else:
-            return super().transform_two_body_elements(u, C, np, C_tilde)
+            return super().change_module(np)
 
     def change_basis(self, *args, **kwargs):
         super().change_basis(*args, **kwargs)

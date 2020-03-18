@@ -215,9 +215,9 @@ class BasisSet:
         # abcd, ds -> abcs
         _u = np.tensordot(u, C, axes=(3, 0))
         # abcs, cr -> absr -> abrs
-        _u = np.tensordot(_u, C, axes=(2, 0)).transpose(0, 1, 3, 2)
+        _u = np.tensordot(_u, C, axes=(2, 0)).transpose((0, 1, 3, 2))
         # abrs, qb -> arsq -> aqrs
-        _u = np.tensordot(_u, C_tilde, axes=(1, 1)).transpose(0, 3, 1, 2)
+        _u = np.tensordot(_u, C_tilde, axes=(1, 1)).transpose((0, 3, 1, 2))
         # pa, aqrs -> pqrs
         _u = np.tensordot(C_tilde, _u, axes=(1, 0))
 
@@ -456,17 +456,17 @@ class BasisSet:
 
     @staticmethod
     def add_spin_two_body(_u, np):
-        u = _u.transpose(1, 3, 0, 2)
+        u = _u.transpose((1, 3, 0, 2))
         u = np.kron(u, np.eye(2))
-        u = u.transpose(2, 3, 0, 1)
+        u = u.transpose((2, 3, 0, 1))
         u = np.kron(u, np.eye(2))
-        u = u.transpose(0, 2, 1, 3)
+        u = u.transpose((0, 2, 1, 3))
 
         return u
 
     @staticmethod
     def anti_symmetrize_u(_u):
-        return _u - _u.transpose(0, 1, 3, 2)
+        return _u - _u.transpose((0, 1, 3, 2))
 
     @staticmethod
     def check_axis_lengths(arr, length):
