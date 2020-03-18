@@ -111,25 +111,25 @@ class SpatialOrbitalSystem(QuantumSystem):
 
         o, v = self.o, self.v
 
-        return
-
-    (
-        2 * self.np.trace(self.h[o, o])
-        + np.sum(
-            np.diagonal(
-                np.sum(
-                    np.diagonal(self.u[o, o, o, o], axis1=1, axis2=3), axis=2
+        return (
+            2 * self.np.trace(self.h[o, o])
+            + np.sum(
+                np.diagonal(
+                    np.sum(
+                        np.diagonal(self.u[o, o, o, o], axis1=1, axis2=3),
+                        axis=2,
+                    )
+                )
+            )
+            - np.sum(
+                np.diagonal(
+                    np.sum(
+                        np.diagonal(self.u[o, o, o, o], axis1=1, axis2=2),
+                        axis=2,
+                    )
                 )
             )
         )
-        - np.sum(
-            np.diagonal(
-                np.sum(
-                    np.diagonal(self.u[o, o, o, o], axis1=1, axis2=2), axis=2
-                )
-            )
-        )
-    )
 
     def construct_fock_matrix(self, h, u, f=None):
         r"""Function setting up the restricted Fock matrix in a closed-shell
