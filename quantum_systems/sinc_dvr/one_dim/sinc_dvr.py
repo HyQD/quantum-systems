@@ -5,11 +5,6 @@ import scipy.sparse.linalg as spsl
 import scipy.special as spec
 
 from ... import BasisSet
-from .sincdvr_helper import (
-    add_spin_two_body,
-    anti_symmetrize_u,
-    transform_two_body_elements,
-)
 
 from quantum_systems.quantum_dots.one_dim.one_dim_qd import _shielded_coulomb
 from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
