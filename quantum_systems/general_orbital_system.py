@@ -57,8 +57,12 @@ class GeneralOrbitalSystem(QuantumSystem):
 
         o, v = self.o, self.v
 
-        return self.np.trace(self.h[o, o]) + 0.5 * self.np.trace(
-            self.np.trace(self.u[o, o, o, o], axis1=1, axis2=3)
+        return self.np.trace(self.h[o, o]) + np.sum(
+            np.diagonal(
+                np.sum(
+                    np.diagonal(self.u[o, o, o, o], axis1=1, axis2=3), axis=2
+                )
+            )
         )
 
     def construct_fock_matrix(self, h, u, f=None):
@@ -99,7 +103,9 @@ class GeneralOrbitalSystem(QuantumSystem):
         f.fill(0)
 
         f += h
-        f += np.einsum("piqi -> pq", u[:, o, :, o])
+        f = np.add(
+            f, np.sum(np.diagonal(u[:, o, :, o], axis1=1, axis2=3), axis=2)
+        )
 
         return f
 
