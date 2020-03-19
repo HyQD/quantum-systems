@@ -7,13 +7,7 @@ verify_ssl = true
 
 [packages]
 tqdm = "*"
-numpy = "*"
-scipy = "*"
-pandas = "*"
 pytest = "*"
-numba = "*"
-pyscf = "*"
-sympy = "*"
 matplotlib = "*"
 black = "*"
 sphinx-rtd-theme = "*"

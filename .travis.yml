@@ -5,6 +5,7 @@ python:
 install:
     - pip install pipenv
     - pipenv install --skip-lock
+    - pip install . -U
 script:
     - pytest
     - black --check .
