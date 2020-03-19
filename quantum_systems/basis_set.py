@@ -207,26 +207,21 @@ class BasisSet:
 
         return np.dot(C_tilde, np.dot(h, C))
 
-    # @staticmethod
-    def transform_two_body_elements(self, u, C, np, C_tilde=None):
+    @staticmethod
+    def transform_two_body_elements(u, C, np, C_tilde=None):
         if C_tilde is None:
             C_tilde = C.conj().T
-        if hasattr(self, '_sparse_u'):
-            import sparse
-            C = sparse.COO(C)
-            C_tilde = sparse.COO(C_tilde)
-        
-        print(0, u)
-        _A = np.tensordot(C_tilde, u, axes=(1, 1))
-        print(1, _A)
-        _A = np.tensordot(_A, C, axes=(3, 0))
-        print(2, _A)
-        _A = np.tensordot(C_tilde, _A, axes=(1, 1))
-        print(3, _A)
-        _A = np.tensordot(_A, C, axes=(2, 0)).transpose((0,1,3,2))
-        print(4, _A)
 
-        return np.array(_A.todense())
+        # abcd, ds -> abcs
+        _u = np.tensordot(u, C, axes=(3, 0))
+        # abcs, cr -> absr -> abrs
+        _u = np.tensordot(_u, C, axes=(2, 0)).transpose((0, 1, 3, 2))
+        # abrs, qb -> arsq -> aqrs
+        _u = np.tensordot(_u, C_tilde, axes=(1, 1)).transpose((0, 3, 1, 2))
+        # pa, aqrs -> pqrs
+        _u = np.tensordot(C_tilde, _u, axes=(1, 0))
+
+        return _u
 
     def get_transformed_h(self, C):
         return self.transform_one_body_elements(self.h, C, np=self.np)
