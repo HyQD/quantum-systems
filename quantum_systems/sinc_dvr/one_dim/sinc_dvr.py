@@ -67,7 +67,9 @@ class ODSincDVR(BasisSet):
         self.l_dvr = l_dvr
         self.grid_length = grid_length
 
-        self.grid = np.linspace(-self.grid_length, self.grid_length, self.l_dvr)
+        self.grid = np.linspace(
+            -self.grid_length, self.grid_length, self.l_dvr
+        )
 
         if potential is None:
             omega = (
@@ -110,7 +112,9 @@ class ODSincDVR(BasisSet):
         return 1 / np.sqrt(self.dx) * np.sinc((x - x[:, None]) / self.dx)
 
     def construct_dipole_moment(self):
-        self.dipole_moment = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
+        self.dipole_moment = np.zeros(
+            (1, self.l, self.l), dtype=self.spf.dtype
+        )
         self.dipole_moment[0] = np.diag(self.grid + self.beta * self.grid ** 2)
 
     def construct_coulomb_elements(self):
@@ -152,6 +156,27 @@ class ODSincDVR(BasisSet):
             )
         else:
             return super().change_module(np)
+
+    def transform_two_body_elements(self, u, C, np, C_tilde=None):
+        """Class method overwriting the static method of BasisSet."""
+        if self._sparse_u:
+            if C_tilde is None:
+                C_tilde = C.conj().T
+            # get the 2d matrix of nonzero values
+            _u = np.zeros(u.shape[:2])
+            _u[u.coords[0], u.coords[1]] = u.data
+            return np.einsum(
+                "ab,ap,bq,ra,sb->pqrs",
+                _u,
+                C,
+                C,
+                C_tilde,
+                C_tilde,
+                optimize=True,
+            )
+        else:
+            # call static method of superclass
+            type(super()).transform_two_body_element(u, C, np, C_tilde)
 
     def change_basis(self, *args, **kwargs):
         super().change_basis(*args, **kwargs)
