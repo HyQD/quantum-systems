@@ -1,10 +1,10 @@
 name: quantum-systems
 channels:
-    - psi4
+    #    - psi4
     - anaconda
 dependencies:
     - python
-    - psi4
+      #    - psi4
     - pip
     - pip:
         - -r requirements.txt
