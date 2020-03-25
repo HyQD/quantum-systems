@@ -55,9 +55,10 @@ class GeneralOrbitalSystem(QuantumSystem):
             The reference energy.
         """
 
+        np = self.np
         o, v = self.o, self.v
 
-        return self.np.trace(self.h[o, o]) + np.sum(
+        return np.trace(self.h[o, o]) + np.sum(
             np.diagonal(
                 np.sum(
                     np.diagonal(self.u[o, o, o, o], axis1=1, axis2=3), axis=2

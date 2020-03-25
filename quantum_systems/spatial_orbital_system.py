@@ -109,10 +109,11 @@ class SpatialOrbitalSystem(QuantumSystem):
             The reference energy.
         """
 
+        np = self.np
         o, v = self.o, self.v
 
         return (
-            2 * self.np.trace(self.h[o, o])
+            2 * np.trace(self.h[o, o])
             + np.sum(
                 np.diagonal(
                     np.sum(
