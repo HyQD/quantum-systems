@@ -83,14 +83,15 @@ def construct_pyscf_system_ao(
     h = pyscf.scf.hf.get_hcore(mol)
     s = mol.intor_symmetric("int1e_ovlp")
     u = mol.intor("int2e").reshape(l, l, l, l).transpose(0, 2, 1, 3)
-    dipole_integrals = mol.intor("int1e_r").reshape(3, l, l)
+    position = mol.intor("int1e_r").reshape(3, l, l)
 
     bs = BasisSet(l, dim=3, np=np)
     bs.h = h
     bs.s = s
     bs.u = u
     bs.nuclear_repulsion_energy = nuclear_repulsion_energy
-    bs.dipole_moment = dipole_integrals
+    bs.particle_charge = -1
+    bs.position = position
     bs.change_module(np=np)
 
     system = SpatialOrbitalSystem(n, bs)
@@ -205,14 +206,15 @@ def construct_pyscf_system_rhf(
     h = pyscf.scf.hf.get_hcore(mol)
     s = mol.intor_symmetric("int1e_ovlp")
     u = mol.intor("int2e").reshape(l, l, l, l).transpose(0, 2, 1, 3)
-    dipole_integrals = mol.intor("int1e_r").reshape(3, l, l)
+    position = mol.intor("int1e_r").reshape(3, l, l)
 
     bs = BasisSet(l, dim=3, np=np)
     bs.h = h
     bs.s = s
     bs.u = u
     bs.nuclear_repulsion_energy = nuclear_repulsion_energy
-    bs.dipole_moment = dipole_integrals
+    bs.particle_charge = -1
+    bs.position = position
     bs.change_module(np=np)
 
     system = SpatialOrbitalSystem(n, bs)
