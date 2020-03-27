@@ -28,7 +28,7 @@ def test_tdhob(get_tdhob):
     tdhob = get_tdhob
 
     dip = np.load(os.path.join("tests", "dat", "tdhob_dipole_moment.npy"))
-    np.testing.assert_allclose(dip, tdhob.dipole_moment, atol=1e-10)
+    np.testing.assert_allclose(dip, tdhob.position, atol=1e-10)
 
     h = np.load(os.path.join("tests", "dat", "tdhob_h.npy"))
     np.testing.assert_allclose(h, tdhob.h, atol=1e-10)
