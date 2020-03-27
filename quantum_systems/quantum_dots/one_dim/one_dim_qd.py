@@ -127,7 +127,7 @@ class ODHO(BasisSet):
             self.spf, self.l, inner_integral, self.grid
         )
 
-        self.construct_dipole_moment()
+        self.construct_position_integrals()
 
     def ho_function(self, x, n):
         return (
@@ -143,13 +143,13 @@ class ODHO(BasisSet):
             * (self.omega / np.pi) ** 0.25
         )
 
-    def construct_dipole_moment(self):
-        self.dipole_moment = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
+    def construct_position_integrals(self):
+        self.position = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
 
         for n in range(self.l - 1):
             Nn = self.normalization(n)
             Nn_up = self.normalization(n + 1)
-            dip_mom = (
+            pos = (
                 Nn
                 * Nn_up
                 * (n + 1)
@@ -158,8 +158,8 @@ class ODHO(BasisSet):
                 * spec.factorial(n)
                 / self.omega
             )
-            self.dipole_moment[0, n, n + 1] = dip_mom
-            self.dipole_moment[0, n + 1, n] = dip_mom
+            self.position[0, n, n + 1] = pos
+            self.position[0, n + 1, n] = pos
 
 
 class ODQD(BasisSet):
@@ -196,8 +196,9 @@ class ODQD(BasisSet):
         Must be called to set up quantum system.  The method will revert to
         regular harmonic oscillator potential if no potential is provided. It
         is also possible to use double well potentials.
-    construct_dipole_moment()
-        Constructs dipole moment. This method is called by setup_basis().
+    construct_position_integrals()
+        Constructs position matrix elements. This method is called by
+        setup_basis().
 
     >>> odqd = ODQD(20, 11, 201, potential=ODQD.HOPotential(omega=1))
     >>> odqd.l == 20
@@ -284,14 +285,14 @@ class ODQD(BasisSet):
             self.spf, self.l, inner_integral, self.grid
         )
 
-        self.construct_dipole_moment()
+        self.construct_position_integrals()
 
-    def construct_dipole_moment(self):
-        self.dipole_moment = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
+    def construct_position_integrals(self):
+        self.position = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
 
         for p in range(self.l):
             for q in range(self.l):
-                self.dipole_moment[0, p, q] = np.trapz(
+                self.position[0, p, q] = np.trapz(
                     self.spf[p].conj()
                     * (self.grid + self.beta * self.grid ** 2)
                     * self.spf[q],

@@ -28,21 +28,22 @@ class RandomBasisSet(BasisSet):
         self.u = self.make_two_body_symmetry(
             self.get_random_elements((self.l, self.l, self.l, self.l), self.np)
         )
-        self.dipole_moment = self.make_dipole_moment_hermitian(
+        self.position = self.make_position_elements_hermitian(
             self.get_random_elements((self.dim, self.l, self.l), self.np)
         )
         self.nuclear_repulsion_energy = self.np.random.random()
+        self.charge = self.np.random.choice([-1, 1])
 
     @staticmethod
     def make_hermitian(h):
         return 0.5 * (h + h.conj().T)
 
     @staticmethod
-    def make_dipole_moment_hermitian(dipole_moment):
-        for i in range(len(dipole_moment)):
-            dipole_moment[i] = RandomBasisSet.make_hermitian(dipole_moment[i])
+    def make_position_elements_hermitian(position):
+        for i in range(len(position)):
+            position[i] = RandomBasisSet.make_hermitian(position[i])
 
-        return dipole_moment
+        return position
 
     @staticmethod
     def make_two_body_symmetry(u):
