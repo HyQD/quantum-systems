@@ -67,9 +67,7 @@ class ODSincDVR(BasisSet):
         self.l_dvr = l_dvr
         self.grid_length = grid_length
 
-        self.grid = np.linspace(
-            -self.grid_length, self.grid_length, self.l_dvr
-        )
+        self.grid = np.linspace(-self.grid_length, self.grid_length, self.l_dvr)
 
         if potential is None:
             omega = (
@@ -106,15 +104,14 @@ class ODSincDVR(BasisSet):
         self.u = self.construct_coulomb_elements()
 
         self.construct_dipole_moment()
+        self.cast_to_complex()
 
     def construct_sinc_grid(self):
         x = self.grid
         return 1 / np.sqrt(self.dx) * np.sinc((x - x[:, None]) / self.dx)
 
     def construct_dipole_moment(self):
-        self.dipole_moment = np.zeros(
-            (1, self.l, self.l), dtype=self.spf.dtype
-        )
+        self.dipole_moment = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
         self.dipole_moment[0] = np.diag(self.grid + self.beta * self.grid ** 2)
 
     def construct_coulomb_elements(self):
@@ -155,7 +152,22 @@ class ODSincDVR(BasisSet):
                 "change_module not implemented for sparse u, doing nothing"
             )
         else:
-            return super().change_module(np)
+            return super(ODSincDVR, ODSincDVR).change_module(np)
+
+    @staticmethod
+    def add_spin_two_body(u, np):
+        """Class method overwriting the static method of BasisSet."""
+        if len(np.shape(u)) == 2:
+            return np.kron(u, np.eye(2))
+        else:
+            return super(ODSincDVR, ODSincDVR).add_spin_two_body(u, np)
+
+    @staticmethod
+    def anti_symmetrize_u(_u):
+        if len(np.shape(_u)) == 2:
+            return _u - _u[::-1]  # _u.transpose((0, 1))[:,::-1]
+        else:
+            return super(ODSincDVR, ODSincDVR).anti_symmetrize_u(_u)
 
     def transform_two_body_elements(self, u, C, np, C_tilde=None):
         """Class method overwriting the static method of BasisSet."""
@@ -163,21 +175,26 @@ class ODSincDVR(BasisSet):
             if C_tilde is None:
                 C_tilde = C.conj().T
             # get the 2d matrix of nonzero values
-            _u = np.zeros(u.shape[:2])
-            _u[u.coords[0], u.coords[1]] = u.data
+            if len(np.shape(u)) == 2:
+                _u = u
+            else:
+                _u = np.zeros(u.shape[:2])
+                _u[u.coords[0], u.coords[1]] = u.data
             return np.einsum(
-                "ab,ap,bq,ra,sb->pqrs",
+                "bs,ar,qb,pa,ab->pqrs",
+                C,
+                C,
+                C_tilde,
+                C_tilde,
                 _u,
-                C,
-                C,
-                C_tilde,
-                C_tilde,
                 optimize=True,
             )
         else:
             # call static method of superclass
-            type(super()).transform_two_body_element(u, C, np, C_tilde)
+            return super(ODSincDVR, ODSincDVR).transform_two_body_elements(
+                u, C, np, C_tilde
+            )
 
     def change_basis(self, *args, **kwargs):
-        super().change_basis(*args, **kwargs)
+        super(ODSincDVR, ODSincDVR).change_basis(*args, **kwargs)
         self._sparse_u = False
