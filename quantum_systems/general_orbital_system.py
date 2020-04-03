@@ -58,10 +58,10 @@ class GeneralOrbitalSystem(QuantumSystem):
         np = self.np
         o, v = self.o, self.v
 
-        return np.trace(self.h[o, o]) + np.sum(
-            np.diagonal(
-                np.sum(
-                    np.diagonal(self.u[o, o, o, o], axis1=1, axis2=3), axis=2
+        return self.np.trace(self.h[o, o]) + self.np.sum(
+            self.np.diagonal(
+                self.np.sum(
+                    self.np.diagonal(self.u[o, o, o, o], axis1=1, axis2=3), axis=2
                 )
             )
         )
@@ -104,9 +104,7 @@ class GeneralOrbitalSystem(QuantumSystem):
         f.fill(0)
 
         f += h
-        f = np.add(
-            f, np.sum(np.diagonal(u[:, o, :, o], axis1=1, axis2=3), axis=2)
-        )
+        f = np.add(f, np.sum(np.diagonal(u[:, o, :, o], axis1=1, axis2=3), axis=2))
 
         return f
 
