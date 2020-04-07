@@ -24,7 +24,7 @@ class ODSincDVR(BasisSet):
 
     Parameters
     ----------
-    l_dvr : int
+    l : int
         Number of sinc-dvr functions
     grid_length : int or float
         Space over which to model wavefunction
@@ -46,7 +46,7 @@ class ODSincDVR(BasisSet):
 
     def __init__(
         self,
-        l_dvr,
+        l,
         grid_length,
         a=0.25,
         alpha=1.0,
@@ -56,21 +56,20 @@ class ODSincDVR(BasisSet):
         **kwargs,
     ):
         # for backwards compatibility:
-        self._u_repr = "sparse" if kwargs.pop("sparse_u", False) else u_repr
+        u_repr = "sparse" if kwargs.pop("sparse_u", False) else u_repr
 
-        if self._u_repr not in ("sparse", "2d", "4d"):
+        if u_repr not in ("sparse", "2d", "4d"):
             raise ValueError("Invalid u_repr value: '{}'".format(u_repr))
 
-        super().__init__(l_dvr, dim=1, **kwargs)
+        super().__init__(l, dim=1, **kwargs)
 
         self.alpha = alpha
         self.a = a
         self.beta = beta
 
-        self.l_dvr = l_dvr
         self.grid_length = grid_length
 
-        self.grid = np.linspace(-self.grid_length, self.grid_length, self.l_dvr)
+        self.grid = np.linspace(-self.grid_length, self.grid_length, self.l)
 
         if potential is None:
             omega = 0.25  # Default frequency corresponding to Zanghellini article
@@ -89,7 +88,7 @@ class ODSincDVR(BasisSet):
         if np.ndim(self.u) == 2:
             return "2d"
         if np.ndim(self.u) == 4:
-            if type(self.u) == np.array:
+            if type(self.u) == np.ndarray:
                 return "4d"
             import sparse
             if type(self.u) == sparse.COO:
@@ -250,4 +249,3 @@ class ODSincDVR(BasisSet):
 
     def change_basis(self, *args, **kwargs):
         super(ODSincDVR, ODSincDVR).change_basis(*args, **kwargs)
-        self._u_repr = "4d"
