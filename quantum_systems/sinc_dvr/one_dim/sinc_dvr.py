@@ -77,7 +77,7 @@ class ODSincDVR(BasisSet):
 
         self.potential = potential
 
-        self.setup_basis()
+        self.setup_basis(u_repr)
 
     @property
     def sparse_repr(self):
@@ -95,7 +95,7 @@ class ODSincDVR(BasisSet):
                 return "sparse"
         return "unknown"
 
-    def setup_basis(self):
+    def setup_basis(self, u_repr="4d"):
         self.dx = self.grid[1] - self.grid[0]
 
         self.h = np.zeros((self.l, self.l))
@@ -115,7 +115,7 @@ class ODSincDVR(BasisSet):
         self.s = self.construct_s()
         self.spf = self.construct_sinc_grid()
 
-        self.u = self.construct_coulomb_elements()
+        self.u = self.construct_coulomb_elements(u_repr)
 
         self.construct_dipole_moment()
         self.cast_to_complex()
@@ -160,7 +160,7 @@ class ODSincDVR(BasisSet):
         self.dipole_moment = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
         self.dipole_moment[0] = np.diag(self.grid + self.beta * self.grid ** 2)
 
-    def construct_coulomb_elements(self):
+    def construct_coulomb_elements(self, u_repr="4d"):
         """Computes Sinc-DVR matrix elements of onebody operator h and two-body
         operator u. """
         x = self.grid
@@ -174,14 +174,14 @@ class ODSincDVR(BasisSet):
         coords = np.array(coords).T
         data = np.array(data)
 
-        if self.u_repr == "sparse":
+        if u_repr == "sparse":
             try:
                 import sparse
             except ModuleNotFoundError as e:
-                print("Please install package sparse to use `sparse_u = True`")
+                print("Please install package sparse to use `u_repr = sparse`")
                 raise
             self.u = sparse.COO(coords, data)
-        elif self.u_repr == "2d":
+        elif u_repr == "2d":
             self.u = np.zeros((self.l, self.l))
             self.u[coords[0], coords[1]] = data
         else:
