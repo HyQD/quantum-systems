@@ -154,9 +154,9 @@ class QuantumSystem(metaclass=abc.ABCMeta):
             h, C, np=self.np, C_tilde=C_tilde
         )
 
-    def transform_two_body_elements(self, u, C, C_tilde=None):
+    def transform_two_body_elements(self, u, C, C_tilde=None, **kwargs):
         return self._basis_set.transform_two_body_elements(
-            u, C, np=self.np, C_tilde=C_tilde
+            u, C, np=self.np, C_tilde=C_tilde, **kwargs
         )
 
     def copy_system(self):
