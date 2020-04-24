@@ -72,7 +72,9 @@ class ODSincDVR(BasisSet):
         self.grid = np.linspace(-self.grid_length, self.grid_length, self.l)
 
         if potential is None:
-            omega = 0.25  # Default frequency corresponding to Zanghellini article
+            omega = (
+                0.25  # Default frequency corresponding to Zanghellini article
+            )
             potential = HOPotential(omega)
 
         self.potential = potential
@@ -91,6 +93,7 @@ class ODSincDVR(BasisSet):
             if type(self.u) == np.ndarray:
                 return "4d"
             import sparse
+
             if type(self.u) == sparse.COO:
                 return "sparse"
         return "unknown"
@@ -107,7 +110,9 @@ class ODSincDVR(BasisSet):
         # mask diagonal to edit offdiagonal elements
         mask = np.ones(self.h.shape, dtype=bool)
         np.fill_diagonal(mask, 0)
-        self.h[mask] = (-1.0) ** diff_grid[mask] / (self.dx ** 2 * diff_grid[mask] ** 2)
+        self.h[mask] = (-1.0) ** diff_grid[mask] / (
+            self.dx ** 2 * diff_grid[mask] ** 2
+        )
         # fill diagonal
         self.h[ind, ind] = np.pi ** 2 / (6 * self.dx ** 2)
         self.h[ind, ind] += self.potential(self.grid)
@@ -144,13 +149,17 @@ class ODSincDVR(BasisSet):
 
             self.u = sparse.COO(coords, data)
         elif new_repr == "2d":
-            self.u = np.zeros((self.l, self.l))
+            self.u = np.zeros((self.l, self.l), dtype=data.dtype)
             self.u[coords[0], coords[1]] = data
         elif new_repr == "4d":
-            self.u = np.zeros((self.l, self.l, self.l, self.l))
+            self.u = np.zeros(
+                (self.l, self.l, self.l, self.l), dtype=data.dtype
+            )
             self.u[coords[0], coords[1], coords[2], coords[3]] = data
         else:
-            raise ValueError("'{}' is not a valid representation".format(new_repr))
+            raise ValueError(
+                "'{}' is not a valid representation".format(new_repr)
+            )
 
     def construct_sinc_grid(self):
         x = self.grid
@@ -197,7 +206,9 @@ class ODSincDVR(BasisSet):
             import warnings
 
             self.np = np
-            warnings.warn("change_module not implemented for sparse u, doing nothing")
+            warnings.warn(
+                "change_module not implemented for sparse u, doing nothing"
+            )
         else:
             return super().change_module(np)
 
@@ -231,11 +242,23 @@ class ODSincDVR(BasisSet):
                 _u = np.zeros(u.shape[:2])
                 _u[u.coords[0], u.coords[1]] = u.data
             u_prime = np.einsum(
-                "bs,ar,qb,pa,ab->pqrs", C, C, C_tilde, C_tilde, _u, optimize=True
+                "bs,ar,qb,pa,ab->pqrs",
+                C,
+                C,
+                C_tilde,
+                C_tilde,
+                _u,
+                optimize=True,
             )
             if anti_symmetrize:
                 u_prime -= np.einsum(
-                    "br,as,qb,pa,ab->pqrs", C, C, C_tilde, C_tilde, _u, optimize=True
+                    "br,as,qb,pa,ab->pqrs",
+                    C,
+                    C,
+                    C_tilde,
+                    C_tilde,
+                    _u,
+                    optimize=True,
                 )
             return u_prime
         else:
@@ -248,4 +271,4 @@ class ODSincDVR(BasisSet):
             )
 
     def change_basis(self, *args, **kwargs):
-        super(ODSincDVR, ODSincDVR).change_basis(*args, **kwargs)
+        super().change_basis(*args, **kwargs)
