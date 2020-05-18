@@ -164,12 +164,14 @@ class BasisSet:
         """
         self.np = np
 
-        self.h = self.change_arr_module(self.h, self.np)
-        self.s = self.change_arr_module(self.s, self.np)
-        self.u = self.change_arr_module(self.u, self.np)
-        self.spf = self.change_arr_module(self.spf, self.np)
-        self.bra_spf = self.change_arr_module(self.bra_spf, self.np)
-        self.dipole_moment = self.change_arr_module(self.dipole_moment, self.np)
+        self._h = self.change_arr_module(self.h, self.np)
+        self._s = self.change_arr_module(self.s, self.np)
+        self._u = self.change_arr_module(self.u, self.np)
+        self._spf = self.change_arr_module(self.spf, self.np)
+        self._bra_spf = self.change_arr_module(self.bra_spf, self.np)
+        self._dipole_moment = self.change_arr_module(
+            self.dipole_moment, self.np
+        )
 
     def cast_to_complex(self):
         """Function converting all matrix elements to ``np.complex128``, where
