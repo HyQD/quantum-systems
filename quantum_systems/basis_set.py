@@ -231,7 +231,7 @@ class BasisSet:
     def get_transformed_u(self, C):
         return self.transform_two_body_elements(self.u, C, np=self.np)
 
-    def _change_basis_one_body_elements(self, C, C_tilde=None):
+    def _change_basis_one_body_elements(self, C, C_tilde):
         self.h = self.transform_one_body_elements(
             self.h, C, np=self.np, C_tilde=C_tilde
         )
@@ -241,13 +241,14 @@ class BasisSet:
                 self.s, C, C_tilde=C_tilde, np=self.np
             )
 
-    def _change_basis_two_body_elements(self, C, C_tilde=None):
+    def _change_basis_two_body_elements(self, C, C_tilde):
         self.u = self.transform_two_body_elements(
             self.u, C, np=self.np, C_tilde=C_tilde
         )
 
-    def _change_basis_dipole_moment(self, C, C_tilde=None):
+    def _change_basis_dipole_moment(self, C, C_tilde):
         dipole_moment = []
+
         for i in range(self.dipole_moment.shape[0]):
             dipole_moment.append(
                 self.transform_one_body_elements(
@@ -257,16 +258,8 @@ class BasisSet:
 
         self.dipole_moment = self.np.asarray(dipole_moment)
 
-    def _change_basis_spf(self, C, C_tilde=None):
-        if C_tilde is not None:
-            # In case of bi-orthogonal basis sets, we create an extra set
-            # of single-particle functions for the bra-side.
-            # Note the use of self.bra_spf instead of self.bra_spf in the
-            # argument to the helper function. This guarantees that
-            # self.bra_spf is not None.
-            self.bra_spf = self.transform_bra_spf(
-                self.bra_spf, C_tilde, self.np
-            )
+    def _change_basis_spf(self, C, C_tilde):
+        self.bra_spf = self.transform_bra_spf(self.bra_spf, C_tilde, self.np)
 
         self.spf = self.transform_spf(self.spf, C, self.np)
 
@@ -306,6 +299,10 @@ class BasisSet:
         """
         # Update basis set size
         self.l = C.shape[1]
+
+        # Ensure that C_tilde is not None
+        if C_tilde is None:
+            C_tilde = C.conj().T
 
         self._change_basis_one_body_elements(C, C_tilde)
         self._change_basis_two_body_elements(C, C_tilde)
