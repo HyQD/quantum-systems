@@ -157,9 +157,9 @@ In two dimensions there is also functionality for adding a constant
 homogeneous magnetic field.</p>
 <div class="section" id="one-dimensional-quantum-dot">
 <h2>One-Dimensional Quantum Dot<a class="headerlink" href="#one-dimensional-quantum-dot" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="quantum_systems.ODQD">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">ODQD</code><span class="sig-paren">(</span><em class="sig-param">l</em>, <em class="sig-param">grid_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">a=0.25</em>, <em class="sig-param">alpha=1.0</em>, <em class="sig-param">beta=0</em>, <em class="sig-param">potential=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">ODQD</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l</span></em>, <em class="sig-param"><span class="n">grid_length</span></em>, <em class="sig-param"><span class="n">num_grid_points</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">0.25</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">beta</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">potential</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create 1D quantum dot system</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -174,7 +174,7 @@ of wavefunction</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="quantum_systems.ODQD.h">
 <code class="sig-name descname">h</code><a class="headerlink" href="#quantum_systems.ODQD.h" title="Permalink to this definition">¶</a></dt>
 <dd><p>One-body matrix</p>
@@ -185,7 +185,7 @@ of wavefunction</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="quantum_systems.ODQD.f">
 <code class="sig-name descname">f</code><a class="headerlink" href="#quantum_systems.ODQD.f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fock matrix</p>
@@ -196,7 +196,7 @@ of wavefunction</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="quantum_systems.ODQD.u">
 <code class="sig-name descname">u</code><a class="headerlink" href="#quantum_systems.ODQD.u" title="Permalink to this definition">¶</a></dt>
 <dd><p>Two-body matrix</p>
@@ -207,7 +207,7 @@ of wavefunction</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.ODQD.setup_basis">
 <code class="sig-name descname">setup_basis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.setup_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Must be called to set up quantum system.  The method will revert to
@@ -215,54 +215,54 @@ regular harmonic oscillator potential if no potential is provided. It
 is also possible to use double well potentials.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.ODQD.construct_dipole_moment">
 <code class="sig-name descname">construct_dipole_moment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.construct_dipole_moment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs dipole moment. This method is called by setup_basis().</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt>
 <code class="sig-name descname">&gt;&gt;&gt; odqd = ODQD(20, 11, 201, potential=ODQD.HOPotential(omega=1))</code></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt>
 <code class="sig-name descname">&gt;&gt;&gt; odqd.l == 20</code></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.ODQD.True">
 <code class="sig-name descname">True</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.True" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt>
 <code class="sig-name descname">&gt;&gt;&gt; abs(0.5 - odqd.h[0, 0]) # doctest.ELLIPSIS</code></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt>
 <code class="sig-name descname">0.0003...</code></dt>
 <dd></dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="quantum_systems.ODQD.AsymmetricDWPotential">
-<em class="property">class </em><code class="sig-name descname">AsymmetricDWPotential</code><span class="sig-paren">(</span><em class="sig-param">a=1</em>, <em class="sig-param">b=1</em>, <em class="sig-param">c=-2.5</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.AsymmetricDWPotential" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">AsymmetricDWPotential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">b</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">c</span><span class="o">=</span><span class="default_value">- 2.5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.AsymmetricDWPotential" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is a generalization of the asymmetric double-well potential
 used by Wadehra et. al: <a class="reference external" href="https://aip.scitation.org/doi/10.1063/1.1589481">https://aip.scitation.org/doi/10.1063/1.1589481</a></p>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="quantum_systems.ODQD.DWPotentialSmooth">
-<em class="property">class </em><code class="sig-name descname">DWPotentialSmooth</code><span class="sig-paren">(</span><em class="sig-param">a=4</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.DWPotentialSmooth" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">DWPotentialSmooth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">4</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.DWPotentialSmooth" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the double-well potential used by J. Kryvi and S. Bøe in their
 thesis work. See Eq. [13.11] in Bøe: <a class="reference external" href="https://www.duo.uio.no/handle/10852/37170">https://www.duo.uio.no/handle/10852/37170</a></p>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="quantum_systems.ODQD.SymmetricDWPotential">
-<em class="property">class </em><code class="sig-name descname">SymmetricDWPotential</code><span class="sig-paren">(</span><em class="sig-param">a=0.5</em>, <em class="sig-param">b=1</em>, <em class="sig-param">c=-7</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.SymmetricDWPotential" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">SymmetricDWPotential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">b</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">c</span><span class="o">=</span><span class="default_value">- 7</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.SymmetricDWPotential" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is a generalization of the symmetric double-well potential
 used by Wadehra et. al: <a class="reference external" href="https://aip.scitation.org/doi/10.1063/1.1589481">https://aip.scitation.org/doi/10.1063/1.1589481</a></p>
 </dd></dl>
@@ -272,9 +272,9 @@ used by Wadehra et. al: <a class="reference external" href="https://aip.scitatio
 </div>
 <div class="section" id="two-dimensional-quantum-dots">
 <h2>Two-Dimensional Quantum Dots<a class="headerlink" href="#two-dimensional-quantum-dots" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="quantum_systems.TwoDimensionalHarmonicOscillator">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalHarmonicOscillator</code><span class="sig-paren">(</span><em class="sig-param">l</em>, <em class="sig-param">radius_length</em>, <em class="sig-param">num_grid_points</em>, <em class="sig-param">omega=1</em>, <em class="sig-param">mass=1</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalHarmonicOscillator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l</span></em>, <em class="sig-param"><span class="n">radius_length</span></em>, <em class="sig-param"><span class="n">num_grid_points</span></em>, <em class="sig-param"><span class="n">omega</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">mass</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create 2D harmonic oscillator, using polar coordinates</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -288,7 +288,7 @@ of wavefunction</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="quantum_systems.TwoDimensionalHarmonicOscillator.h">
 <code class="sig-name descname">h</code><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.h" title="Permalink to this definition">¶</a></dt>
 <dd><p>One-body matrix</p>
@@ -299,7 +299,7 @@ of wavefunction</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="quantum_systems.TwoDimensionalHarmonicOscillator.f">
 <code class="sig-name descname">f</code><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fock matrix</p>
@@ -310,7 +310,7 @@ of wavefunction</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="quantum_systems.TwoDimensionalHarmonicOscillator.u">
 <code class="sig-name descname">u</code><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.u" title="Permalink to this definition">¶</a></dt>
 <dd><p>Two-body matrix</p>
@@ -321,20 +321,20 @@ of wavefunction</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.TwoDimensionalHarmonicOscillator.setup_basis">
 <code class="sig-name descname">setup_basis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.setup_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Must be called to set up quantum system.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.TwoDimensionalHarmonicOscillator.setup_spf">
 <code class="sig-name descname">setup_spf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.setup_spf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs single-particle functions. This method is called
 by setup_basis().</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.TwoDimensionalHarmonicOscillator.construct_dipole_moment">
 <code class="sig-name descname">construct_dipole_moment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalHarmonicOscillator.construct_dipole_moment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs dipole moment. This method is called by
@@ -343,9 +343,9 @@ setup_basis().</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="quantum_systems.TwoDimensionalDoubleWell">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalDoubleWell</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">barrier_strength=1</em>, <em class="sig-param">axis=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalDoubleWell" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimensionalDoubleWell</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="n">barrier_strength</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalDoubleWell" title="Permalink to this definition">¶</a></dt>
 <dd><p>System constructing two-dimensional quantum dots with a double well
 potential barrier.</p>
 <dl class="field-list simple">
@@ -363,7 +363,7 @@ axis the well barrier is aligned to. (0, 1) = (x, y).</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.TwoDimensionalDoubleWell.setup_basis">
 <code class="sig-name descname">setup_basis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimensionalDoubleWell.setup_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function setting up the one- and two-body elements, the
@@ -373,9 +373,9 @@ second quantization methods.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="quantum_systems.TwoDimHarmonicOscB">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimHarmonicOscB</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">omega_c=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">TwoDimHarmonicOscB</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="n">omega_c</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create 2D harmonic oscillator under homogenous
 magnetic field, using polar coordinates</p>
 <dl class="field-list simple">
@@ -391,7 +391,7 @@ of wavefunction</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="quantum_systems.TwoDimHarmonicOscB.h">
 <code class="sig-name descname">h</code><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB.h" title="Permalink to this definition">¶</a></dt>
 <dd><p>One-body matrix</p>
@@ -402,7 +402,7 @@ of wavefunction</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="quantum_systems.TwoDimHarmonicOscB.f">
 <code class="sig-name descname">f</code><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB.f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fock matrix</p>
@@ -413,7 +413,7 @@ of wavefunction</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="quantum_systems.TwoDimHarmonicOscB.u">
 <code class="sig-name descname">u</code><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB.u" title="Permalink to this definition">¶</a></dt>
 <dd><p>Two-body matrix</p>
@@ -424,13 +424,13 @@ of wavefunction</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.TwoDimHarmonicOscB.setup_basis">
 <code class="sig-name descname">setup_basis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB.setup_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Must be called to set up quantum system.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.TwoDimHarmonicOscB.construct_dipole_moment">
 <code class="sig-name descname">construct_dipole_moment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.TwoDimHarmonicOscB.construct_dipole_moment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs dipole moment. This method is called by

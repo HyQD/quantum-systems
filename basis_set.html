@@ -154,9 +154,9 @@
   <div class="section" id="basis-set">
 <h1>Basis set<a class="headerlink" href="#basis-set" title="Permalink to this headline">¶</a></h1>
 <p>A basis set is the collection of matrix elements and associated functions.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="quantum_systems.BasisSet">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">BasisSet</code><span class="sig-paren">(</span><em class="sig-param">l</em>, <em class="sig-param">dim</em>, <em class="sig-param">np=None</em>, <em class="sig-param">includes_spin=False</em>, <em class="sig-param">anti_symmetrized_u=False</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">BasisSet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l</span></em>, <em class="sig-param"><span class="n">dim</span></em>, <em class="sig-param"><span class="n">np</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">includes_spin</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">anti_symmetrized_u</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class serving as a container for matrix elements for various systems. The
 purpose of <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> after a set has been constructed is to be passed to
 a subclass of <code class="docutils literal notranslate"><span class="pre">QuantumSystem</span></code>. From there on the <code class="docutils literal notranslate"><span class="pre">QuantumSystem</span></code> takes
@@ -177,7 +177,7 @@ anti_symmetrized. By default we assume that this is not the case.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.BasisSet.anti_symmetrize_two_body_elements">
 <code class="sig-name descname">anti_symmetrize_two_body_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.anti_symmetrize_two_body_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function making the two-body matrix elements anti-symmetric. This
@@ -191,16 +191,16 @@ corresponds to</p>
 \langle \phi_p \phi_q \rvert \hat{u} \lvert \phi_s \phi_r \rangle.\]</div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.BasisSet.cast_to_complex">
 <code class="sig-name descname">cast_to_complex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.cast_to_complex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function converting all matrix elements to <code class="docutils literal notranslate"><span class="pre">np.complex128</span></code>, where
 <code class="docutils literal notranslate"><span class="pre">np</span></code> is the member array module.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.BasisSet.change_basis">
-<code class="sig-name descname">change_basis</code><span class="sig-paren">(</span><em class="sig-param">C</em>, <em class="sig-param">C_tilde=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_basis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">change_basis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">C</span></em>, <em class="sig-param"><span class="n">C_tilde</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function using coefficient matrices to change basis of the matrix
 elements and the single-particle functions. This function also supports
 rectangular coefficient matrices meaning that the number of basis
@@ -234,9 +234,9 @@ and the dual states are the Hermitian adjoint of one another.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.BasisSet.change_module">
-<code class="sig-name descname">change_module</code><span class="sig-paren">(</span><em class="sig-param">np</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_module" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">change_module</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">np</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_module" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function converting all matrix elements to a new module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -245,9 +245,9 @@ and the dual states are the Hermitian adjoint of one another.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.BasisSet.change_to_general_orbital_basis">
-<code class="sig-name descname">change_to_general_orbital_basis</code><span class="sig-paren">(</span><em class="sig-param">anti_symmetrize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_to_general_orbital_basis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">change_to_general_orbital_basis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">anti_symmetrize</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_to_general_orbital_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function converting a spatial orbital basis set to a general orbital
 basis. That is, the function duplicates every element by adding a
 spin-function to each spatial orbital. This leads to an
@@ -269,9 +269,9 @@ Hamiltonian. By default we perform an anti-symmetrization.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.BasisSet.compute_particle_density">
-<code class="sig-name descname">compute_particle_density</code><span class="sig-paren">(</span><em class="sig-param">rho_qp</em>, <em class="sig-param">C=None</em>, <em class="sig-param">C_tilde=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.compute_particle_density" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_particle_density</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rho_qp</span></em>, <em class="sig-param"><span class="n">C</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">C_tilde</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.compute_particle_density" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function computing the particle density for a given one-body
 density matrix. This function (optionally) changes the basis of the
 single-particle states for given coefficient matrices. The one-body
@@ -303,7 +303,7 @@ occurs.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.BasisSet.copy_basis">
 <code class="sig-name descname">copy_basis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.copy_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function creating a deep copy of the current basis. This function

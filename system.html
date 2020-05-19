@@ -156,9 +156,9 @@
 <p>All systems are represented by the <cite>QuantumSystem</cite>-class. This class allows the
 construction of custom systems by passing in matrix elements. Alternatively,
 there are subclasses setting up specific systems.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="quantum_systems.QuantumSystem">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">QuantumSystem</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">basis_set</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">QuantumSystem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">basis_set</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract base class defining general methods and data on a quantum
 system. The class is used to further specify a system beyond a general
 <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> by specifying the number of particles in the system.</p>
@@ -171,15 +171,15 @@ states.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.QuantumSystem.bra_spf">
 <em class="property">property </em><code class="sig-name descname">bra_spf</code><a class="headerlink" href="#quantum_systems.QuantumSystem.bra_spf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the conjugate single particle functions.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.QuantumSystem.change_module">
-<code class="sig-name descname">change_module</code><span class="sig-paren">(</span><em class="sig-param">np</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.change_module" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">change_module</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">np</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.change_module" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function converting between modules.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -188,7 +188,7 @@ states.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.QuantumSystem.copy_system">
 <code class="sig-name descname">copy_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.copy_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function creating a deep copy of the current system. This function
@@ -204,27 +204,27 @@ using Python’s <code class="docutils literal notranslate"><span class="pre">co
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.QuantumSystem.dipole_moment">
 <em class="property">property </em><code class="sig-name descname">dipole_moment</code><a class="headerlink" href="#quantum_systems.QuantumSystem.dipole_moment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the dipole moment elements.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.QuantumSystem.h">
 <em class="property">property </em><code class="sig-name descname">h</code><a class="headerlink" href="#quantum_systems.QuantumSystem.h" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the one-body Hamiltonian.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.QuantumSystem.s">
 <em class="property">property </em><code class="sig-name descname">s</code><a class="headerlink" href="#quantum_systems.QuantumSystem.s" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the overlap matrix.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.QuantumSystem.set_system_size">
-<code class="sig-name descname">set_system_size</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">l</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.set_system_size" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_system_size</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">l</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.set_system_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function setting the system size. Note that <code class="docutils literal notranslate"><span class="pre">l</span></code> should
 correspond to the length of each axis of the matrix elements.</p>
 <dl class="field-list simple">
@@ -237,13 +237,13 @@ correspond to the length of each axis of the matrix elements.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.QuantumSystem.spf">
 <em class="property">property </em><code class="sig-name descname">spf</code><a class="headerlink" href="#quantum_systems.QuantumSystem.spf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the single particle functions.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.QuantumSystem.u">
 <em class="property">property </em><code class="sig-name descname">u</code><a class="headerlink" href="#quantum_systems.QuantumSystem.u" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the two-body Hamiltonian.</p>
@@ -251,9 +251,9 @@ correspond to the length of each axis of the matrix elements.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="quantum_systems.SpatialOrbitalSystem">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">SpatialOrbitalSystem</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">basis_set</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">SpatialOrbitalSystem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">basis_set</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quantum system containing orbital matrix elements, i.e., we only keep
 the spatial orbitals as they are degenerate in each spin direction. We have</p>
 <div class="math notranslate nohighlight">
@@ -287,7 +287,7 @@ below.</p></li>
 <span class="go">True</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.SpatialOrbitalSystem.compute_reference_energy">
 <code class="sig-name descname">compute_reference_energy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.compute_reference_energy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function computing the reference energy in an orbital system.
@@ -307,9 +307,9 @@ This is given by</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.SpatialOrbitalSystem.construct_fock_matrix">
-<code class="sig-name descname">construct_fock_matrix</code><span class="sig-paren">(</span><em class="sig-param">h</em>, <em class="sig-param">u</em>, <em class="sig-param">f=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.construct_fock_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">construct_fock_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">f</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.construct_fock_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function setting up the restricted Fock matrix in a closed-shell
 orbital basis.</p>
 <p>In an orbital basis we compute:</p>
@@ -337,9 +337,9 @@ new matrix.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.SpatialOrbitalSystem.construct_general_orbital_system">
-<code class="sig-name descname">construct_general_orbital_system</code><span class="sig-paren">(</span><em class="sig-param">anti_symmetrize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.construct_general_orbital_system" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">construct_general_orbital_system</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">anti_symmetrize</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.construct_general_orbital_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function constructing a <code class="docutils literal notranslate"><span class="pre">GeneralOrbitalSystem</span></code> by
 duplicating every basis element of current system. That is,</p>
 <div class="math notranslate nohighlight">
@@ -369,9 +369,9 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="quantum_systems.GeneralOrbitalSystem">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">GeneralOrbitalSystem</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">basis_set</em>, <em class="sig-param">anti_symmetrize=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">GeneralOrbitalSystem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">basis_set</span></em>, <em class="sig-param"><span class="n">anti_symmetrize</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quantum system containing matrix elements represented as general
 spin-orbitals, i.e.,</p>
 <div class="math notranslate nohighlight">
@@ -393,7 +393,7 @@ general spin-orbital as having a definitive spin-direction.</p>
 </dd>
 </dl>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.GeneralOrbitalSystem.compute_reference_energy">
 <code class="sig-name descname">compute_reference_energy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem.compute_reference_energy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function computing the reference energy in a general spin-orbital
@@ -413,9 +413,9 @@ system.  This is given by</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="quantum_systems.GeneralOrbitalSystem.construct_fock_matrix">
-<code class="sig-name descname">construct_fock_matrix</code><span class="sig-paren">(</span><em class="sig-param">h</em>, <em class="sig-param">u</em>, <em class="sig-param">f=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem.construct_fock_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">construct_fock_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">f</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem.construct_fock_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function setting up the Fock matrix, that is, the normal-ordered
 one-body elements, in a general spin-orbital basis. This function
 assumes that the two-body elements are anti-symmetrized.</p>
