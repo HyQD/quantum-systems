@@ -70,6 +70,7 @@ class ODSincDVR(BasisSet):
         self.grid_length = grid_length
 
         self.grid = np.linspace(-self.grid_length, self.grid_length, self.l)
+        self.num_grid_points = self.l
 
         if potential is None:
             omega = (
