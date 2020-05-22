@@ -121,7 +121,8 @@ class QuantumSystem(metaclass=abc.ABCMeta):
     def set_time_evolution_operator(self, time_evolution_operator):
         # TODO: Support list of time-evolution operators
         self._time_evolution_operator = time_evolution_operator
-        self._time_evolution_operator.set_system(self)
+        if not self._time_evolution_operator is None:
+            self._time_evolution_operator.set_system(self)
 
     @property
     def has_one_body_time_evolution_operator(self):
