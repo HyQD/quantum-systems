@@ -139,7 +139,7 @@ class ODSincDVR(BasisSet):
         if self.u_repr == "2d":
             return coords, self.u[coords0, coords1]
         if self.u_repr == "4d":
-            return coords, self.u[coords0, coords1]
+            return coords, self.u[coords0, coords1, coords0, coords1]
         raise ValueError("Not a valid")
 
     def change_repr(self, new_repr):
