@@ -16,17 +16,17 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         states.
     """
 
-    def __init__(self, n, basis_set):
+    def __init__(self, n, basis_set, nfrozen=0):
         self._basis_set = basis_set
 
         assert n <= self._basis_set.l
 
         self.np = self._basis_set.np
-        self.set_system_size(n, self._basis_set.l)
+        self.set_system_size(n, self._basis_set.l, nfrozen)
 
         self._time_evolution_operator = None
 
-    def set_system_size(self, n, l):
+    def set_system_size(self, n, l, nfrozen):
         """Function setting the system size. Note that ``l`` should
         correspond to the length of each axis of the matrix elements.
 
@@ -43,8 +43,9 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         self.n = n
         self.l = l
         self.m = self.l - self.n
+        self.nfrozen = nfrozen
 
-        self.o = slice(0, self.n)
+        self.o = slice(nfrozen, self.n)
         self.v = slice(self.n, self.l)
 
     @abc.abstractmethod
@@ -65,7 +66,7 @@ class QuantumSystem(metaclass=abc.ABCMeta):
 
     def change_basis(self, C, C_tilde=None):
         self._basis_set.change_basis(C, C_tilde)
-        self.set_system_size(self.n, self._basis_set.l)
+        self.set_system_size(self.n, self._basis_set.l, self.nfrozen)
 
     @abc.abstractmethod
     def change_to_hf_basis(self, *args, **kwargs):
