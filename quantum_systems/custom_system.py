@@ -111,6 +111,7 @@ def construct_pyscf_system_rhf(
     verbose=False,
     charge=0,
     cart=False,
+    nfrozen=0,
     **kwargs,
 ):
     """Convenience function setting up a closed-shell atom or a molecule from
@@ -215,7 +216,7 @@ def construct_pyscf_system_rhf(
     bs.dipole_moment = dipole_integrals
     bs.change_module(np=np)
 
-    system = SpatialOrbitalSystem(n, bs)
+    system = SpatialOrbitalSystem(n, bs, nfrozen=nfrozen)
     system.change_basis(C)
 
     return (
