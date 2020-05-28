@@ -55,7 +55,7 @@ class GeneralOrbitalSystem(QuantumSystem):
             The reference energy.
         """
 
-        o, v = self.o, self.v
+        o, v = slice(0, self.n), self.v
 
         return self.np.trace(self.h[o, o]) + 0.5 * self.np.trace(
             self.np.trace(self.u[o, o, o, o], axis1=1, axis2=3)
@@ -91,7 +91,7 @@ class GeneralOrbitalSystem(QuantumSystem):
         """
 
         np = self.np
-        o, v = (self.o, self.v)
+        o, v = (slice(0, self.n), self.v)
 
         if f is None:
             f = np.zeros_like(h)
