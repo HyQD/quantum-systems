@@ -160,6 +160,11 @@ class QuantumSystem(metaclass=abc.ABCMeta):
             u, C, np=self.np, C_tilde=C_tilde, **kwargs
         )
 
+    def partially_transform_two_body_element(self, u, C, C_tilde=None, **kwargs):
+        return self._basis_set.transform_two_body_elements(
+            u, C, np=self.np, C_tilde=C_tilde, **kwargs
+        )
+
     def copy_system(self):
         """Function creating a deep copy of the current system. This function
         is a hack as we have to temporarily remove the stored module before

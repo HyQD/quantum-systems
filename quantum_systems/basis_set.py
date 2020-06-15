@@ -225,6 +225,19 @@ class BasisSet:
 
         return _u
 
+    @staticmethod
+    def partially_transform_two_body_element(u, C, np, C_tilde=None):
+        if C_tilde is None:
+            C_tilde = C.conj().T
+
+        return np.einsum(
+            "rb,ds,abcd->arcs",
+            C_tilde,
+            C,
+            u,
+            optimize=True,
+        )
+
     def get_transformed_h(self, C):
         return self.transform_one_body_elements(self.h, C, np=self.np)
 
