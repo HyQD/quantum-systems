@@ -56,9 +56,9 @@ class ODSincDVR(BasisSet):
         **kwargs,
     ):
         # for backwards compatibility:
-        u_repr = "sparse" if kwargs.pop("sparse_u", False) else u_repr
+        # u_repr = "sparse" if kwargs.pop("sparse_u", False) else u_repr
 
-        if u_repr not in ("sparse", "2d", "4d"):
+        if u_repr not in ("2d", "4d"):
             raise ValueError("Invalid u_repr value: '{}'".format(u_repr))
 
         super().__init__(l, dim=1, **kwargs)
@@ -84,22 +84,17 @@ class ODSincDVR(BasisSet):
 
     @property
     def sparse_repr(self):
-        return self.u_repr in ("sparse", "2d")
+        return self.u_repr == "2d"
 
     @property
     def u_repr(self):
         if np.ndim(self.u) == 2:
             return "2d"
         if np.ndim(self.u) == 4:
-            if type(self.u) == np.ndarray:
-                return "4d"
-            import sparse
-
-            if type(self.u) == sparse.COO:
-                return "sparse"
+            return "4d"
         return "unknown"
 
-    def setup_basis(self, u_repr="4d"):
+    def setup_basis(self, u_repr):
         self.dx = self.grid[1] - self.grid[0]
 
         self.h = np.zeros((self.l, self.l))
@@ -126,37 +121,21 @@ class ODSincDVR(BasisSet):
         self.construct_dipole_moment()
         self.cast_to_complex()
 
-    def get_u_data(self):
-        """Returns u matrix as COO-formatted data, i.e an array of coordinates
-        and an array of data"""
-
-        if self.u_repr == "sparse":
-            return self.u.coords, self.u.data
-
+    def set_u_repr(self, new_repr):
+        """Switches representation of coloumb matrix elements between 2d and 4d"""
         coords0 = np.arange(self.l ** 2) % self.l
         coords1 = np.arange(self.l ** 2) // self.l
-        coords = np.array([coords0, coords1, coords0, coords1])
-        if self.u_repr == "2d":
-            return coords, self.u[coords0, coords1]
-        if self.u_repr == "4d":
-            return coords, self.u[coords0, coords1, coords0, coords1]
-        raise ValueError("Not a valid")
 
-    def change_repr(self, new_repr):
-        coords, data = self.get_u_data()
-
-        if new_repr == "sparse":
-            import sparse
-
-            self.u = sparse.COO(coords, data)
-        elif new_repr == "2d":
-            self.u = np.zeros((self.l, self.l), dtype=data.dtype)
-            self.u[coords[0], coords[1]] = data
+        if new_repr == self.u_repr:
+            print("u repr is already {}, doing nothing".format(new_repr))
         elif new_repr == "4d":
-            self.u = np.zeros(
-                (self.l, self.l, self.l, self.l), dtype=data.dtype
+            new_u = np.zeros(
+                (self.l, self.l, self.l, self.l), dtype=self.u.dtype
             )
-            self.u[coords[0], coords[1], coords[2], coords[3]] = data
+            new_u[coords0, coords1, coords0, coords1] = self.u[coords0, coords1]
+        elif new_repr == "2d":
+            new_u = np.zeros((self.l, self.l), dtype=self.u.dtype)
+            new_u[coords0, coords1] = self.u[coords0, coords1, coords0, coords1]
         else:
             raise ValueError(
                 "'{}' is not a valid representation".format(new_repr)
@@ -172,7 +151,7 @@ class ODSincDVR(BasisSet):
 
     def construct_coulomb_elements(self, u_repr="4d"):
         """Computes Sinc-DVR matrix elements of onebody operator h and two-body
-        operator u. """
+        operator u."""
         x = self.grid
 
         coords = []
@@ -184,14 +163,7 @@ class ODSincDVR(BasisSet):
         coords = np.array(coords).T
         data = np.array(data)
 
-        if u_repr == "sparse":
-            try:
-                import sparse
-            except ModuleNotFoundError as e:
-                print("Please install package sparse to use `u_repr = sparse`")
-                raise
-            self.u = sparse.COO(coords, data)
-        elif u_repr == "2d":
+        if u_repr == "2d":
             self.u = np.zeros((self.l, self.l))
             self.u[coords[0], coords[1]] = data
         else:
@@ -216,8 +188,10 @@ class ODSincDVR(BasisSet):
     @staticmethod
     def add_spin_two_body(u, np):
         """Class method overwriting the static method of BasisSet."""
-        if len(np.shape(u)) == 2:
-            return np.kron(u, np.eye(2))
+        if np.ndim(u) == 2:
+            # spin symmetry is equal to dvr symmetry, meaning that the total matrix of
+            # spatial and spin elements is doubled with every element kept
+            return np.kron(u, np.ones((2, 2)))
         else:
             return super(ODSincDVR, ODSincDVR).add_spin_two_body(u, np)
 
@@ -233,7 +207,7 @@ class ODSincDVR(BasisSet):
     ):
         """Class method overwriting the static method of BasisSet. Returns a 4d
         u_prime in numpy format"""
-        if self.sparse_repr:
+        if self.u_repr == "2d":
             if C_tilde is None:
                 C_tilde = C.conj().T
             # get the 2d matrix of nonzero values
@@ -282,19 +256,11 @@ class ODSincDVR(BasisSet):
             else:
                 _u = np.zeros(u.shape[:2])
                 _u[u.coords[0], u.coords[1]] = u.data
-            return np.einsum(
-                "rb,bs,ab->ars",
-                C_tilde,
-                C,
-                _u,
-                optimize=True,
-            )
+            return np.einsum("rb,bs,ab->ars", C_tilde, C, _u, optimize=True,)
         else:
             return super(ODSincDVR, ODSincDVR).partially_transform_u(
-                    u, C, np, C_tilde=None
-                    )
-
-
+                u, C, np, C_tilde=None
+            )
 
     def change_basis(self, *args, **kwargs):
         super().change_basis(*args, **kwargs)
