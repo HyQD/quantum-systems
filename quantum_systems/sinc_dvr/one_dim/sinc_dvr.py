@@ -97,7 +97,7 @@ class ODSincDVR(BasisSet):
     def setup_basis(self, u_repr):
         self.dx = self.grid[1] - self.grid[0]
 
-        self.h = np.zeros((self.l, self.l))
+        self.h = np.zeros((self.l, self.l), dtype=np.complex128)
 
         # create multi_dim index for speedy calculations
         ind = np.arange(self.l)
