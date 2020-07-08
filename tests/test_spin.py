@@ -109,3 +109,44 @@ def test_spin_up_down():
 
     np.testing.assert_allclose(S_up, gos.spin_x + 1j * gos.spin_y)
     np.testing.assert_allclose(S_down, gos.spin_x - 1j * gos.spin_y)
+
+
+def test_spin_squared():
+    n = 4
+    l = 10
+    dim = 2
+
+    spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
+    gos = spas.construct_general_orbital_system()
+
+    contract = lambda a, b: np.einsum("pq, qs -> ps", a, b) - np.einsum(
+        "pq, rs -> prqs", a, b
+    )
+    contract = lambda a, b: np.einsum("pq, rs -> prqs", a, b)
+
+    S_2 = np.zeros_like(gos.u)
+
+    for spin in [gos.spin_x, gos.spin_y, gos.spin_z]:
+        # S_2 += np.einsum("pq, qs -> ps", spin, spin) - np.einsum("pq, rs -> prqs", spin, spin)
+        S_2 += contract(spin, spin)
+
+    S_up = gos.spin_x + 1j * gos.spin_y
+    S_down = gos.spin_x - 1j * gos.spin_y
+
+    # S_2_alt = np.einsum("pq, rs -> pqrs", S_down, S_up) + np.einsum(
+    #     "pq, rs -> pqrs", gos.spin_z, gos.spin_z + gos.s
+    # )
+    # S_2_alt_2 = np.einsum("pq, rs -> pqrs", S_up, S_down) + np.einsum(
+    #     "pq, rs -> pqrs", gos.spin_z, gos.spin_z - gos.s
+    # )
+    # S_2_alt = contract(S_down, S_up) + contract(gos.spin_z, gos.spin_z + gos.s)
+    # S_2_alt_2 = contract(S_up, S_down) + contract(gos.spin_z, gos.spin_z - gos.s)
+    S_2_alt = (
+        np.kron(S_down, S_up) + np.kron(gos.spin_z, gos.spin_z + gos.s)
+    ).reshape(gos.l, gos.l, gos.l, gos.l)
+    S_2_alt_2 = (
+        np.kron(S_up, S_down) + np.kron(gos.spin_z, gos.spin_z - gos.s)
+    ).reshape(gos.l, gos.l, gos.l, gos.l)
+
+    np.testing.assert_allclose(S_2_alt, S_2_alt_2)
+    np.testing.assert_allclose(S_2, S_2_alt)
