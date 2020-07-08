@@ -103,3 +103,9 @@ def test_spin_up_down():
     np.testing.assert_allclose(b, sigma_down @ a)
     np.testing.assert_allclose(a, sigma_up @ sigma_down @ a)
     np.testing.assert_allclose(b, sigma_down @ sigma_up @ b)
+
+    S_up = np.kron(spas.s, sigma_up)
+    S_down = np.kron(spas.s, sigma_down)
+
+    np.testing.assert_allclose(S_up, gos.spin_x + 1j * gos.spin_y)
+    np.testing.assert_allclose(S_down, gos.spin_x - 1j * gos.spin_y)
