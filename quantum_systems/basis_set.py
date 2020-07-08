@@ -235,12 +235,14 @@ class BasisSet:
         """
         self.np = np
 
-        self.h = self.change_arr_module(self.h, self.np)
-        self.s = self.change_arr_module(self.s, self.np)
-        self.u = self.change_arr_module(self.u, self.np)
-        self.spf = self.change_arr_module(self.spf, self.np)
-        self.bra_spf = self.change_arr_module(self.bra_spf, self.np)
-        self.dipole_moment = self.change_arr_module(self.dipole_moment, self.np)
+        self._h = self.change_arr_module(self.h, self.np)
+        self._s = self.change_arr_module(self.s, self.np)
+        self._u = self.change_arr_module(self.u, self.np)
+        self._spf = self.change_arr_module(self.spf, self.np)
+        self._bra_spf = self.change_arr_module(self.bra_spf, self.np)
+        self._dipole_moment = self.change_arr_module(
+            self.dipole_moment, self.np
+        )
 
     def cast_to_complex(self):
         """Function converting all matrix elements to ``np.complex128``, where
@@ -300,7 +302,7 @@ class BasisSet:
     def get_transformed_u(self, C):
         return self.transform_two_body_elements(self.u, C, np=self.np)
 
-    def _change_basis_one_body_elements(self, C, C_tilde=None):
+    def _change_basis_one_body_elements(self, C, C_tilde):
         self.h = self.transform_one_body_elements(
             self.h, C, np=self.np, C_tilde=C_tilde
         )
@@ -316,13 +318,14 @@ class BasisSet:
                     spin, C, C_tilde=C_tilde, np=self.np
                 )
 
-    def _change_basis_two_body_elements(self, C, C_tilde=None):
+    def _change_basis_two_body_elements(self, C, C_tilde):
         self.u = self.transform_two_body_elements(
             self.u, C, np=self.np, C_tilde=C_tilde
         )
 
-    def _change_basis_dipole_moment(self, C, C_tilde=None):
+    def _change_basis_dipole_moment(self, C, C_tilde):
         dipole_moment = []
+
         for i in range(self.dipole_moment.shape[0]):
             dipole_moment.append(
                 self.transform_one_body_elements(
@@ -332,16 +335,8 @@ class BasisSet:
 
         self.dipole_moment = self.np.asarray(dipole_moment)
 
-    def _change_basis_spf(self, C, C_tilde=None):
-        if C_tilde is not None:
-            # In case of bi-orthogonal basis sets, we create an extra set
-            # of single-particle functions for the bra-side.
-            # Note the use of self.bra_spf instead of self.bra_spf in the
-            # argument to the helper function. This guarantees that
-            # self.bra_spf is not None.
-            self.bra_spf = self.transform_bra_spf(
-                self.bra_spf, C_tilde, self.np
-            )
+    def _change_basis_spf(self, C, C_tilde):
+        self.bra_spf = self.transform_bra_spf(self.bra_spf, C_tilde, self.np)
 
         self.spf = self.transform_spf(self.spf, C, self.np)
 
@@ -381,6 +376,10 @@ class BasisSet:
         """
         # Update basis set size
         self.l = C.shape[1]
+
+        # Ensure that C_tilde is not None
+        if C_tilde is None:
+            C_tilde = C.conj().T
 
         self._change_basis_one_body_elements(C, C_tilde)
         self._change_basis_two_body_elements(C, C_tilde)
