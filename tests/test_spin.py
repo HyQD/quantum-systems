@@ -81,3 +81,25 @@ def test_gos_spin_matrices():
                 spin_2[i, j] = 0.5 * spas.s[g, d] * sigma[a, b]
 
         np.testing.assert_allclose(spin, spin_2)
+
+
+def test_spin_up_down():
+    n = 4
+    l = 10
+    dim = 2
+
+    spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
+    gos = spas.construct_general_orbital_system()
+
+    a = gos._basis_set.a
+    b = gos._basis_set.b
+
+    sigma_up = 0.5 * (gos._basis_set.sigma_x + 1j * gos._basis_set.sigma_y)
+    sigma_down = 0.5 * (gos._basis_set.sigma_x - 1j * gos._basis_set.sigma_y)
+
+    np.testing.assert_allclose(a, sigma_up @ b)
+    np.testing.assert_allclose(np.zeros_like(a), sigma_up @ a)
+    np.testing.assert_allclose(np.zeros_like(b), sigma_down @ b)
+    np.testing.assert_allclose(b, sigma_down @ a)
+    np.testing.assert_allclose(a, sigma_up @ sigma_down @ a)
+    np.testing.assert_allclose(b, sigma_down @ sigma_up @ b)
