@@ -54,6 +54,7 @@ class BasisSet:
         self._spin_x = None
         self._spin_y = None
         self._spin_z = None
+        self._spin_2 = None
 
         self._spf = None
         self._bra_spf = None
@@ -156,6 +157,17 @@ class BasisSet:
         self._spin_z = spin_z
 
     @property
+    def spin_2(self):
+        return self._spin_2
+
+    @spin_2.setter
+    def spin_2(self, spin_2):
+        assert self.includes_spin
+        assert all(self.check_axis_lengths(spin_2, self.l))
+
+        self._spin_2 = spin_2
+
+    @property
     def sigma_x(self):
         return self._sigma_x
 
@@ -235,14 +247,19 @@ class BasisSet:
         """
         self.np = np
 
-        self._h = self.change_arr_module(self.h, self.np)
-        self._s = self.change_arr_module(self.s, self.np)
-        self._u = self.change_arr_module(self.u, self.np)
-        self._spf = self.change_arr_module(self.spf, self.np)
-        self._bra_spf = self.change_arr_module(self.bra_spf, self.np)
-        self._dipole_moment = self.change_arr_module(
-            self.dipole_moment, self.np
-        )
+        for arr in [
+            self.h,
+            self.s,
+            self.u,
+            self.spf,
+            self.bra_spf,
+            self.dipole_moment,
+            self.spin_x,
+            self.spin_y,
+            self.spin_z,
+            self.spin_2,
+        ]:
+            arr = self.change_arr_module(arr, self.np)
 
     def cast_to_complex(self):
         """Function converting all matrix elements to ``np.complex128``, where
@@ -250,20 +267,20 @@ class BasisSet:
         """
         np = self.np
 
-        self.h = self.h.astype(np.complex128)
-        self.u = self.u.astype(np.complex128)
-
-        if self.s is not None:
-            self.s = self.s.astype(np.complex128)
-
-        if self.spf is not None:
-            self.spf = self.spf.astype(np.complex128)
-
-        if self.bra_spf is not None:
-            self.bra_spf = self.bra_spf.astype(np.complex128)
-
-        if self.dipole_moment is not None:
-            self.dipole_moment = self.dipole_moment.astype(np.complex128)
+        for arr in [
+            self.h,
+            self.s,
+            self.u,
+            self.spf,
+            self.bra_spf,
+            self.dipole_moment,
+            self.spin_x,
+            self.spin_y,
+            self.spin_z,
+            self.spin_2,
+        ]:
+            if arr is not None:
+                arr = arr.astype(np.complex128)
 
     @staticmethod
     def transform_spf(spf, C, np):
@@ -322,6 +339,11 @@ class BasisSet:
         self.u = self.transform_two_body_elements(
             self.u, C, np=self.np, C_tilde=C_tilde
         )
+
+        if self.spin_2 is not None:
+            self.spin_2 = self.transform_two_body_elements(
+                self.spin_2, C, np=self.np, C_tilde=C_tilde
+            )
 
     def _change_basis_dipole_moment(self, C, C_tilde):
         dipole_moment = []
@@ -508,6 +530,10 @@ class BasisSet:
         self.spin_y = 0.5 * self.np.kron(self.s, self.sigma_y)
         self.spin_z = 0.5 * self.np.kron(self.s, self.sigma_z)
 
+        self.spin_2 = self.setup_spin_squared_operator(
+            self.s, self.sigma_x, self.sigma_y, self.sigma_z, self.np
+        )
+
         self.h = self.add_spin_one_body(self.h, np=self.np)
         self.s = self.add_spin_one_body(self.s, np=self.np)
         self.u = self.add_spin_two_body(self.u, np=self.np)
@@ -590,6 +616,46 @@ class BasisSet:
                 sigma_z[i, j] = np.dot(s.conj().T, np.dot(sigma_z_mat, t))
 
         return sigma_x, sigma_y, sigma_z
+
+    @staticmethod
+    def setup_spin_squared_operator(overlap, sigma_x, sigma_y, sigma_z, np):
+        r"""Static method computing the matrix elements of the two-body spin
+        squared operator, :math:`\hat{S}^2`. The spin-basis is chosen by the
+        Pauli matrices.
+
+        Parameters
+        ----------
+        overlap : np.ndarray
+            The overlap matrix elements between the spatial orbitals.
+        sigma_x : np.ndarray
+            Pauli spin-matrix in :math:`x`-direction.
+        sigma_y : np.ndarray
+            Pauli spin-matrix in :math:`y`-direction.
+        sigma_z : np.ndarray
+            Pauli spin-matrix in :math:`z`-direction.
+        np : module
+            An appropriate array and linalg module.
+
+        Returns
+        -------
+        np.ndarray
+            The spin-squared operator as an array on the form ``(l, l, l, l)``,
+            where ``l`` is the number of spin-orbitals.
+        """
+        overlap_2 = np.einsum("pr, qs -> pqrs", overlap, overlap)
+
+        sigma_x_2 = np.kron(sigma_x, np.eye(2)) + np.kron(np.eye(2), sigma_x)
+        sigma_y_2 = np.kron(sigma_y, np.eye(2)) + np.kron(np.eye(2), sigma_y)
+        sigma_z_2 = np.kron(sigma_z, np.eye(2)) + np.kron(np.eye(2), sigma_z)
+
+        S_2_spin = (
+            sigma_x_2 @ sigma_x_2
+            + sigma_y_2 @ sigma_y_2
+            + sigma_z_2 @ sigma_z_2
+        ) / 4
+        S_2_spin = S_2_spin.reshape(2, 2, 2, 2)
+
+        return np.kron(overlap_2, S_2_spin)
 
     @staticmethod
     def add_spin_spf(spf, np):

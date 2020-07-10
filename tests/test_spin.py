@@ -136,39 +136,65 @@ def test_spin_squared():
     dim = 2
 
     spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
-    gos = spas.construct_general_orbital_system()
+    gos = spas.construct_general_orbital_system(a=[1, 0], b=[0, 1])
 
-    # contract = lambda a, b: np.einsum("pq, qs -> ps", a, b) - np.einsum(
-    #     "pq, rs -> prqs", a, b
-    # )
-    contract = lambda a, b: np.einsum("pr, qs -> pqrs", a, b)
-    # contract = lambda a, b: np.einsum("pq, qs -> ps", a, b) + np.einsum("pr, qs -> pqsr", a, b)
+    overlap = spas.s
+    overlap_sq = np.einsum("pr, qs -> pqrs", overlap, overlap)
 
-    S_2 = np.zeros_like(gos.u)
+    a = gos._basis_set.a
+    b = gos._basis_set.b
 
-    for spin in [gos.spin_x, gos.spin_y, gos.spin_z]:
-        # S_2 += np.einsum("pq, qs -> ps", spin, spin) - np.einsum("pq, rs -> prqs", spin, spin)
-        S_2 += contract(spin, spin)
+    aa = np.kron(a, a)
+    ab = np.kron(a, b)
+    ba = np.kron(b, a)
+    bb = np.kron(b, b)
 
-    S_up = gos.spin_x + 1j * gos.spin_y
-    S_down = gos.spin_x - 1j * gos.spin_y
+    triplets = [aa, 1 / np.sqrt(2) * (ab + ba), bb]
+    singlet = [1 / np.sqrt(2) * (ab - ba)]
 
-    # S_2_alt = np.einsum("pq, rs -> pqrs", S_down, S_up) + np.einsum(
-    #     "pq, rs -> pqrs", gos.spin_z, gos.spin_z + gos.s
-    # )
-    # S_2_alt_2 = np.einsum("pq, rs -> pqrs", S_up, S_down) + np.einsum(
-    #     "pq, rs -> pqrs", gos.spin_z, gos.spin_z - gos.s
-    # )
-    S_2_alt = contract(S_down, S_up) + contract(gos.spin_z, gos.spin_z + gos.s)
-    S_2_alt_2 = contract(S_up, S_down) + contract(
-        gos.spin_z, gos.spin_z - gos.s
+    # S^2 with alpha = [1, 0]^T and beta = [0, 1]^T
+    S_sq_spin = np.zeros((4, 4))
+    S_sq_spin[0, 0] = 2
+    S_sq_spin[3, 3] = 2
+    S_sq_spin[1, 1] = 1
+    S_sq_spin[2, 2] = 1
+    S_sq_spin[1, 2] = 1
+    S_sq_spin[2, 1] = 1
+    S_sq_spin = S_sq_spin.reshape(2, 2, 2, 2)
+
+    for trip in triplets:
+        # Check that the eigenvalue of all triplet states is 2
+        np.testing.assert_allclose(trip.T @ S_sq_spin.reshape(4, 4) @ trip, 2)
+
+    # Check that the eigenvalue of the singlet state is 0
+    np.testing.assert_allclose(
+        singlet[0].T @ S_sq_spin.reshape(4, 4) @ singlet[0], 0
     )
-    # S_2_alt = (
-    #     np.kron(S_down, S_up) + np.kron(gos.spin_z, gos.spin_z + gos.s)
-    # ).reshape(gos.l, gos.l, gos.l, gos.l)
-    # S_2_alt_2 = (
-    #     np.kron(S_up, S_down) + np.kron(gos.spin_z, gos.spin_z - gos.s)
-    # ).reshape(gos.l, gos.l, gos.l, gos.l)
 
-    np.testing.assert_allclose(S_2_alt, S_2_alt_2)
-    np.testing.assert_allclose(S_2, S_2_alt)
+    S_sq = np.kron(overlap_sq, S_sq_spin)
+    assert S_sq.shape == gos.u.shape
+
+    np.testing.assert_allclose(S_sq, gos.spin_2)
+
+    for P in range(gos.l):
+        p = P // 2
+        sigma = P % 2
+
+        for Q in range(gos.l):
+            q = Q // 2
+            tau = Q % 2
+
+            for R in range(gos.l):
+                r = R // 2
+                gamma = R % 2
+
+                for S in range(gos.l):
+                    s = S // 2
+                    delta = S % 2
+
+                    np.testing.assert_allclose(
+                        overlap[p, r]
+                        * overlap[q, s]
+                        * S_sq_spin[sigma, tau, gamma, delta],
+                        S_sq[P, Q, R, S],
+                    )
