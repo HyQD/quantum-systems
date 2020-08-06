@@ -644,6 +644,8 @@ class BasisSet:
         """
         overlap_2 = np.einsum("pr, qs -> pqrs", overlap, overlap)
 
+        # The 2 in sigma_*_2 (confusingly) enough does not denote the squared
+        # operator, but rather that it is a two-spin operator.
         sigma_x_2 = np.kron(sigma_x, np.eye(2)) + np.kron(np.eye(2), sigma_x)
         sigma_y_2 = np.kron(sigma_y, np.eye(2)) + np.kron(np.eye(2), sigma_y)
         sigma_z_2 = np.kron(sigma_z, np.eye(2)) + np.kron(np.eye(2), sigma_z)
