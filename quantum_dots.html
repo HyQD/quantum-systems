@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,18 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -25,15 +30,11 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Quantum System" href="system.html" /> 
@@ -50,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Quantum Systems
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Quantum Systems
           
 
           
@@ -73,6 +74,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -91,6 +93,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -129,7 +132,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Quantum Dots</li>
     
@@ -164,13 +167,13 @@ homogeneous magnetic field.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>l</strong> (<em>int</em>) – Number of basis functions</p></li>
-<li><p><strong>grid_length</strong> (<em>int</em><em> or </em><em>float</em>) – Space over which to model wavefunction</p></li>
-<li><p><strong>num_grid_points</strong> (<em>int</em><em> or </em><em>float</em>) – Defines resolution of numerical representation
+<li><p><strong>l</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of basis functions</p></li>
+<li><p><strong>grid_length</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Space over which to model wavefunction</p></li>
+<li><p><strong>num_grid_points</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Defines resolution of numerical representation
 of wavefunction</p></li>
-<li><p><strong>a</strong> (<em>float</em><em>, </em><em>default 0.25</em>) – Screening parameter in the shielded Coulomb interation.</p></li>
-<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – Strength parameter in the shielded Coulomb interaction.</p></li>
-<li><p><strong>beta</strong> (<em>float</em><em>, </em><em>default 0.0</em>) – Strength parameter of the non-dipole term in the laser interaction matrix.</p></li>
+<li><p><strong>a</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">0.25</span></code>) – Screening parameter in the shielded Coulomb interation.</p></li>
+<li><p><strong>alpha</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">1.0</span></code>) – Strength parameter in the shielded Coulomb interaction.</p></li>
+<li><p><strong>beta</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">0.0</span></code>) – Strength parameter of the non-dipole term in the laser interaction matrix.</p></li>
 </ul>
 </dd>
 </dl>
@@ -180,7 +183,7 @@ of wavefunction</p></li>
 <dd><p>One-body matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -191,7 +194,7 @@ of wavefunction</p></li>
 <dd><p>Fock matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -202,7 +205,7 @@ of wavefunction</p></li>
 <dd><p>Two-body matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -279,12 +282,12 @@ used by Wadehra et. al: <a class="reference external" href="https://aip.scitatio
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>l</strong> (<em>int</em>) – Number of basis functions</p></li>
-<li><p><strong>radius_length</strong> (<em>int</em><em> or </em><em>float</em>) – Radius of space over which to model wavefunction</p></li>
-<li><p><strong>num_grid_points</strong> (<em>int</em><em> or </em><em>float</em>) – Defines resolution of numerical representation
+<li><p><strong>l</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of basis functions</p></li>
+<li><p><strong>radius_length</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Radius of space over which to model wavefunction</p></li>
+<li><p><strong>num_grid_points</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Defines resolution of numerical representation
 of wavefunction</p></li>
-<li><p><strong>omega</strong> (<em>float</em><em>, </em><em>default 1</em>) – Frequency of harmonic oscillator potential.</p></li>
-<li><p><strong>mass</strong> (<em>int of float</em><em>, </em><em>default 1</em>) – Mass of electrons</p></li>
+<li><p><strong>omega</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">1</span></code>) – Frequency of harmonic oscillator potential.</p></li>
+<li><p><strong>mass</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">1</span></code>) – Mass of electrons</p></li>
 </ul>
 </dd>
 </dl>
@@ -294,7 +297,7 @@ of wavefunction</p></li>
 <dd><p>One-body matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -305,7 +308,7 @@ of wavefunction</p></li>
 <dd><p>Fock matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -316,7 +319,7 @@ of wavefunction</p></li>
 <dd><p>Two-body matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -351,14 +354,14 @@ potential barrier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>l</strong> (<em>int</em>) – Number of spin-orbitals.</p></li>
-<li><p><strong>radius</strong> (<em>float</em>) – Length of radial coordinate.</p></li>
-<li><p><strong>num_grid_points</strong> (<em>int</em>) – Discretization of spatial coordinates. This includes both the radial and
+<li><p><strong>l</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of spin-orbitals.</p></li>
+<li><p><strong>radius</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Length of radial coordinate.</p></li>
+<li><p><strong>num_grid_points</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Discretization of spatial coordinates. This includes both the radial and
 the angular part of the room.</p></li>
-<li><p><strong>barrier_strength</strong> (<em>float</em>) – Barrier strength in the double well potential.</p></li>
-<li><p><strong>omega</strong> (<em>float</em>) – Frequency of the oscillator potential.</p></li>
-<li><p><strong>mass</strong> (<em>float</em>) – Mass of the particles.</p></li>
-<li><p><strong>axis</strong> (<em>int</em>) – The axis argument specifies which
+<li><p><strong>barrier_strength</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Barrier strength in the double well potential.</p></li>
+<li><p><strong>omega</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Frequency of the oscillator potential.</p></li>
+<li><p><strong>mass</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Mass of the particles.</p></li>
+<li><p><strong>axis</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The axis argument specifies which
 axis the well barrier is aligned to. (0, 1) = (x, y).</p></li>
 </ul>
 </dd>
@@ -381,13 +384,13 @@ magnetic field, using polar coordinates</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>l</strong> (<em>int</em>) – Number of spinorbitals</p></li>
-<li><p><strong>radius_length</strong> (<em>int</em><em> or </em><em>float</em>) – Radius of space over which to model wavefunction</p></li>
-<li><p><strong>num_grid_points</strong> (<em>int</em><em> or </em><em>float</em>) – Defines resolution of numerical representation
+<li><p><strong>l</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of spinorbitals</p></li>
+<li><p><strong>radius_length</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Radius of space over which to model wavefunction</p></li>
+<li><p><strong>num_grid_points</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Defines resolution of numerical representation
 of wavefunction</p></li>
-<li><p><strong>omega_0</strong> (<em>float</em><em>, </em><em>default 1</em>) – Frequency of harmonic oscillator potential.</p></li>
-<li><p><strong>mass</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>default 1</em>) – Mass of electrons.</p></li>
-<li><p><strong>omega_c</strong> (<em>float</em><em>, </em><em>default 0</em>) – Frequency corresponding to strength of magnetic field.</p></li>
+<li><p><strong>omega_0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">1</span></code>) – Frequency of harmonic oscillator potential.</p></li>
+<li><p><strong>mass</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">1</span></code>) – Mass of electrons.</p></li>
+<li><p><strong>omega_c</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">0</span></code>) – Frequency corresponding to strength of magnetic field.</p></li>
 </ul>
 </dd>
 </dl>
@@ -397,7 +400,7 @@ of wavefunction</p></li>
 <dd><p>One-body matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -408,7 +411,7 @@ of wavefunction</p></li>
 <dd><p>Fock matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -419,7 +422,7 @@ of wavefunction</p></li>
 <dd><p>Two-body matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -460,11 +463,19 @@ setup_basis().</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2019, Schoyen, gregwinther
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -475,7 +486,6 @@ setup_basis().</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
