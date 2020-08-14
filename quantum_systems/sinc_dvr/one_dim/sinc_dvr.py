@@ -159,7 +159,7 @@ class ODSincDVR(BasisSet):
         for p in range(self.l):
             for q in range(self.l):
                 data.append(_shielded_coulomb(x[p], x[q], self.alpha, self.a))
-                coords.append((p, q, p, q))
+                coords.append((p, q))
         coords = np.array(coords).T
         data = np.array(data)
 
@@ -168,7 +168,7 @@ class ODSincDVR(BasisSet):
             self.u[coords[0], coords[1]] = data
         else:
             self.u = np.zeros((self.l, self.l, self.l, self.l))
-            self.u[coords[0], coords[1], coords[2], coords[3]] = data
+            self.u[coords[0], coords[1], coords[0], coords[1]] = data
         return self.u
 
     def construct_s(self):
