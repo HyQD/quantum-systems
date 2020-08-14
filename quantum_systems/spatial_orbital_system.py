@@ -49,7 +49,9 @@ class SpatialOrbitalSystem(QuantumSystem):
 
         super().__init__(n // 2, basis_set, **kwargs)
 
-    def construct_general_orbital_system(self, anti_symmetrize=True):
+    def construct_general_orbital_system(
+        self, a=[1, 0], b=[0, 1], anti_symmetrize=True
+    ):
         r"""Function constructing a ``GeneralOrbitalSystem`` by 
         duplicating every basis element of current system. That is,
 
@@ -64,6 +66,12 @@ class SpatialOrbitalSystem(QuantumSystem):
 
         Parameters
         ----------
+        a : list, np.array
+            The :math:`\alpha` (up) spin basis vector. Default is :math:`\alpha
+            = (1, 0)^T`.
+        b : list, np.array
+            The :math:`\beta` (down) spin basis vector. Default is :math:`\beta
+            = (0, 1)^T`. Note that ``a`` and ``b`` are assumed orthonormal.
         anti_symmetrize : bool
             Whether or not to create the anti-symmetrized two-body elements.
             Default is ``True``.
@@ -81,6 +89,8 @@ class SpatialOrbitalSystem(QuantumSystem):
         gos = GeneralOrbitalSystem(
             self.n * 2,
             self._basis_set.copy_basis(),
+            a=a,
+            b=b,
             anti_symmetrize=anti_symmetrize,
         )
 
