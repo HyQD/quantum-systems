@@ -15,6 +15,9 @@ class HOPotential(OneDimPotential):
     def __call__(self, x):
         return 0.5 * self.omega ** 2 * x ** 2
 
+    def derivative(self, x):
+        return self.omega**2 * x
+
 
 class DWPotential(HOPotential):
     def __init__(self, omega, l):
@@ -25,6 +28,9 @@ class DWPotential(HOPotential):
         return super().__call__(x) + 0.5 * self.omega ** 2 * (
             0.25 * self.l ** 2 - self.l * abs(x)
         )
+
+    def derivative(self, x):
+        raise NotImplementedError()
 
 
 class DWPotentialSmooth(OneDimPotential):
@@ -43,6 +49,9 @@ class DWPotentialSmooth(OneDimPotential):
             * (x - 0.5 * self.a) ** 2
         )
 
+    def derivative(self, x):
+        raise NotImplementedError()
+
 
 class SymmetricDWPotential(OneDimPotential):
     """
@@ -57,6 +66,9 @@ class SymmetricDWPotential(OneDimPotential):
 
     def __call__(self, x):
         return self.a * x ** 6 + self.b * x ** 4 + self.c * x ** 2
+
+    def derivative(self, x):
+        raise NotImplementedError()
 
 
 class AsymmetricDWPotential(OneDimPotential):
@@ -73,6 +85,10 @@ class AsymmetricDWPotential(OneDimPotential):
     def __call__(self, x):
         return self.a * x ** 4 + self.b * x ** 3 + self.c * x ** 2
 
+    def derivative(self, x):
+        raise NotImplementedError()
+
+
 
 class GaussianPotential(OneDimPotential):
     def __init__(self, weight, center, deviation, np):
@@ -85,6 +101,9 @@ class GaussianPotential(OneDimPotential):
         return -self.weight * self.np.exp(
             -((x - self.center) ** 2) / (2.0 * self.deviation ** 2)
         )
+
+    def derivative(self, x):
+        raise NotImplementedError()
 
 
 class GaussianPotentialHardWall(OneDimPotential):
@@ -112,6 +131,9 @@ class GaussianPotentialHardWall(OneDimPotential):
             + wall
         )
 
+    def derivative(self, x):
+        raise NotImplementedError()
+
 
 class AtomicPotential(OneDimPotential):
     def __init__(self, Za=2, c=0.54878464):
@@ -120,3 +142,6 @@ class AtomicPotential(OneDimPotential):
 
     def __call__(self, x):
         return -self.Za / np.sqrt(x ** 2 + self.c)
+
+    def derivative(self, x):
+        return self.Za * x / (x ** 2 + self.c)**(3/2)
