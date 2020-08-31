@@ -522,9 +522,11 @@ class BasisSet:
         assert abs(self.np.dot(self.b.conj().T, self.b) - 1) < 1e-12
         assert abs(self.np.dot(self.a.conj().T, self.b)) < 1e-12
 
-        (self.sigma_x, self.sigma_y, self.sigma_z,) = self.setup_pauli_matrices(
-            self.a, self.b, self.np
-        )
+        (
+            self.sigma_x,
+            self.sigma_y,
+            self.sigma_z,
+        ) = self.setup_pauli_matrices(self.a, self.b, self.np)
 
         self.spin_x = 0.5 * self.np.kron(self.s, self.sigma_x)
         self.spin_y = 0.5 * self.np.kron(self.s, self.sigma_y)

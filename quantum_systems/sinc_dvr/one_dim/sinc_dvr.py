@@ -120,7 +120,7 @@ class ODSincDVR(BasisSet):
 
     def construct_coulomb_elements(self):
         """Computes Sinc-DVR matrix elements of onebody operator h and two-body
-        operator u. """
+        operator u."""
         x = self.grid
 
         if self._sparse_u:
