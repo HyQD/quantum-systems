@@ -557,6 +557,10 @@ class BasisSet:
             if not self._bra_spf is None:
                 self.bra_spf = self.add_spin_bra_spf(self._bra_spf, self.np)
 
+        # Due to inherently complex matrices for spin we cast all elements to
+        # complex numbers.
+        self.cast_to_complex()
+
         return self
 
     @staticmethod
