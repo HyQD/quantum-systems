@@ -247,19 +247,19 @@ class BasisSet:
         """
         self.np = np
 
-        for arr in [
-            self.h,
-            self.s,
-            self.u,
-            self.spf,
-            self.bra_spf,
-            self.dipole_moment,
-            self.spin_x,
-            self.spin_y,
-            self.spin_z,
-            self.spin_2,
+        for name, arr in [
+            ("_h", self.h),
+            ("_s", self.s),
+            ("_u", self.u),
+            ("_spf", self.spf),
+            ("_bra_spf", self.bra_spf),
+            ("_dipole_moment", self.dipole_moment),
+            ("_spin_x", self.spin_x),
+            ("_spin_y", self.spin_y),
+            ("_spin_z", self.spin_z),
+            ("_spin_2", self.spin_2),
         ]:
-            arr = self.change_arr_module(arr, self.np)
+            setattr(self, name, self.change_arr_module(arr, self.np))
 
     def cast_to_complex(self):
         """Function converting all matrix elements to ``np.complex128``, where
@@ -267,20 +267,20 @@ class BasisSet:
         """
         np = self.np
 
-        for arr in [
-            self.h,
-            self.s,
-            self.u,
-            self.spf,
-            self.bra_spf,
-            self.dipole_moment,
-            self.spin_x,
-            self.spin_y,
-            self.spin_z,
-            self.spin_2,
+        for name, arr in [
+            ("_h", self.h),
+            ("_s", self.s),
+            ("_u", self.u),
+            ("_spf", self.spf),
+            ("_bra_spf", self.bra_spf),
+            ("_dipole_moment", self.dipole_moment),
+            ("_spin_x", self.spin_x),
+            ("_spin_y", self.spin_y),
+            ("_spin_z", self.spin_z),
+            ("_spin_2", self.spin_2),
         ]:
             if arr is not None:
-                arr = arr.astype(np.complex128)
+                setattr(self, name, arr.astype(np.complex128))
 
     @staticmethod
     def transform_spf(spf, C, np):
