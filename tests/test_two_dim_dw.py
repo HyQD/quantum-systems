@@ -71,8 +71,8 @@ def test_theta_2_tilde_integral():
 
 def test_zero_barrier():
     """Test checking if we can reproduce the regular two-dimensional harmonic
-   oscillator system when setting the barrier strength to zero.
-   """
+    oscillator system when setting the barrier strength to zero.
+    """
 
     n = 2
     l = 12
