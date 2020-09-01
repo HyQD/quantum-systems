@@ -198,8 +198,7 @@ class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
         self.b = b
 
     def setup_basis(self):
-        """The wells are divided by x-axis by default.
-        """
+        """The wells are divided by x-axis by default."""
 
         super().setup_basis()
 

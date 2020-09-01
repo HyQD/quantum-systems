@@ -253,19 +253,19 @@ class BasisSet:
         """
         self.np = np
 
-        for arr in [
-            self.h,
-            self.s,
-            self.u,
-            self.spf,
-            self.bra_spf,
-            self.position,
-            self.spin_x,
-            self.spin_y,
-            self.spin_z,
-            self.spin_2,
+        for name, arr in [
+            ("_h", self.h),
+            ("_s", self.s),
+            ("_u", self.u),
+            ("_spf", self.spf),
+            ("_bra_spf", self.bra_spf),
+            ("_position", self.position),
+            ("_spin_x", self.spin_x),
+            ("_spin_y", self.spin_y),
+            ("_spin_z", self.spin_z),
+            ("_spin_2", self.spin_2),
         ]:
-            arr = self.change_arr_module(arr, self.np)
+            setattr(self, name, self.change_arr_module(arr, self.np))
 
     def cast_to_complex(self):
         """Function converting all matrix elements to ``np.complex128``, where
@@ -273,20 +273,20 @@ class BasisSet:
         """
         np = self.np
 
-        for arr in [
-            self.h,
-            self.s,
-            self.u,
-            self.spf,
-            self.bra_spf,
-            self.position,
-            self.spin_x,
-            self.spin_y,
-            self.spin_z,
-            self.spin_2,
+        for name, arr in [
+            ("_h", self.h),
+            ("_s", self.s),
+            ("_u", self.u),
+            ("_spf", self.spf),
+            ("_bra_spf", self.bra_spf),
+            ("_position", self.position),
+            ("_spin_x", self.spin_x),
+            ("_spin_y", self.spin_y),
+            ("_spin_z", self.spin_z),
+            ("_spin_2", self.spin_2),
         ]:
             if arr is not None:
-                arr = arr.astype(np.complex128)
+                setattr(self, name, arr.astype(np.complex128))
 
     @staticmethod
     def transform_spf(spf, C, np):
@@ -528,9 +528,11 @@ class BasisSet:
         assert abs(self.np.dot(self.b.conj().T, self.b) - 1) < 1e-12
         assert abs(self.np.dot(self.a.conj().T, self.b)) < 1e-12
 
-        (self.sigma_x, self.sigma_y, self.sigma_z,) = self.setup_pauli_matrices(
-            self.a, self.b, self.np
-        )
+        (
+            self.sigma_x,
+            self.sigma_y,
+            self.sigma_z,
+        ) = self.setup_pauli_matrices(self.a, self.b, self.np)
 
         self.spin_x = 0.5 * self.np.kron(self.s, self.sigma_x)
         self.spin_y = 0.5 * self.np.kron(self.s, self.sigma_y)
@@ -562,6 +564,10 @@ class BasisSet:
             # potentially construct the dual state.
             if not self._bra_spf is None:
                 self.bra_spf = self.add_spin_bra_spf(self._bra_spf, self.np)
+
+        # Due to inherently complex matrices for spin we cast all elements to
+        # complex numbers.
+        self.cast_to_complex()
 
         return self
 
