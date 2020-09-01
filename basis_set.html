@@ -168,14 +168,14 @@ be used by second-quantized many-body methods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>l</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of basis functions.</p></li>
-<li><p><strong>dim</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Dimensionality of the systems.</p></li>
-<li><p><strong>np</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">module</span></code>) – Matrix and linear algebra module. Currently only <cite>numpy</cite> is supported.</p></li>
-<li><p><strong>includes_spin</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Toggle to determine if the basis set to be created includes explicitly
+<li><p><strong>l</strong> (<em>int</em>) – Number of basis functions.</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – Dimensionality of the systems.</p></li>
+<li><p><strong>np</strong> (<em>module</em>) – Matrix and linear algebra module. Currently only <cite>numpy</cite> is supported.</p></li>
+<li><p><strong>includes_spin</strong> (<em>bool</em>) – Toggle to determine if the basis set to be created includes explicitly
 in the basis functions. By default we assume that <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> only
 contains spatial orbitals thus there are no explicit spin-dependence in
 the elements.</p></li>
-<li><p><strong>anti_symmetrized_u</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Toggle to determine if the two-body matrix elements have been
+<li><p><strong>anti_symmetrized_u</strong> (<em>bool</em>) – Toggle to determine if the two-body matrix elements have been
 anti_symmetrized. By default we assume that this is not the case.</p></li>
 </ul>
 </dd>
@@ -228,8 +228,8 @@ and the dual states are the Hermitian adjoint of one another.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>C</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Coefficient matrix for “ket”-states.</p></li>
-<li><p><strong>C_tilde</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Coefficient matrix for “bra”-states, by default <code class="docutils literal notranslate"><span class="pre">C_tilde</span></code> is
+<li><p><strong>C</strong> (<em>np.ndarray</em>) – Coefficient matrix for “ket”-states.</p></li>
+<li><p><strong>C_tilde</strong> (<em>np.ndarray</em>) – Coefficient matrix for “bra”-states, by default <code class="docutils literal notranslate"><span class="pre">C_tilde</span></code> is
 <code class="docutils literal notranslate"><span class="pre">None</span></code> and we treat <code class="docutils literal notranslate"><span class="pre">C_tilde</span></code> as the Hermitian conjugate of
 <code class="docutils literal notranslate"><span class="pre">C</span></code>.</p></li>
 </ul>
@@ -243,7 +243,7 @@ and the dual states are the Hermitian adjoint of one another.</p>
 <dd><p>Function converting all matrix elements to a new module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>np</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">module</span></code>) – Array- and linalg-module.</p>
+<dd class="field-odd"><p><strong>np</strong> (<em>module</em>) – Array- and linalg-module.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -267,11 +267,11 @@ conversion happens in-place.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code>) – The <span class="math notranslate nohighlight">\(\alpha\)</span> (up) spin basis vector. Default is <span class="math notranslate nohighlight">\(\alpha
+<li><p><strong>a</strong> (<em>list</em><em>, </em><em>np.array</em>) – The <span class="math notranslate nohighlight">\(\alpha\)</span> (up) spin basis vector. Default is <span class="math notranslate nohighlight">\(\alpha
 = (1, 0)^T\)</span>.</p></li>
-<li><p><strong>b</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code>) – The <span class="math notranslate nohighlight">\(\beta\)</span> (down) spin basis vector. Default is <span class="math notranslate nohighlight">\(\beta
+<li><p><strong>b</strong> (<em>list</em><em>, </em><em>np.array</em>) – The <span class="math notranslate nohighlight">\(\beta\)</span> (down) spin basis vector. Default is <span class="math notranslate nohighlight">\(\beta
 = (0, 1)^T\)</span>. Note that <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are assumed orthonormal.</p></li>
-<li><p><strong>anti_symmetrize</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether or not to anti-symmetrize the elements in the two-body
+<li><p><strong>anti_symmetrize</strong> (<em>bool</em>) – Whether or not to anti-symmetrize the elements in the two-body
 Hamiltonian. By default we perform an anti-symmetrization.</p></li>
 </ul>
 </dd>
@@ -294,10 +294,10 @@ density is given by</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rho_qp</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – One-body density matrix</p></li>
-<li><p><strong>C</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Coefficient matrix for basis change. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> and hence
+<li><p><strong>rho_qp</strong> (<em>np.ndarray</em>) – One-body density matrix</p></li>
+<li><p><strong>C</strong> (<em>np.ndarray</em>) – Coefficient matrix for basis change. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> and hence
 no transformation occurs.</p></li>
-<li><p><strong>C_tilde</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Bra-state coefficient matrix. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> which leads to
+<li><p><strong>C_tilde</strong> (<em>np.ndarray</em>) – Bra-state coefficient matrix. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> which leads to
 one of two situations. If <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">!=</span> <span class="pre">None</span></code> <code class="docutils literal notranslate"><span class="pre">C_tilde</span></code> is assumed to
 be the conjugated transpose of <code class="docutils literal notranslate"><span class="pre">C</span></code>. Otherwise, no transformation
 occurs.</p></li>
@@ -342,10 +342,10 @@ y, z\}\)</span> for the three Pauli matrices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – The <span class="math notranslate nohighlight">\(\alpha\)</span> basis vector as a column vector.</p></li>
-<li><p><strong>b</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – The <span class="math notranslate nohighlight">\(\beta\)</span> basis vector as a column vector. Note that the
+<li><p><strong>a</strong> (<em>np.ndarray</em>) – The <span class="math notranslate nohighlight">\(\alpha\)</span> basis vector as a column vector.</p></li>
+<li><p><strong>b</strong> (<em>np.ndarray</em>) – The <span class="math notranslate nohighlight">\(\beta\)</span> basis vector as a column vector. Note that the
 two basis vectors are assumed to be orthonormal.</p></li>
-<li><p><strong>np</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">module</span></code>) – An appropriate array and linalg module.</p></li>
+<li><p><strong>np</strong> (<em>module</em>) – An appropriate array and linalg module.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -377,11 +377,11 @@ Pauli matrices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>overlap</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – The overlap matrix elements between the spatial orbitals.</p></li>
-<li><p><strong>sigma_x</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Pauli spin-matrix in <span class="math notranslate nohighlight">\(x\)</span>-direction.</p></li>
-<li><p><strong>sigma_y</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Pauli spin-matrix in <span class="math notranslate nohighlight">\(y\)</span>-direction.</p></li>
-<li><p><strong>sigma_z</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Pauli spin-matrix in <span class="math notranslate nohighlight">\(z\)</span>-direction.</p></li>
-<li><p><strong>np</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">module</span></code>) – An appropriate array and linalg module.</p></li>
+<li><p><strong>overlap</strong> (<em>np.ndarray</em>) – The overlap matrix elements between the spatial orbitals.</p></li>
+<li><p><strong>sigma_x</strong> (<em>np.ndarray</em>) – Pauli spin-matrix in <span class="math notranslate nohighlight">\(x\)</span>-direction.</p></li>
+<li><p><strong>sigma_y</strong> (<em>np.ndarray</em>) – Pauli spin-matrix in <span class="math notranslate nohighlight">\(y\)</span>-direction.</p></li>
+<li><p><strong>sigma_z</strong> (<em>np.ndarray</em>) – Pauli spin-matrix in <span class="math notranslate nohighlight">\(z\)</span>-direction.</p></li>
+<li><p><strong>np</strong> (<em>module</em>) – An appropriate array and linalg module.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

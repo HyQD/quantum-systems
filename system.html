@@ -168,8 +168,8 @@ system. The class is used to further specify a system beyond a general
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of occupied basis functions.</p></li>
-<li><p><strong>basis_set</strong> (<a class="reference internal" href="basis_set.html#quantum_systems.BasisSet" title="quantum_systems.BasisSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasisSet</span></code></a>) – A <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code>-class or subclass containing matrix elements and basis
+<li><p><strong>n</strong> (<em>int</em>) – Number of occupied basis functions.</p></li>
+<li><p><strong>basis_set</strong> (<a class="reference internal" href="basis_set.html#quantum_systems.BasisSet" title="quantum_systems.BasisSet"><em>BasisSet</em></a>) – A <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code>-class or subclass containing matrix elements and basis
 states.</p></li>
 </ul>
 </dd>
@@ -186,7 +186,7 @@ states.</p></li>
 <dd><p>Function converting between modules.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>np</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">module</span></code>) – Array- and linalg-module.</p>
+<dd class="field-odd"><p><strong>np</strong> (<em>module</em>) – Array- and linalg-module.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -233,8 +233,8 @@ correspond to the length of each axis of the matrix elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of basis functions.</p></li>
-<li><p><strong>l</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of basis functions.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of basis functions.</p></li>
+<li><p><strong>l</strong> (<em>int</em>) – Number of basis functions.</p></li>
 </ul>
 </dd>
 </dl>
@@ -268,11 +268,11 @@ that we only store <span class="math notranslate nohighlight">\(\psi(\mathbf{r},
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of particles.  Internally <code class="docutils literal notranslate"><span class="pre">SpatialOrbitalSystem</span></code> converts
+<li><p><strong>n</strong> (<em>int</em>) – Number of particles.  Internally <code class="docutils literal notranslate"><span class="pre">SpatialOrbitalSystem</span></code> converts
 <code class="docutils literal notranslate"><span class="pre">n</span></code> to <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">//</span> <span class="pre">2</span></code> such that <code class="docutils literal notranslate"><span class="pre">n</span></code> denotes the number of occupied
 basis functions (half the number of particles). See example in doctest
 below.</p></li>
-<li><p><strong>basis_set</strong> (<a class="reference internal" href="basis_set.html#quantum_systems.BasisSet" title="quantum_systems.BasisSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasisSet</span></code></a>) – Spatial orbital basis set without explicit spin-dependence.</p></li>
+<li><p><strong>basis_set</strong> (<a class="reference internal" href="basis_set.html#quantum_systems.BasisSet" title="quantum_systems.BasisSet"><em>BasisSet</em></a>) – Spatial orbital basis set without explicit spin-dependence.</p></li>
 </ul>
 </dd>
 </dl>
@@ -324,9 +324,9 @@ assumed to not be anti-symmetric.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>h</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – The one-body matrix elements.</p></li>
-<li><p><strong>u</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – The two-body matrix elements.</p></li>
-<li><p><strong>f</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An empty array of the same shape as <cite>h</cite> to be filled with the Fock
+<li><p><strong>h</strong> (<em>np.ndarray</em>) – The one-body matrix elements.</p></li>
+<li><p><strong>u</strong> (<em>np.ndarray</em>) – The two-body matrix elements.</p></li>
+<li><p><strong>f</strong> (<em>np.ndarray</em>) – An empty array of the same shape as <cite>h</cite> to be filled with the Fock
 matrix elements. Default is <cite>None</cite> which means that we allocate a
 new matrix.</p></li>
 </ul>
@@ -355,11 +355,11 @@ position <span class="math notranslate nohighlight">\(\mathbf{r}\)</span> and sp
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code>) – The <span class="math notranslate nohighlight">\(\alpha\)</span> (up) spin basis vector. Default is <span class="math notranslate nohighlight">\(\alpha
+<li><p><strong>a</strong> (<em>list</em><em>, </em><em>np.array</em>) – The <span class="math notranslate nohighlight">\(\alpha\)</span> (up) spin basis vector. Default is <span class="math notranslate nohighlight">\(\alpha
 = (1, 0)^T\)</span>.</p></li>
-<li><p><strong>b</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code>) – The <span class="math notranslate nohighlight">\(\beta\)</span> (down) spin basis vector. Default is <span class="math notranslate nohighlight">\(\beta
+<li><p><strong>b</strong> (<em>list</em><em>, </em><em>np.array</em>) – The <span class="math notranslate nohighlight">\(\beta\)</span> (down) spin basis vector. Default is <span class="math notranslate nohighlight">\(\beta
 = (0, 1)^T\)</span>. Note that <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are assumed orthonormal.</p></li>
-<li><p><strong>anti_symmetrize</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether or not to create the anti-symmetrized two-body elements.
+<li><p><strong>anti_symmetrize</strong> (<em>bool</em>) – Whether or not to create the anti-symmetrized two-body elements.
 Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 </ul>
 </dd>
@@ -398,11 +398,11 @@ general spin-orbital as having a definitive spin-direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code>) – The <span class="math notranslate nohighlight">\(\alpha\)</span> (up) spin basis vector. Default is <span class="math notranslate nohighlight">\(\alpha =
+<li><p><strong>a</strong> (<em>list</em><em>, </em><em>np.array</em>) – The <span class="math notranslate nohighlight">\(\alpha\)</span> (up) spin basis vector. Default is <span class="math notranslate nohighlight">\(\alpha =
 (1, 0)^T\)</span>.</p></li>
-<li><p><strong>b</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">np.array</span></code>) – The <span class="math notranslate nohighlight">\(\beta\)</span> (down) spin basis vector. Default is <span class="math notranslate nohighlight">\(\beta =
+<li><p><strong>b</strong> (<em>list</em><em>, </em><em>np.array</em>) – The <span class="math notranslate nohighlight">\(\beta\)</span> (down) spin basis vector. Default is <span class="math notranslate nohighlight">\(\beta =
 (0, 1)^T\)</span>. Note that <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are assumed orthonormal.</p></li>
-<li><p><strong>anti_symmetrize</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether or not to create the anti-symmetrized two-body elements.
+<li><p><strong>anti_symmetrize</strong> (<em>bool</em>) – Whether or not to create the anti-symmetrized two-body elements.
 Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 </ul>
 </dd>
@@ -448,9 +448,9 @@ l, ...\)</span> correspond to the occupied indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>h</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – The one-body matrix elements.</p></li>
-<li><p><strong>u</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – The two-body matrix elements.</p></li>
-<li><p><strong>f</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An empty array of the same shape as <code class="docutils literal notranslate"><span class="pre">h</span></code> to be filled with the
+<li><p><strong>h</strong> (<em>np.ndarray</em>) – The one-body matrix elements.</p></li>
+<li><p><strong>u</strong> (<em>np.ndarray</em>) – The two-body matrix elements.</p></li>
+<li><p><strong>f</strong> (<em>np.ndarray</em>) – An empty array of the same shape as <code class="docutils literal notranslate"><span class="pre">h</span></code> to be filled with the
 Fock matrix elements. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> which means that we
 allocate a new matrix.</p></li>
 </ul>
