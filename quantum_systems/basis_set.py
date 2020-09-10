@@ -648,8 +648,6 @@ class BasisSet:
             The spin-squared operator as an array on the form ``(l, l, l, l)``,
             where ``l`` is the number of spin-orbitals.
         """
-        overlap_2 = np.einsum("pr, qs -> pqrs", overlap, overlap)
-
         # The 2 in sigma_*_2 (confusingly) enough does not denote the squared
         # operator, but rather that it is a two-spin operator.
         sigma_x_2 = np.kron(sigma_x, np.eye(2)) + np.kron(np.eye(2), sigma_x)
@@ -663,7 +661,16 @@ class BasisSet:
         ) / 4
         S_2_spin = S_2_spin.reshape(2, 2, 2, 2)
 
-        return np.kron(overlap_2, S_2_spin)
+        # S_2 = S_2_spin.transpose(1, 3, 0, 2)
+        # S_2 = np.kron(overlap, S_2)
+        # S_2 = S_2.transpose(2, 3, 0, 1)
+        # S_2 = np.kron(overlap, S_2)
+        # S_2 = S_2.transpose(0, 2, 1, 3)
+
+        # np.testing.assert_allclose(np.kron(overlap_2, S_2_spin), S_2)
+
+        # return S_2
+        return np.kron(np.einsum("pr, qs -> pqrs", overlap, overlap), S_2_spin)
 
     @staticmethod
     def add_spin_spf(spf, np):
@@ -688,18 +695,19 @@ class BasisSet:
 
     @staticmethod
     def add_spin_two_body(_u, np):
-        # u[p, q, r, s] -> u[q, s, p, r]
-        u = _u.transpose(1, 3, 0, 2)
-        # u[q, s, p, r] (x) 1_{2x2} -> u[q, s, P, R]
-        u = np.kron(u, np.eye(2))
-        # u[q, s, P, R] -> u[P, R, q, s]
-        u = u.transpose(2, 3, 0, 1)
-        # u[P, R, q, s] -> u[P, R, Q, S]
-        u = np.kron(u, np.eye(2))
-        # u[P, R, Q, S] -> u[P, Q, R, S]
-        u = u.transpose(0, 2, 1, 3)
+        # # u[p, q, r, s] -> u[q, s, p, r]
+        # u = _u.transpose(1, 3, 0, 2)
+        # # u[q, s, p, r] (x) 1_{2x2} -> u[q, s, P, R]
+        # u = np.kron(u, np.eye(2))
+        # # u[q, s, P, R] -> u[P, R, q, s]
+        # u = u.transpose(2, 3, 0, 1)
+        # # u[P, R, q, s] -> u[P, R, Q, S]
+        # u = np.kron(u, np.eye(2))
+        # # u[P, R, Q, S] -> u[P, Q, R, S]
+        # u = u.transpose(0, 2, 1, 3)
 
-        return u
+        # return u
+        return np.kron(_u, np.einsum("pr, qs -> pqrs", np.eye(2), np.eye(2)))
 
     @staticmethod
     def anti_symmetrize_u(_u):
