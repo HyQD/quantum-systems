@@ -688,10 +688,15 @@ class BasisSet:
 
     @staticmethod
     def add_spin_two_body(_u, np):
+        # u[p, q, r, s] -> u[q, s, p, r]
         u = _u.transpose(1, 3, 0, 2)
+        # u[q, s, p, r] (x) 1_{2x2} -> u[q, s, P, R]
         u = np.kron(u, np.eye(2))
+        # u[q, s, P, R] -> u[P, R, q, s]
         u = u.transpose(2, 3, 0, 1)
+        # u[P, R, q, s] -> u[P, R, Q, S]
         u = np.kron(u, np.eye(2))
+        # u[P, R, Q, S] -> u[P, Q, R, S]
         u = u.transpose(0, 2, 1, 3)
 
         return u
