@@ -6,6 +6,7 @@ from quantum_systems import (
     RandomBasisSet,
     GeneralOrbitalSystem,
     SpatialOrbitalSystem,
+    construct_pyscf_system_ao,
 )
 
 
@@ -198,3 +199,55 @@ def test_spin_squared():
                         * S_sq_spin[sigma, tau, gamma, delta],
                         S_sq[P, Q, R, S],
                     )
+
+
+def test_spin_squared_constructions():
+    n = 3
+    l = 10
+
+    system = GeneralOrbitalSystem(n, RandomBasisSet(l, 3))
+
+    system = construct_pyscf_system_ao("he")
+
+    spin_dir_tb_orig = []
+    spin_dir_tb_pm = []
+
+    spin_p = system.spin_x + 1j * system.spin_y
+    spin_m = system.spin_x - 1j * system.spin_y
+
+    for spin in [system.spin_x, system.spin_y, system.spin_z]:
+        spin_dir_tb_orig.append(
+            np.kron(spin, system.s) + np.kron(system.s, spin)
+        )
+
+    for spin in [spin_p, spin_m, system.spin_z]:
+        spin_dir_tb_pm.append(np.kron(spin, system.s) + np.kron(system.s, spin))
+
+    # S^2 = S_x^2 + S_y^2 + S_z^2
+    spin_2 = sum(map(lambda x: x @ x, spin_dir_tb_orig)).reshape(
+        system.spin_2.shape
+    )
+
+    # S^2 = S_- * S_+ + S_z + S_z^2
+    spin_2_mp = (
+        spin_dir_tb_pm[1] @ spin_dir_tb_pm[0]
+        + spin_dir_tb_pm[2]
+        + spin_dir_tb_pm[2] @ spin_dir_tb_pm[2]
+    ).reshape(system.spin_2.shape)
+
+    # S^2 = S_+ * S_- - S_z + S_z^2
+    spin_2_pm = (
+        spin_dir_tb_pm[0] @ spin_dir_tb_pm[1]
+        - spin_dir_tb_pm[2]
+        + spin_dir_tb_pm[2] @ spin_dir_tb_pm[2]
+    ).reshape(system.spin_2.shape)
+
+    print(system.s)
+    print(system.spin_2)
+    print("-" * 100)
+    print(spin_2)
+    wat
+
+    np.testing.assert_allclose(spin_2, system.spin_2, atol=1e-10)
+    np.testing.assert_allclose(spin_2_mp, system.spin_2)
+    np.testing.assert_allclose(spin_2_pm, system.spin_2)
