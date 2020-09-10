@@ -2,11 +2,13 @@ import pytest
 import numpy as np
 
 from quantum_systems import (
+    ODQD,
     BasisSet,
     RandomBasisSet,
     GeneralOrbitalSystem,
     SpatialOrbitalSystem,
     construct_pyscf_system_ao,
+    construct_pyscf_system_rhf,
 )
 
 
@@ -205,9 +207,24 @@ def test_spin_squared_constructions():
     n = 3
     l = 10
 
-    system = GeneralOrbitalSystem(n, RandomBasisSet(l, 3))
+    # rbs = RandomBasisSet(l, 3)
+    # overlap_2 = np.einsum("pr, qs -> pqrs", np.eye(2), np.eye(2))
+    # u = rbs.u.copy()
 
-    system = construct_pyscf_system_ao("he")
+    # u_s = rbs.add_spin_two_body(u, np)
+    # np.testing.assert_allclose(u_s, np.kron(u, overlap_2))
+
+    # wat
+
+    # system = GeneralOrbitalSystem(n, RandomBasisSet(l, 3))
+
+    # system = construct_pyscf_system_ao("he")
+
+    system = GeneralOrbitalSystem(
+        n, ODQD(l, 10, 1001, potential=ODQD.HOPotential(1))
+    )
+
+    # system = construct_pyscf_system_rhf("he", basis="cc-pVTZ")
 
     spin_dir_tb_orig = []
     spin_dir_tb_pm = []
@@ -242,12 +259,12 @@ def test_spin_squared_constructions():
         + spin_dir_tb_pm[2] @ spin_dir_tb_pm[2]
     ).reshape(system.spin_2.shape)
 
-    print(system.s)
-    print(system.spin_2)
-    print("-" * 100)
-    print(spin_2)
-    wat
+    # print(system.s)
+    # print(system.spin_2)
+    # print("-" * 100)
+    # print(spin_2)
+    # wat
 
     np.testing.assert_allclose(spin_2, system.spin_2, atol=1e-10)
-    np.testing.assert_allclose(spin_2_mp, system.spin_2)
-    np.testing.assert_allclose(spin_2_pm, system.spin_2)
+    np.testing.assert_allclose(spin_2_mp, system.spin_2, atol=1e-10)
+    np.testing.assert_allclose(spin_2_pm, system.spin_2, atol=1e-10)
