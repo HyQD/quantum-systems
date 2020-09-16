@@ -177,7 +177,7 @@ def test_spin_squared():
     S_sq = np.kron(overlap_sq, S_sq_spin)
     assert S_sq.shape == gos.u.shape
 
-    np.testing.assert_allclose(S_sq, gos.spin_2)
+    np.testing.assert_allclose(S_sq, gos.spin_2 + gos.spin_2_tb)
 
     for P in range(gos.l):
         p = P // 2
@@ -242,7 +242,7 @@ def test_spin_squared_constructions():
 
     # S^2 = S_x^2 + S_y^2 + S_z^2
     spin_2 = sum(map(lambda x: x @ x, spin_dir_tb_orig)).reshape(
-        system.spin_2.shape
+        system.spin_2_tb.shape
     )
 
     # S^2 = S_- * S_+ + S_z + S_z^2
@@ -250,14 +250,14 @@ def test_spin_squared_constructions():
         spin_dir_tb_pm[1] @ spin_dir_tb_pm[0]
         + spin_dir_tb_pm[2]
         + spin_dir_tb_pm[2] @ spin_dir_tb_pm[2]
-    ).reshape(system.spin_2.shape)
+    ).reshape(system.spin_2_tb.shape)
 
     # S^2 = S_+ * S_- - S_z + S_z^2
     spin_2_pm = (
         spin_dir_tb_pm[0] @ spin_dir_tb_pm[1]
         - spin_dir_tb_pm[2]
         + spin_dir_tb_pm[2] @ spin_dir_tb_pm[2]
-    ).reshape(system.spin_2.shape)
+    ).reshape(system.spin_2_tb.shape)
 
     # print(system.s)
     # print(system.spin_2)
@@ -265,6 +265,6 @@ def test_spin_squared_constructions():
     # print(spin_2)
     # wat
 
-    np.testing.assert_allclose(spin_2, system.spin_2, atol=1e-10)
-    np.testing.assert_allclose(spin_2_mp, system.spin_2, atol=1e-10)
-    np.testing.assert_allclose(spin_2_pm, system.spin_2, atol=1e-10)
+    np.testing.assert_allclose(spin_2, system.spin_2_tb, atol=1e-10)
+    np.testing.assert_allclose(spin_2_mp, system.spin_2_tb, atol=1e-10)
+    np.testing.assert_allclose(spin_2_pm, system.spin_2_tb, atol=1e-10)
