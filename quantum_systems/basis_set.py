@@ -55,6 +55,7 @@ class BasisSet:
         self._spin_y = None
         self._spin_z = None
         self._spin_2 = None
+        self._spin_2_tb = None
 
         self._spf = None
         self._bra_spf = None
@@ -166,6 +167,17 @@ class BasisSet:
         assert all(self.check_axis_lengths(spin_2, self.l))
 
         self._spin_2 = spin_2
+
+    @property
+    def spin_2_tb(self):
+        return self._spin_2_tb
+
+    @spin_2_tb.setter
+    def spin_2_tb(self, spin_2_tb):
+        assert self.includes_spin
+        assert all(self.check_axis_lengths(spin_2_tb, self.l))
+
+        self._spin_2_tb = spin_2_tb
 
     @property
     def sigma_x(self):
@@ -470,6 +482,7 @@ class BasisSet:
         """
         if not self._anti_symmetrized_u:
             self.u = self.anti_symmetrize_u(self.u)
+            self.spin_2_tb = self.anti_symmetrize_u(self.spin_2_tb)
             self._anti_symmetrized_u = True
 
     def change_to_general_orbital_basis(
@@ -532,8 +545,8 @@ class BasisSet:
         self.spin_y = 0.5 * self.np.kron(self.s, self.sigma_y)
         self.spin_z = 0.5 * self.np.kron(self.s, self.sigma_z)
 
-        self.spin_2 = self.setup_spin_squared_operator(
-            self.s, self.sigma_x, self.sigma_y, self.sigma_z, self.np
+        self.spin_2, self.spin_2_tb = self.setup_spin_squared_operator(
+            self.spin_x, self.spin_y, self.spin_z, self.np
         )
 
         self.h = self.add_spin_one_body(self.h, np=self.np)
@@ -624,7 +637,7 @@ class BasisSet:
         return sigma_x, sigma_y, sigma_z
 
     @staticmethod
-    def setup_spin_squared_operator(overlap, sigma_x, sigma_y, sigma_z, np):
+    def setup_spin_squared_operator(spin_x, spin_y, spin_z, np):
         r"""Static method computing the matrix elements of the two-body spin
         squared operator, :math:`\hat{S}^2`. The spin-basis is chosen by the
         Pauli matrices.
@@ -644,33 +657,40 @@ class BasisSet:
 
         Returns
         -------
-        np.ndarray
-            The spin-squared operator as an array on the form ``(l, l, l, l)``,
-            where ``l`` is the number of spin-orbitals.
+        (np.ndarray, )
+            The spin-squared operator as two arrays on the form ``(l, l)`` and
+            ``(l, l, l, l)``, where ``l`` is the number of spin-orbitals. The
+            former corresponds to the one-body part of the spin-squared
+            operator whereas the latter is the two-body part.
         """
-        # The 2 in sigma_*_2 (confusingly) enough does not denote the squared
-        # operator, but rather that it is a two-spin operator.
-        sigma_x_2 = np.kron(sigma_x, np.eye(2)) + np.kron(np.eye(2), sigma_x)
-        sigma_y_2 = np.kron(sigma_y, np.eye(2)) + np.kron(np.eye(2), sigma_y)
-        sigma_z_2 = np.kron(sigma_z, np.eye(2)) + np.kron(np.eye(2), sigma_z)
 
-        S_2_spin = (
-            sigma_x_2 @ sigma_x_2
-            + sigma_y_2 @ sigma_y_2
-            + sigma_z_2 @ sigma_z_2
-        ) / 4
-        S_2_spin = S_2_spin.reshape(2, 2, 2, 2)
+        l = len(spin_x)
 
-        # S_2 = S_2_spin.transpose(1, 3, 0, 2)
-        # S_2 = np.kron(overlap, S_2)
-        # S_2 = S_2.transpose(2, 3, 0, 1)
-        # S_2 = np.kron(overlap, S_2)
-        # S_2 = S_2.transpose(0, 2, 1, 3)
+        spin_2 = np.zeros_like(spin_x)
+        spin_2_tb = np.zeros((l, l, l, l), dtype=spin_2.dtype)
 
-        # np.testing.assert_allclose(np.kron(overlap_2, S_2_spin), S_2)
+        for s_i in [spin_x, spin_y, spin_z]:
+            spin_2 += s_i @ s_i
+            spin_2_tb += np.einsum("pr, qs -> pqrs", s_i, s_i)
 
-        # return S_2
-        return np.kron(np.einsum("pr, qs -> pqrs", overlap, overlap), S_2_spin)
+        return spin_2, spin_2_tb
+
+        # s_2_spin = (sigma_x @ sigma_x + sigma_y @ sigma_y + sigma_z @ sigma_z) / 4
+
+        # # The 2 in sigma_*_2 (confusingly) enough does not denote the squared
+        # # operator, but rather that it is a two-spin operator.
+        # sigma_x_2 = np.kron(sigma_x, np.eye(2)) + np.kron(np.eye(2), sigma_x)
+        # sigma_y_2 = np.kron(sigma_y, np.eye(2)) + np.kron(np.eye(2), sigma_y)
+        # sigma_z_2 = np.kron(sigma_z, np.eye(2)) + np.kron(np.eye(2), sigma_z)
+
+        # S_2_spin = (
+        #     sigma_x_2 @ sigma_x_2
+        #     + sigma_y_2 @ sigma_y_2
+        #     + sigma_z_2 @ sigma_z_2
+        # ) / 4
+        # S_2_spin = S_2_spin.reshape(2, 2, 2, 2)
+
+        # return np.kron(overlap, s_2_spin), np.kron(np.einsum("pr, qs -> pqrs", overlap, overlap), S_2_spin)
 
     @staticmethod
     def add_spin_spf(spf, np):
