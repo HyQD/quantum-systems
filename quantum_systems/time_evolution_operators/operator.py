@@ -123,3 +123,22 @@ class AdiabaticSwitching(TimeEvolutionOperator):
         np = self._system.np
 
         return self._switching_function(current_time) * self._system.u
+
+
+class CustomOneBodyOperator(TimeEvolutionOperator):
+    def __init__(self, weight, operator):
+        self._weight = weight
+        self._operator = operator
+
+    @property
+    def is_one_body_operator(self):
+        return True
+
+    def h_t(self, current_time):
+        np = self._system.np
+
+        if not callable(self._weight):
+            tmp = self._weight
+            self._weight = lambda t: tmp
+
+        return self._system.h + self._weight(current_time) * self._operator
