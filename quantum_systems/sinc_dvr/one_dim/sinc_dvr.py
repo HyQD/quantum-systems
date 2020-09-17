@@ -250,22 +250,5 @@ class ODSincDVR(BasisSet):
                 u, C, np, C_tilde
             )
 
-    def partially_transform_u(self, u, C, np, C_tilde=None):
-        """Coloumb matrix elements with two indices contracted, one bra and one ket."""
-        if C_tilde is None:
-            C_tilde = C.conj().T
-
-        if self.sparse_repr:
-            if self.u_repr == "2d":
-                _u = u
-            else:
-                _u = np.zeros(u.shape[:2])
-                _u[u.coords[0], u.coords[1]] = u.data
-            return np.einsum("rb,bs,ab->ars", C_tilde, C, _u, optimize=True,)
-        else:
-            return super(ODSincDVR, ODSincDVR).partially_transform_u(
-                u, C, np, C_tilde=None
-            )
-
     def change_basis(self, *args, **kwargs):
         super().change_basis(*args, **kwargs)
