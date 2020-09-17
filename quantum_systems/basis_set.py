@@ -47,6 +47,15 @@ class BasisSet:
         self._s = None
         self._dipole_moment = None
 
+        self._sigma_x = None
+        self._sigma_y = None
+        self._sigma_z = None
+
+        self._spin_x = None
+        self._spin_y = None
+        self._spin_z = None
+        self._spin_2 = None
+
         self._spf = None
         self._bra_spf = None
 
@@ -115,6 +124,80 @@ class BasisSet:
         self._dipole_moment = dipole_moment
 
     @property
+    def spin_x(self):
+        return self._spin_x
+
+    @spin_x.setter
+    def spin_x(self, spin_x):
+        assert self.includes_spin
+        assert all(self.check_axis_lengths(spin_x, self.l))
+
+        self._spin_x = spin_x
+
+    @property
+    def spin_y(self):
+        return self._spin_y
+
+    @spin_y.setter
+    def spin_y(self, spin_y):
+        assert self.includes_spin
+        assert all(self.check_axis_lengths(spin_y, self.l))
+
+        self._spin_y = spin_y
+
+    @property
+    def spin_z(self):
+        return self._spin_z
+
+    @spin_z.setter
+    def spin_z(self, spin_z):
+        assert self.includes_spin
+        assert all(self.check_axis_lengths(spin_z, self.l))
+
+        self._spin_z = spin_z
+
+    @property
+    def spin_2(self):
+        return self._spin_2
+
+    @spin_2.setter
+    def spin_2(self, spin_2):
+        assert self.includes_spin
+        assert all(self.check_axis_lengths(spin_2, self.l))
+
+        self._spin_2 = spin_2
+
+    @property
+    def sigma_x(self):
+        return self._sigma_x
+
+    @sigma_x.setter
+    def sigma_x(self, sigma_x):
+        assert self.includes_spin
+
+        self._sigma_x = sigma_x
+
+    @property
+    def sigma_y(self):
+        return self._sigma_y
+
+    @sigma_y.setter
+    def sigma_y(self, sigma_y):
+        assert self.includes_spin
+
+        self._sigma_y = sigma_y
+
+    @property
+    def sigma_z(self):
+        return self._sigma_z
+
+    @sigma_z.setter
+    def sigma_z(self, sigma_z):
+        assert self.includes_spin
+
+        self._sigma_z = sigma_z
+
+    @property
     def spf(self):
         return self._spf
 
@@ -164,14 +247,19 @@ class BasisSet:
         """
         self.np = np
 
-        self._h = self.change_arr_module(self.h, self.np)
-        self._s = self.change_arr_module(self.s, self.np)
-        self._u = self.change_arr_module(self.u, self.np)
-        self._spf = self.change_arr_module(self.spf, self.np)
-        self._bra_spf = self.change_arr_module(self.bra_spf, self.np)
-        self._dipole_moment = self.change_arr_module(
-            self.dipole_moment, self.np
-        )
+        for arr in [
+            self.h,
+            self.s,
+            self.u,
+            self.spf,
+            self.bra_spf,
+            self.dipole_moment,
+            self.spin_x,
+            self.spin_y,
+            self.spin_z,
+            self.spin_2,
+        ]:
+            arr = self.change_arr_module(arr, self.np)
 
     def cast_to_complex(self):
         """Function converting all matrix elements to ``np.complex128``, where
@@ -179,20 +267,20 @@ class BasisSet:
         """
         np = self.np
 
-        self.h = self.h.astype(np.complex128)
-        self.u = self.u.astype(np.complex128)
-
-        if self.s is not None:
-            self.s = self.s.astype(np.complex128)
-
-        if self.spf is not None:
-            self.spf = self.spf.astype(np.complex128)
-
-        if self.bra_spf is not None:
-            self.bra_spf = self.bra_spf.astype(np.complex128)
-
-        if self.dipole_moment is not None:
-            self.dipole_moment = self.dipole_moment.astype(np.complex128)
+        for arr in [
+            self.h,
+            self.s,
+            self.u,
+            self.spf,
+            self.bra_spf,
+            self.dipole_moment,
+            self.spin_x,
+            self.spin_y,
+            self.spin_z,
+            self.spin_2,
+        ]:
+            if arr is not None:
+                arr = arr.astype(np.complex128)
 
     @staticmethod
     def transform_spf(spf, C, np):
@@ -217,26 +305,13 @@ class BasisSet:
         # abcd, ds -> abcs
         _u = np.tensordot(u, C, axes=(3, 0))
         # abcs, cr -> absr -> abrs
-        _u = np.tensordot(_u, C, axes=(2, 0)).transpose((0, 1, 3, 2))
+        _u = np.tensordot(_u, C, axes=(2, 0)).transpose(0, 1, 3, 2)
         # abrs, qb -> arsq -> aqrs
-        _u = np.tensordot(_u, C_tilde, axes=(1, 1)).transpose((0, 3, 1, 2))
+        _u = np.tensordot(_u, C_tilde, axes=(1, 1)).transpose(0, 3, 1, 2)
         # pa, aqrs -> pqrs
         _u = np.tensordot(C_tilde, _u, axes=(1, 0))
 
         return _u
-
-    @staticmethod
-    def partially_transform_two_body_element(u, C, np, C_tilde=None):
-        if C_tilde is None:
-            C_tilde = C.conj().T
-
-        return np.einsum(
-            "rb,ds,abcd->arcs",
-            C_tilde,
-            C,
-            u,
-            optimize=True,
-        )
 
     def get_transformed_h(self, C):
         return self.transform_one_body_elements(self.h, C, np=self.np)
@@ -254,10 +329,21 @@ class BasisSet:
                 self.s, C, C_tilde=C_tilde, np=self.np
             )
 
+        for spin in [self.spin_x, self.spin_y, self.spin_z]:
+            if spin is not None:
+                spin = self.transform_one_body_elements(
+                    spin, C, C_tilde=C_tilde, np=self.np
+                )
+
     def _change_basis_two_body_elements(self, C, C_tilde):
         self.u = self.transform_two_body_elements(
             self.u, C, np=self.np, C_tilde=C_tilde
         )
+
+        if self.spin_2 is not None:
+            self.spin_2 = self.transform_two_body_elements(
+                self.spin_2, C, np=self.np, C_tilde=C_tilde
+            )
 
     def _change_basis_dipole_moment(self, C, C_tilde):
         dipole_moment = []
@@ -386,7 +472,9 @@ class BasisSet:
             self.u = self.anti_symmetrize_u(self.u)
             self._anti_symmetrized_u = True
 
-    def change_to_general_orbital_basis(self, anti_symmetrize=True):
+    def change_to_general_orbital_basis(
+        self, a=[1, 0], b=[0, 1], anti_symmetrize=True
+    ):
         r"""Function converting a spatial orbital basis set to a general orbital
         basis. That is, the function duplicates every element by adding a
         spin-function to each spatial orbital. This leads to an
@@ -400,10 +488,16 @@ class BasisSet:
         position :math:`\mathbf{r}` and spin :math:`m_s`. Here
         :math:`\phi_p(\mathbf{r})` is a spatial orbital and :math:`\sigma(m_s)`
         a spin-function with :math:`\sigma \in \{\alpha, \beta\}`. The
-        conversion happens in place.
+        conversion happens in-place.
 
         Parameters
         ----------
+        a : list, np.array
+            The :math:`\alpha` (up) spin basis vector. Default is :math:`\alpha
+            = (1, 0)^T`.
+        b : list, np.array
+            The :math:`\beta` (down) spin basis vector. Default is :math:`\beta
+            = (0, 1)^T`. Note that ``a`` and ``b`` are assumed orthonormal.
         anti_symmetrize : bool
             Whether or not to anti-symmetrize the elements in the two-body
             Hamiltonian. By default we perform an anti-symmetrization.
@@ -419,6 +513,26 @@ class BasisSet:
         self._includes_spin = True
 
         self.l = 2 * self.l
+
+        self.a = self.np.array(a).astype(self.np.complex128).reshape(-1, 1)
+        self.b = self.np.array(b).astype(self.np.complex128).reshape(-1, 1)
+
+        # Check that spin basis elements are orthonormal
+        assert abs(self.np.dot(self.a.conj().T, self.a) - 1) < 1e-12
+        assert abs(self.np.dot(self.b.conj().T, self.b) - 1) < 1e-12
+        assert abs(self.np.dot(self.a.conj().T, self.b)) < 1e-12
+
+        (self.sigma_x, self.sigma_y, self.sigma_z,) = self.setup_pauli_matrices(
+            self.a, self.b, self.np
+        )
+
+        self.spin_x = 0.5 * self.np.kron(self.s, self.sigma_x)
+        self.spin_y = 0.5 * self.np.kron(self.s, self.sigma_y)
+        self.spin_z = 0.5 * self.np.kron(self.s, self.sigma_z)
+
+        self.spin_2 = self.setup_spin_squared_operator(
+            self.s, self.sigma_x, self.sigma_y, self.sigma_z, self.np
+        )
 
         self.h = self.add_spin_one_body(self.h, np=self.np)
         self.s = self.add_spin_one_body(self.s, np=self.np)
@@ -446,6 +560,106 @@ class BasisSet:
         return self
 
     @staticmethod
+    def setup_pauli_matrices(a, b, np):
+        r"""Static method computing matrix elements of the Pauli spin-matrices
+        in a given orthonormal basis of spin functions :math:`\{\alpha,
+        \beta\}`.
+
+        .. math:: (\sigma_i)^{\rho}_{\gamma}
+            = \langle \rho \rvert \hat{\sigma}_i \lvert \gamma \rangle,
+
+        where :math:`\rho, \gamma \in \{\alpha, \beta\}` and :math:`i \in \{x,
+        y, z\}` for the three Pauli matrices.
+
+        Parameters
+        ----------
+        a : np.ndarray
+            The :math:`\alpha` basis vector as a column vector.
+        b : np.ndarray
+            The :math:`\beta` basis vector as a column vector. Note that the
+            two basis vectors are assumed to be orthonormal.
+        np : module
+            An appropriate array and linalg module.
+
+        Returns
+        -------
+        tuple
+            The three Pauli matrices in the order :math:`\sigma_x, \sigma_y,
+            \sigma_z`.
+
+        >>> import numpy as np
+        >>> a = np.array([1, 0]).reshape(-1, 1)
+        >>> b = np.array([0, 1]).reshape(-1, 1)
+        >>> sigma_x, sigma_y, sigma_z = BasisSet.setup_pauli_matrices(a, b, np)
+        >>> print(sigma_x)
+        [[0.+0.j 1.+0.j]
+         [1.+0.j 0.+0.j]]
+        >>> print(sigma_y)
+        [[0.+0.j 0.-1.j]
+         [0.+1.j 0.+0.j]]
+        >>> print(sigma_z)
+        [[ 1.+0.j  0.+0.j]
+         [ 0.+0.j -1.+0.j]]
+        """
+        sigma_x_mat = np.array([[0, 1], [1, 0]]).astype(np.complex128)
+        sigma_y_mat = np.array([[0, -1j], [1j, 0]])
+        sigma_z_mat = np.array([[1, 0], [0, -1]]).astype(np.complex128)
+
+        sigma_x = np.zeros_like(sigma_x_mat)
+        sigma_y = np.zeros_like(sigma_y_mat)
+        sigma_z = np.zeros_like(sigma_z_mat)
+
+        for i, s in enumerate([a, b]):
+            for j, t in enumerate([a, b]):
+                sigma_x[i, j] = np.dot(s.conj().T, np.dot(sigma_x_mat, t))
+                sigma_y[i, j] = np.dot(s.conj().T, np.dot(sigma_y_mat, t))
+                sigma_z[i, j] = np.dot(s.conj().T, np.dot(sigma_z_mat, t))
+
+        return sigma_x, sigma_y, sigma_z
+
+    @staticmethod
+    def setup_spin_squared_operator(overlap, sigma_x, sigma_y, sigma_z, np):
+        r"""Static method computing the matrix elements of the two-body spin
+        squared operator, :math:`\hat{S}^2`. The spin-basis is chosen by the
+        Pauli matrices.
+
+        Parameters
+        ----------
+        overlap : np.ndarray
+            The overlap matrix elements between the spatial orbitals.
+        sigma_x : np.ndarray
+            Pauli spin-matrix in :math:`x`-direction.
+        sigma_y : np.ndarray
+            Pauli spin-matrix in :math:`y`-direction.
+        sigma_z : np.ndarray
+            Pauli spin-matrix in :math:`z`-direction.
+        np : module
+            An appropriate array and linalg module.
+
+        Returns
+        -------
+        np.ndarray
+            The spin-squared operator as an array on the form ``(l, l, l, l)``,
+            where ``l`` is the number of spin-orbitals.
+        """
+        overlap_2 = np.einsum("pr, qs -> pqrs", overlap, overlap)
+
+        # The 2 in sigma_*_2 (confusingly) enough does not denote the squared
+        # operator, but rather that it is a two-spin operator.
+        sigma_x_2 = np.kron(sigma_x, np.eye(2)) + np.kron(np.eye(2), sigma_x)
+        sigma_y_2 = np.kron(sigma_y, np.eye(2)) + np.kron(np.eye(2), sigma_y)
+        sigma_z_2 = np.kron(sigma_z, np.eye(2)) + np.kron(np.eye(2), sigma_z)
+
+        S_2_spin = (
+            sigma_x_2 @ sigma_x_2
+            + sigma_y_2 @ sigma_y_2
+            + sigma_z_2 @ sigma_z_2
+        ) / 4
+        S_2_spin = S_2_spin.reshape(2, 2, 2, 2)
+
+        return np.kron(overlap_2, S_2_spin)
+
+    @staticmethod
     def add_spin_spf(spf, np):
         new_shape = [spf.shape[0] * 2, *spf.shape[1:]]
         new_spf = np.zeros(tuple(new_shape), dtype=spf.dtype)
@@ -468,17 +682,17 @@ class BasisSet:
 
     @staticmethod
     def add_spin_two_body(_u, np):
-        u = _u.transpose((1, 3, 0, 2))
+        u = _u.transpose(1, 3, 0, 2)
         u = np.kron(u, np.eye(2))
-        u = u.transpose((2, 3, 0, 1))
+        u = u.transpose(2, 3, 0, 1)
         u = np.kron(u, np.eye(2))
-        u = u.transpose((0, 2, 1, 3))
+        u = u.transpose(0, 2, 1, 3)
 
         return u
 
     @staticmethod
     def anti_symmetrize_u(_u):
-        return _u - _u.transpose((0, 1, 3, 2))
+        return _u - _u.transpose(0, 1, 3, 2)
 
     @staticmethod
     def check_axis_lengths(arr, length):

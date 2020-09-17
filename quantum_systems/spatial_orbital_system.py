@@ -49,7 +49,9 @@ class SpatialOrbitalSystem(QuantumSystem):
 
         super().__init__(n // 2, basis_set, **kwargs)
 
-    def construct_general_orbital_system(self, anti_symmetrize=True):
+    def construct_general_orbital_system(
+        self, a=[1, 0], b=[0, 1], anti_symmetrize=True
+    ):
         r"""Function constructing a ``GeneralOrbitalSystem`` by 
         duplicating every basis element of current system. That is,
 
@@ -64,6 +66,12 @@ class SpatialOrbitalSystem(QuantumSystem):
 
         Parameters
         ----------
+        a : list, np.array
+            The :math:`\alpha` (up) spin basis vector. Default is :math:`\alpha
+            = (1, 0)^T`.
+        b : list, np.array
+            The :math:`\beta` (down) spin basis vector. Default is :math:`\beta
+            = (0, 1)^T`. Note that ``a`` and ``b`` are assumed orthonormal.
         anti_symmetrize : bool
             Whether or not to create the anti-symmetrized two-body elements.
             Default is ``True``.
@@ -81,6 +89,8 @@ class SpatialOrbitalSystem(QuantumSystem):
         gos = GeneralOrbitalSystem(
             self.n * 2,
             self._basis_set.copy_basis(),
+            a=a,
+            b=b,
             anti_symmetrize=anti_symmetrize,
         )
 
@@ -109,27 +119,13 @@ class SpatialOrbitalSystem(QuantumSystem):
             The reference energy.
         """
 
-        np = self.np
         o, v = self.o, self.v
 
         return (
-            2 * np.trace(self.h[o, o])
-            + np.sum(
-                np.diagonal(
-                    np.sum(
-                        np.diagonal(self.u[o, o, o, o], axis1=1, axis2=3),
-                        axis=2,
-                    )
-                )
-            )
-            - np.sum(
-                np.diagonal(
-                    np.sum(
-                        np.diagonal(self.u[o, o, o, o], axis1=1, axis2=2),
-                        axis=2,
-                    )
-                )
-            )
+            2 * self.np.trace(self.h[o, o])
+            + 2
+            * self.np.trace(self.np.trace(self.u[o, o, o, o], axis1=1, axis2=3))
+            - self.np.trace(self.np.trace(self.u[o, o, o, o], axis1=1, axis2=2))
         )
 
     def construct_fock_matrix(self, h, u, f=None):
@@ -169,12 +165,8 @@ class SpatialOrbitalSystem(QuantumSystem):
         f.fill(0)
 
         f += h
-        f = np.add(
-            f, 2 * np.sum(np.diagonal(u[:, o, :, o], axis1=1, axis2=3), axis=2)
-        )
-        f = np.subtract(
-            f, np.sum(np.diagonal(u[:, o, o, :], axis1=1, axis2=2), axis=2)
-        )
+        f += 2 * np.einsum("piqi -> pq", u[:, o, :, o])
+        f -= np.einsum("piiq -> pq", u[:, o, o, :])
 
         return f
 

@@ -18,17 +18,31 @@ class GeneralOrbitalSystem(QuantumSystem):
     system size grows quickly. Furthermore, we are unable to categorize a
     general spin-orbital as having a definitive spin-direction.
 
+    Parameters
+    ----------
+    a : list, np.array
+        The :math:`\alpha` (up) spin basis vector. Default is :math:`\alpha =
+        (1, 0)^T`.
+    b : list, np.array
+        The :math:`\beta` (down) spin basis vector. Default is :math:`\beta =
+        (0, 1)^T`. Note that ``a`` and ``b`` are assumed orthonormal.
+    anti_symmetrize : bool
+        Whether or not to create the anti-symmetrized two-body elements.
+        Default is ``True``.
+
     See Also
     -------
     QuantumSystem
         Parent class with constructor and main interface functions.
     """
 
-    def __init__(self, n, basis_set, anti_symmetrize=True, **kwargs):
+    def __init__(
+        self, n, basis_set, a=[1, 0], b=[0, 1], anti_symmetrize=True, **kwargs
+    ):
         if not basis_set.includes_spin:
 
             basis_set = basis_set.change_to_general_orbital_basis(
-                anti_symmetrize=anti_symmetrize
+                a=a, b=b, anti_symmetrize=anti_symmetrize
             )
 
         if anti_symmetrize:
@@ -38,6 +52,22 @@ class GeneralOrbitalSystem(QuantumSystem):
             basis_set.anti_symmetrize_two_body_elements()
 
         super().__init__(n, basis_set, **kwargs)
+
+    @property
+    def spin_x(self):
+        return self._basis_set.spin_x
+
+    @property
+    def spin_y(self):
+        return self._basis_set.spin_y
+
+    @property
+    def spin_z(self):
+        return self._basis_set.spin_z
+
+    @property
+    def spin_2(self):
+        return self._basis_set.spin_2
 
     def compute_reference_energy(self):
         r"""Function computing the reference energy in a general spin-orbital
@@ -55,16 +85,10 @@ class GeneralOrbitalSystem(QuantumSystem):
             The reference energy.
         """
 
-        np = self.np
         o, v = self.o, self.v
 
-        return self.np.trace(self.h[o, o]) + self.np.sum(
-            self.np.diagonal(
-                self.np.sum(
-                    self.np.diagonal(self.u[o, o, o, o], axis1=1, axis2=3),
-                    axis=2,
-                )
-            )
+        return self.np.trace(self.h[o, o]) + 0.5 * self.np.trace(
+            self.np.trace(self.u[o, o, o, o], axis1=1, axis2=3)
         )
 
     def construct_fock_matrix(self, h, u, f=None):
@@ -105,9 +129,7 @@ class GeneralOrbitalSystem(QuantumSystem):
         f.fill(0)
 
         f += h
-        f = np.add(
-            f, np.sum(np.diagonal(u[:, o, :, o], axis1=1, axis2=3), axis=2)
-        )
+        f += np.einsum("piqi -> pq", u[:, o, :, o])
 
         return f
 
