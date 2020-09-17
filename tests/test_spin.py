@@ -134,11 +134,14 @@ def test_overlap_squared():
 
 
 def test_spin_squared():
-    n = 4
-    l = 10
+    n = 2
+    l = 2
     dim = 2
 
     spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
+    spas = SpatialOrbitalSystem(
+        n, ODQD(l, 8, 1001, potential=ODQD.HOPotential(1))
+    )
     gos = spas.construct_general_orbital_system(a=[1, 0], b=[0, 1])
 
     overlap = spas.s
@@ -174,97 +177,84 @@ def test_spin_squared():
         singlet[0].T @ S_sq_spin.reshape(4, 4) @ singlet[0], 0
     )
 
-    S_sq = np.kron(overlap_sq, S_sq_spin)
-    assert S_sq.shape == gos.u.shape
+    # S_sq = np.kron(overlap_sq, S_sq_spin)
+    # assert S_sq.shape == gos.u.shape
 
-    np.testing.assert_allclose(S_sq, gos.spin_2 + gos.spin_2_tb)
+    # np.testing.assert_allclose(S_sq, 0.5 * gos.spin_2_tb)
 
-    for P in range(gos.l):
-        p = P // 2
-        sigma = P % 2
+    # for P in range(gos.l):
+    #     p = P // 2
+    #     sigma = P % 2
 
-        for Q in range(gos.l):
-            q = Q // 2
-            tau = Q % 2
+    #     for Q in range(gos.l):
+    #         q = Q // 2
+    #         tau = Q % 2
 
-            for R in range(gos.l):
-                r = R // 2
-                gamma = R % 2
+    #         for R in range(gos.l):
+    #             r = R // 2
+    #             gamma = R % 2
 
-                for S in range(gos.l):
-                    s = S // 2
-                    delta = S % 2
+    #             for S in range(gos.l):
+    #                 s = S // 2
+    #                 delta = S % 2
 
-                    np.testing.assert_allclose(
-                        overlap[p, r]
-                        * overlap[q, s]
-                        * S_sq_spin[sigma, tau, gamma, delta],
-                        S_sq[P, Q, R, S],
-                    )
+    #                 np.testing.assert_allclose(
+    #                     overlap[p, r]
+    #                     * overlap[q, s]
+    #                     * S_sq_spin[sigma, tau, gamma, delta],
+    #                     S_sq[P, Q, R, S],
+    #                 )
 
 
 def test_spin_squared_constructions():
-    n = 3
-    l = 10
+    # TODO: Try to make this test applicable for non-orthonomal basis sets.
 
-    # rbs = RandomBasisSet(l, 3)
-    # overlap_2 = np.einsum("pr, qs -> pqrs", np.eye(2), np.eye(2))
-    # u = rbs.u.copy()
-
-    # u_s = rbs.add_spin_two_body(u, np)
-    # np.testing.assert_allclose(u_s, np.kron(u, overlap_2))
-
-    # wat
-
+    # n = 2
+    # l = 10
     # system = GeneralOrbitalSystem(n, RandomBasisSet(l, 3))
+    # system = GeneralOrbitalSystem(
+    #     n, ODQD(l, 10, 1001, potential=ODQD.HOPotential(1))
+    # )
 
     # system = construct_pyscf_system_ao("he")
 
-    system = GeneralOrbitalSystem(
-        n, ODQD(l, 10, 1001, potential=ODQD.HOPotential(1))
-    )
-
-    # system = construct_pyscf_system_rhf("he", basis="cc-pVTZ")
+    system = construct_pyscf_system_rhf("he", basis="cc-pVTZ")
 
     spin_dir_tb_orig = []
     spin_dir_tb_pm = []
 
     spin_p = system.spin_x + 1j * system.spin_y
     spin_m = system.spin_x - 1j * system.spin_y
+    spin_z = system.spin_z
+    s = system.s
 
-    for spin in [system.spin_x, system.spin_y, system.spin_z]:
-        spin_dir_tb_orig.append(
-            np.kron(spin, system.s) + np.kron(system.s, spin)
-        )
-
-    for spin in [spin_p, spin_m, system.spin_z]:
-        spin_dir_tb_pm.append(np.kron(spin, system.s) + np.kron(system.s, spin))
-
-    # S^2 = S_x^2 + S_y^2 + S_z^2
-    spin_2 = sum(map(lambda x: x @ x, spin_dir_tb_orig)).reshape(
-        system.spin_2_tb.shape
+    np.testing.assert_allclose(
+        spin_p @ s @ spin_m - spin_m @ s @ spin_p, 2 * spin_z, atol=1e-10
     )
 
     # S^2 = S_- * S_+ + S_z + S_z^2
-    spin_2_mp = (
-        spin_dir_tb_pm[1] @ spin_dir_tb_pm[0]
-        + spin_dir_tb_pm[2]
-        + spin_dir_tb_pm[2] @ spin_dir_tb_pm[2]
-    ).reshape(system.spin_2_tb.shape)
+    spin_2_mp = spin_m @ spin_p + spin_z + spin_z @ spin_z
+    spin_2_tb_mp = (
+        0.5 * np.einsum("pr, qs -> pqrs", spin_m, spin_p)
+        + 0.5 * np.einsum("pr, qs -> pqrs", spin_p, spin_m)
+        + np.einsum("pr, qs -> pqrs", spin_z, spin_z)
+    )
+    spin_2_tb_mp = system._basis_set.anti_symmetrize_u(spin_2_tb_mp)
 
     # S^2 = S_+ * S_- - S_z + S_z^2
-    spin_2_pm = (
-        spin_dir_tb_pm[0] @ spin_dir_tb_pm[1]
-        - spin_dir_tb_pm[2]
-        + spin_dir_tb_pm[2] @ spin_dir_tb_pm[2]
-    ).reshape(system.spin_2_tb.shape)
+    spin_2_pm = spin_p @ spin_m - spin_z + spin_z @ spin_z
+    spin_2_tb_pm = (
+        0.5 * np.einsum("pr, qs -> pqrs", spin_m, spin_p)
+        + 0.5 * np.einsum("pr, qs -> pqrs", spin_p, spin_m)
+        + np.einsum("pr, qs -> pqrs", spin_z, spin_z)
+    )
+    spin_2_tb_pm = system._basis_set.anti_symmetrize_u(spin_2_tb_pm)
 
-    # print(system.s)
-    # print(system.spin_2)
-    # print("-" * 100)
-    # print(spin_2)
-    # wat
+    np.testing.assert_allclose(spin_2_mp, spin_2_pm, atol=1e-10)
+    np.testing.assert_allclose(spin_2_tb_mp, spin_2_tb_pm)
 
-    np.testing.assert_allclose(spin_2, system.spin_2_tb, atol=1e-10)
-    np.testing.assert_allclose(spin_2_mp, system.spin_2_tb, atol=1e-10)
-    np.testing.assert_allclose(spin_2_pm, system.spin_2_tb, atol=1e-10)
+    np.testing.assert_allclose(spin_2_mp, system.spin_2, atol=1e-10)
+    np.testing.assert_allclose(spin_2_tb_mp, system.spin_2_tb)
+
+    np.testing.assert_allclose(spin_2_pm, system.spin_2, atol=1e-10)
+    np.testing.assert_allclose(spin_2_tb_pm, system.spin_2_tb)
