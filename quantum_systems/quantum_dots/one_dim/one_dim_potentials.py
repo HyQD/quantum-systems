@@ -7,6 +7,9 @@ class OneDimPotential(metaclass=abc.ABCMeta):
     def __call__(self, x):
         pass
 
+    def derivative(self, x):
+        raise NotImplementedError()
+
 
 class HOPotential(OneDimPotential):
     def __init__(self, omega):
@@ -30,7 +33,13 @@ class DWPotential(HOPotential):
         )
 
     def derivative(self, x):
-        raise NotImplementedError()
+        """
+        Uses Heaviside function to avoid division by zero. Is ill defined in x=0
+        anyways
+        """
+        return super().derivative(x) - self.l * self.omega ** 2 * (
+            np.heaviside(x, 0.5) - 0.5
+        )
 
 
 class DWPotentialSmooth(OneDimPotential):
@@ -50,7 +59,15 @@ class DWPotentialSmooth(OneDimPotential):
         )
 
     def derivative(self, x):
-        raise NotImplementedError()
+        a = self.a
+        return (
+            1
+            / a ** 2
+            * (
+                (x + 0.5 * a) * (x - 0.5 * a) ** 2
+                + (x - 0.5 * a) * (x + 0.5 * a) ** 2
+            )
+        )
 
 
 class SymmetricDWPotential(OneDimPotential):
@@ -68,7 +85,7 @@ class SymmetricDWPotential(OneDimPotential):
         return self.a * x ** 6 + self.b * x ** 4 + self.c * x ** 2
 
     def derivative(self, x):
-        raise NotImplementedError()
+        return 6 * self.a * x ** 5 + 3 * self.b * x ** 3 + 2 * self.c * x
 
 
 class AsymmetricDWPotential(OneDimPotential):
@@ -86,7 +103,7 @@ class AsymmetricDWPotential(OneDimPotential):
         return self.a * x ** 4 + self.b * x ** 3 + self.c * x ** 2
 
     def derivative(self, x):
-        raise NotImplementedError()
+        return 4 * self.a * x ** 3 + 3 * self.b * x ** 2 + 2 * self.c * x
 
 
 class GaussianPotential(OneDimPotential):
@@ -102,7 +119,7 @@ class GaussianPotential(OneDimPotential):
         )
 
     def derivative(self, x):
-        raise NotImplementedError()
+        return -(x - self.center) / self.deviation ** 2 * self(x)
 
 
 class GaussianPotentialHardWall(OneDimPotential):
@@ -129,9 +146,6 @@ class GaussianPotentialHardWall(OneDimPotential):
             * np.exp(-((x - self.center) ** 2) / (2.0 * self.deviation ** 2))
             + wall
         )
-
-    def derivative(self, x):
-        raise NotImplementedError()
 
 
 class AtomicPotential(OneDimPotential):
