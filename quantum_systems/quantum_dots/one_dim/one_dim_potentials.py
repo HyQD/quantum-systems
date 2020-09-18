@@ -16,7 +16,7 @@ class HOPotential(OneDimPotential):
         return 0.5 * self.omega ** 2 * x ** 2
 
     def derivative(self, x):
-        return self.omega**2 * x
+        return self.omega ** 2 * x
 
 
 class DWPotential(HOPotential):
@@ -89,7 +89,6 @@ class AsymmetricDWPotential(OneDimPotential):
         raise NotImplementedError()
 
 
-
 class GaussianPotential(OneDimPotential):
     def __init__(self, weight, center, deviation, np):
         self.weight = weight
@@ -144,4 +143,4 @@ class AtomicPotential(OneDimPotential):
         return -self.Za / np.sqrt(x ** 2 + self.c)
 
     def derivative(self, x):
-        return self.Za * x / (x ** 2 + self.c)**(3/2)
+        return self.Za * x / (x ** 2 + self.c) ** (3 / 2)

@@ -173,11 +173,13 @@ class ODSincDVR(BasisSet):
 
     def construct_s(self):
         return np.eye(self.l)
-    
+
     def change_to_general_orbital_basis(self, anti_symmetrize=True):
         if anti_symmetrize and self.u_repr == "2d":
             self.set_u_repr("4d")
-        return super().change_to_general_orbital_basis(anti_symmetrize=anti_symmetrize)
+        return super().change_to_general_orbital_basis(
+            anti_symmetrize=anti_symmetrize
+        )
 
     def change_module(self, np):
         if self.sparse_repr:
