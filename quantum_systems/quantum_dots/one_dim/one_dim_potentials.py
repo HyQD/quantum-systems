@@ -55,7 +55,7 @@ class DWPotentialSmooth(OneDimPotential):
 
 class SymmetricDWPotential(OneDimPotential):
     """
-    This is a generalization of the symmetric double-well potential 
+    This is a generalization of the symmetric double-well potential
     used by Wadehra et. al: https://aip.scitation.org/doi/10.1063/1.1589481
     """
 
@@ -73,7 +73,7 @@ class SymmetricDWPotential(OneDimPotential):
 
 class AsymmetricDWPotential(OneDimPotential):
     """
-    This is a generalization of the asymmetric double-well potential 
+    This is a generalization of the asymmetric double-well potential
     used by Wadehra et. al: https://aip.scitation.org/doi/10.1063/1.1589481
     """
 
@@ -108,7 +108,7 @@ class GaussianPotential(OneDimPotential):
 
 class GaussianPotentialHardWall(OneDimPotential):
     """
-    A hard wall is introduced in order to force the 
+    A hard wall is introduced in order to force the
     higher lying states (unbound states) to go to zero at the end of the grid.
     """
 

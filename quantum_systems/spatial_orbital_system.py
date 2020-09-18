@@ -52,7 +52,7 @@ class SpatialOrbitalSystem(QuantumSystem):
     def construct_general_orbital_system(
         self, a=[1, 0], b=[0, 1], anti_symmetrize=True
     ):
-        r"""Function constructing a ``GeneralOrbitalSystem`` by 
+        r"""Function constructing a ``GeneralOrbitalSystem`` by
         duplicating every basis element of current system. That is,
 
         .. math:: \psi(\mathbf{r}, t)
