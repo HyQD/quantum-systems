@@ -4,7 +4,9 @@ import scipy.sparse as sps
 import scipy.sparse.linalg as spsl
 import scipy.special as spec
 
-from ... import BasisSet
+import warnings
+
+from quantum_systems import BasisSet
 
 from quantum_systems.quantum_dots.one_dim.one_dim_qd import _shielded_coulomb
 from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
@@ -176,6 +178,11 @@ class ODSincDVR(BasisSet):
 
     def change_to_general_orbital_basis(self, anti_symmetrize=True):
         if anti_symmetrize and self.u_repr == "2d":
+            if self.l > 100:
+                warnings.warn(
+                    "Warning, l large. Change to gos with anti_symmetrize=True forces 4d u."
+                )
+
             self.set_u_repr("4d")
         return super().change_to_general_orbital_basis(
             anti_symmetrize=anti_symmetrize
@@ -183,7 +190,6 @@ class ODSincDVR(BasisSet):
 
     def change_module(self, np):
         if self.sparse_repr:
-            import warnings
 
             self.np = np
             warnings.warn(
@@ -213,7 +219,8 @@ class ODSincDVR(BasisSet):
         self, u, C, np, anti_symmetrize=False, C_tilde=None
     ):
         """Class method overwriting the static method of BasisSet. Returns a 4d
-        u_prime in numpy format"""
+        u_prime in numpy format, and allows for direct antisymmetrization of transformed
+        elements, to compensate for lack of antisymmetrization in 2d representation of u."""
         if self.u_repr == "2d":
             if C_tilde is None:
                 C_tilde = C.conj().T
