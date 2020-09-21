@@ -532,6 +532,12 @@ class BasisSet:
 
         self.l = 2 * self.l
 
+        overlap = self.s.copy()
+
+        self.h = self.add_spin_one_body(self.h, np=self.np)
+        self.s = self.add_spin_one_body(self.s, np=self.np)
+        self.u = self.add_spin_two_body(self.u, np=self.np)
+
         # temporary change to allow 2d representations of two-body operators, such as
         # for dvr. A 2d representation is necessary for large basis sets, in which case
         # self.spin_2 also becomes huge. Until a better representation of self.spin_2
@@ -551,17 +557,9 @@ class BasisSet:
                 self.sigma_z,
             ) = self.setup_pauli_matrices(self.a, self.b, self.np)
 
-            self.spin_x = 0.5 * self.np.kron(self.s, self.sigma_x)
-            self.spin_y = 0.5 * self.np.kron(self.s, self.sigma_y)
-            self.spin_z = 0.5 * self.np.kron(self.s, self.sigma_z)
-
-            self.spin_2 = self.setup_spin_squared_operator(
-                self.s, self.sigma_x, self.sigma_y, self.sigma_z, self.np
-            )
-
-            self.h = self.add_spin_one_body(self.h, np=self.np)
-            self.s = self.add_spin_one_body(self.s, np=self.np)
-            self.u = self.add_spin_two_body(self.u, np=self.np)
+            self.spin_x = 0.5 * self.np.kron(overlap, self.sigma_x)
+            self.spin_y = 0.5 * self.np.kron(overlap, self.sigma_y)
+            self.spin_z = 0.5 * self.np.kron(overlap, self.sigma_z)
 
             self.spin_2, self.spin_2_tb = self.setup_spin_squared_operator(
                 self.spin_x, self.spin_y, self.spin_z, self.s, self.np
