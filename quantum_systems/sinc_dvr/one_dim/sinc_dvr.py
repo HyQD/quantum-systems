@@ -4,12 +4,9 @@ import scipy.sparse as sps
 import scipy.sparse.linalg as spsl
 import scipy.special as spec
 
-from ... import BasisSet
-from .sincdvr_helper import (
-    add_spin_two_body,
-    anti_symmetrize_u,
-    transform_two_body_elements,
-)
+import warnings
+
+from quantum_systems import BasisSet
 
 from quantum_systems.quantum_dots.one_dim.one_dim_qd import _shielded_coulomb
 from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
@@ -29,7 +26,7 @@ class ODSincDVR(BasisSet):
 
     Parameters
     ----------
-    l_dvr : int
+    l : int
         Number of sinc-dvr functions
     grid_length : int or float
         Space over which to model wavefunction
@@ -51,28 +48,31 @@ class ODSincDVR(BasisSet):
 
     def __init__(
         self,
-        l_dvr,
+        l,
         grid_length,
         a=0.25,
         alpha=1.0,
         beta=0,
         potential=None,
-        sparse_u=True,
+        u_repr="2d",
         **kwargs,
     ):
+        # for backwards compatibility:
+        # u_repr = "sparse" if kwargs.pop("sparse_u", False) else u_repr
 
-        super().__init__(l_dvr, dim=1, **kwargs)
+        if u_repr not in ("2d", "4d"):
+            raise ValueError("Invalid u_repr value: '{}'".format(u_repr))
 
-        self._sparse_u = sparse_u
+        super().__init__(l, dim=1, **kwargs)
 
         self.alpha = alpha
         self.a = a
         self.beta = beta
 
-        self.l_dvr = l_dvr
         self.grid_length = grid_length
 
-        self.grid = np.linspace(-self.grid_length, self.grid_length, self.l_dvr)
+        self.grid = np.linspace(-self.grid_length, self.grid_length, self.l)
+        self.num_grid_points = self.l
 
         if potential is None:
             omega = (
@@ -82,15 +82,27 @@ class ODSincDVR(BasisSet):
 
         self.potential = potential
 
-        self.setup_basis()
+        self.setup_basis(u_repr)
 
-    def setup_basis(self):
+    @property
+    def sparse_repr(self):
+        return self.u_repr == "2d"
+
+    @property
+    def u_repr(self):
+        if np.ndim(self.u) == 2:
+            return "2d"
+        if np.ndim(self.u) == 4:
+            return "4d"
+        return "unknown"
+
+    def setup_basis(self, u_repr):
         self.dx = self.grid[1] - self.grid[0]
 
-        self.h = np.zeros((self.l_dvr, self.l_dvr))
+        self.h = np.zeros((self.l, self.l), dtype=np.complex128)
 
         # create multi_dim index for speedy calculations
-        ind = np.arange(self.l_dvr)
+        ind = np.arange(self.l)
         diff_grid = ind[:, None] - ind
 
         # mask diagonal to edit offdiagonal elements
@@ -106,9 +118,30 @@ class ODSincDVR(BasisSet):
         self.s = self.construct_s()
         self.spf = self.construct_sinc_grid()
 
-        self.u = self.construct_coulomb_elements()
+        self.u = self.construct_coulomb_elements(u_repr)
 
         self.construct_dipole_moment()
+        self.cast_to_complex()
+
+    def set_u_repr(self, new_repr):
+        """Switches representation of coloumb matrix elements between 2d and 4d"""
+        coords0 = np.arange(self.l ** 2) % self.l
+        coords1 = np.arange(self.l ** 2) // self.l
+
+        if new_repr == self.u_repr:
+            print("u repr is already {}, doing nothing".format(new_repr))
+        elif new_repr == "4d":
+            new_u = np.zeros(
+                (self.l, self.l, self.l, self.l), dtype=self.u.dtype
+            )
+            new_u[coords0, coords1, coords0, coords1] = self.u[coords0, coords1]
+        elif new_repr == "2d":
+            new_u = np.zeros((self.l, self.l), dtype=self.u.dtype)
+            new_u[coords0, coords1] = self.u[coords0, coords1, coords0, coords1]
+        else:
+            raise ValueError(
+                "'{}' is not a valid representation".format(new_repr)
+            )
 
     def construct_sinc_grid(self):
         x = self.grid
@@ -118,50 +151,113 @@ class ODSincDVR(BasisSet):
         self.dipole_moment = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
         self.dipole_moment[0] = np.diag(self.grid + self.beta * self.grid ** 2)
 
-    def construct_coulomb_elements(self):
+    def construct_coulomb_elements(self, u_repr="4d"):
         """Computes Sinc-DVR matrix elements of onebody operator h and two-body
         operator u."""
         x = self.grid
 
-        if self._sparse_u:
-            self.u = np.zeros((self.l_dvr, self.l_dvr))
+        coords = []
+        data = []
+        for p in range(self.l):
+            for q in range(self.l):
+                data.append(_shielded_coulomb(x[p], x[q], self.alpha, self.a))
+                coords.append((p, q))
+        coords = np.array(coords).T
+        data = np.array(data)
+
+        if u_repr == "2d":
+            self.u = np.zeros((self.l, self.l))
+            self.u[coords[0], coords[1]] = data
         else:
-            self.u = np.zeros((self.l_dvr, self.l_dvr, self.l_dvr, self.l_dvr))
-
-        for p in range(self.l_dvr):
-            for q in range(self.l_dvr):
-                if self._sparse_u:
-                    self.u[p, q] = _shielded_coulomb(
-                        x[p], x[q], self.alpha, self.a
-                    )
-                else:
-                    self.u[p, q, p, q] = _shielded_coulomb(
-                        x[p], x[q], self.alpha, self.a
-                    )
-
+            self.u = np.zeros((self.l, self.l, self.l, self.l))
+            self.u[coords[0], coords[1], coords[0], coords[1]] = data
         return self.u
 
     def construct_s(self):
-        return np.eye(self.l_dvr)
+        return np.eye(self.l)
 
-    def add_spin_two_body(self, _u, np):
-        if self._sparse_u:
-            return add_spin_two_body(_u, np)
-        else:
-            return super().add_spin_two_body(_u, np)
+    def change_to_general_orbital_basis(self, anti_symmetrize=True):
+        if anti_symmetrize and self.u_repr == "2d":
+            if self.l > 100:
+                warnings.warn(
+                    "Warning, l large. Change to gos with anti_symmetrize=True forces 4d u."
+                )
 
-    def anti_symmetrize_u(self, _u):
-        if self._sparse_u:
-            return anti_symmetrize_u(_u)
-        else:
-            return super().anti_symmetrize_u(_u)
+            self.set_u_repr("4d")
+        return super().change_to_general_orbital_basis(
+            anti_symmetrize=anti_symmetrize
+        )
 
-    def transform_two_body_elements(self, u, C, np, C_tilde=None):
-        if self._sparse_u:
-            return transform_two_body_elements(u, C, np, C_tilde)
+    def change_module(self, np):
+        if self.sparse_repr:
+
+            self.np = np
+            warnings.warn(
+                "change_module not implemented for sparse u, doing nothing"
+            )
         else:
-            return super().transform_two_body_elements(u, C, np, C_tilde)
+            return super().change_module(np)
+
+    @staticmethod
+    def add_spin_two_body(u, np):
+        """Class method overwriting the static method of BasisSet."""
+        if np.ndim(u) == 2:
+            # spin symmetry is equal to dvr symmetry, meaning that the total matrix of
+            # spatial and spin elements is doubled with every element kept
+            return np.kron(u, np.ones((2, 2)))
+        else:
+            return super(ODSincDVR, ODSincDVR).add_spin_two_body(u, np)
+
+    @staticmethod
+    def anti_symmetrize_u(_u):
+        if len(np.shape(_u)) == 2:
+            return _u  # _u.transpose((0, 1))[:,::-1]
+        else:
+            return super(ODSincDVR, ODSincDVR).anti_symmetrize_u(_u)
+
+    def transform_two_body_elements(
+        self, u, C, np, anti_symmetrize=False, C_tilde=None
+    ):
+        """Class method overwriting the static method of BasisSet. Returns a 4d
+        u_prime in numpy format, and allows for direct antisymmetrization of transformed
+        elements, to compensate for lack of antisymmetrization in 2d representation of u."""
+        if self.u_repr == "2d":
+            if C_tilde is None:
+                C_tilde = C.conj().T
+            # get the 2d matrix of nonzero values
+            if self.u_repr == "2d":
+                _u = u
+            else:
+                _u = np.zeros(u.shape[:2])
+                _u[u.coords[0], u.coords[1]] = u.data
+            u_prime = np.einsum(
+                "bs,ar,qb,pa,ab->pqrs",
+                C,
+                C,
+                C_tilde,
+                C_tilde,
+                _u,
+                optimize=True,
+            )
+            if anti_symmetrize:
+                u_prime -= np.einsum(
+                    "br,as,qb,pa,ab->pqrs",
+                    C,
+                    C,
+                    C_tilde,
+                    C_tilde,
+                    _u,
+                    optimize=True,
+                )
+            return u_prime
+        else:
+            assert (
+                not anti_symmetrize
+            ), "antisymmetrize only valid for sparse storage of u"
+            # call static method of superclass
+            return super(ODSincDVR, ODSincDVR).transform_two_body_elements(
+                u, C, np, C_tilde
+            )
 
     def change_basis(self, *args, **kwargs):
         super().change_basis(*args, **kwargs)
-        self._sparse_u = False
