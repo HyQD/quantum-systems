@@ -69,6 +69,10 @@ class GeneralOrbitalSystem(QuantumSystem):
     def spin_2(self):
         return self._basis_set.spin_2
 
+    @property
+    def spin_2_tb(self):
+        return self._basis_set.spin_2_tb
+
     def compute_reference_energy(self):
         r"""Function computing the reference energy in a general spin-orbital
         system.  This is given by
