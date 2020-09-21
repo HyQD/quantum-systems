@@ -484,7 +484,10 @@ class BasisSet:
         """
         if not self._anti_symmetrized_u:
             self.u = self.anti_symmetrize_u(self.u)
-            self.spin_2_tb = self.anti_symmetrize_u(self.spin_2_tb)
+
+            if self.spin_2_tb is not None:
+                self.spin_2_tb = self.anti_symmetrize_u(self.spin_2_tb)
+
             self._anti_symmetrized_u = True
 
     def change_to_general_orbital_basis(
@@ -529,31 +532,40 @@ class BasisSet:
 
         self.l = 2 * self.l
 
-        self.a = self.np.array(a).astype(self.np.complex128).reshape(-1, 1)
-        self.b = self.np.array(b).astype(self.np.complex128).reshape(-1, 1)
+        # temporary change to allow 2d representations of two-body operators, such as
+        # for dvr. A 2d representation is necessary for large basis sets, in which case
+        # self.spin_2 also becomes huge. Until a better representation of self.spin_2
+        # can be found, we've removed the spin functionality.
+        if getattr(self, "u_repr", "4d") != "2d":
+            self.a = self.np.array(a).astype(self.np.complex128).reshape(-1, 1)
+            self.b = self.np.array(b).astype(self.np.complex128).reshape(-1, 1)
 
-        # Check that spin basis elements are orthonormal
-        assert abs(self.np.dot(self.a.conj().T, self.a) - 1) < 1e-12
-        assert abs(self.np.dot(self.b.conj().T, self.b) - 1) < 1e-12
-        assert abs(self.np.dot(self.a.conj().T, self.b)) < 1e-12
+            # Check that spin basis elements are orthonormal
+            assert abs(self.np.dot(self.a.conj().T, self.a) - 1) < 1e-12
+            assert abs(self.np.dot(self.b.conj().T, self.b) - 1) < 1e-12
+            assert abs(self.np.dot(self.a.conj().T, self.b)) < 1e-12
 
-        (
-            self.sigma_x,
-            self.sigma_y,
-            self.sigma_z,
-        ) = self.setup_pauli_matrices(self.a, self.b, self.np)
+            (
+                self.sigma_x,
+                self.sigma_y,
+                self.sigma_z,
+            ) = self.setup_pauli_matrices(self.a, self.b, self.np)
 
-        self.spin_x = 0.5 * self.np.kron(self.s, self.sigma_x)
-        self.spin_y = 0.5 * self.np.kron(self.s, self.sigma_y)
-        self.spin_z = 0.5 * self.np.kron(self.s, self.sigma_z)
+            self.spin_x = 0.5 * self.np.kron(self.s, self.sigma_x)
+            self.spin_y = 0.5 * self.np.kron(self.s, self.sigma_y)
+            self.spin_z = 0.5 * self.np.kron(self.s, self.sigma_z)
 
-        self.h = self.add_spin_one_body(self.h, np=self.np)
-        self.s = self.add_spin_one_body(self.s, np=self.np)
-        self.u = self.add_spin_two_body(self.u, np=self.np)
+            self.spin_2 = self.setup_spin_squared_operator(
+                self.s, self.sigma_x, self.sigma_y, self.sigma_z, self.np
+            )
 
-        self.spin_2, self.spin_2_tb = self.setup_spin_squared_operator(
-            self.spin_x, self.spin_y, self.spin_z, self.s, self.np
-        )
+            self.h = self.add_spin_one_body(self.h, np=self.np)
+            self.s = self.add_spin_one_body(self.s, np=self.np)
+            self.u = self.add_spin_two_body(self.u, np=self.np)
+
+            self.spin_2, self.spin_2_tb = self.setup_spin_squared_operator(
+                self.spin_x, self.spin_y, self.spin_z, self.s, self.np
+            )
 
         if anti_symmetrize:
             self.anti_symmetrize_two_body_elements()
