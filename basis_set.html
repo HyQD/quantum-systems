@@ -370,26 +370,39 @@ two basis vectors are assumed to be orthonormal.</p></li>
 
 <dl class="py method">
 <dt id="quantum_systems.BasisSet.setup_spin_squared_operator">
-<em class="property">static </em><code class="sig-name descname">setup_spin_squared_operator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">overlap</span></em>, <em class="sig-param"><span class="n">sigma_x</span></em>, <em class="sig-param"><span class="n">sigma_y</span></em>, <em class="sig-param"><span class="n">sigma_z</span></em>, <em class="sig-param"><span class="n">np</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.setup_spin_squared_operator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Static method computing the matrix elements of the two-body spin
-squared operator, <span class="math notranslate nohighlight">\(\hat{S}^2\)</span>. The spin-basis is chosen by the
-Pauli matrices.</p>
+<em class="property">static </em><code class="sig-name descname">setup_spin_squared_operator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spin_x</span></em>, <em class="sig-param"><span class="n">spin_y</span></em>, <em class="sig-param"><span class="n">spin_z</span></em>, <em class="sig-param"><span class="n">overlap</span></em>, <em class="sig-param"><span class="n">np</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.setup_spin_squared_operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method computing the matrix elements of the one- and
+two-body spin squared operator, <span class="math notranslate nohighlight">\(\hat{S}^2\)</span>. The operator is
+computed by</p>
+<div class="math notranslate nohighlight">
+\[\hat{S}^2 = \hat{S}_x^2 + \hat{S}_y^2 + \hat{S}_z^2,\]</div>
+<p>where each squared direction <span class="math notranslate nohighlight">\(\hat{S}_i^2\)</span> can be written</p>
+<div class="math notranslate nohighlight">
+\[\hat{S}_i^2
+= (S_i)^{p}_{r} (S_i)^{r}_{q}
+\hat{c}^{\dagger}_{p} \hat{c}_{q}
++ (S_i)^{p}_{r} (S_i)^{q}_{s}
+\hat{c}^{\dagger}_{p} \hat{c}^{\dagger}_{q}
+\hat{c}_{s} \hat{c}_{r},\]</div>
+<p>in the second quantization formulation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>overlap</strong> (<em>np.ndarray</em>) – The overlap matrix elements between the spatial orbitals.</p></li>
-<li><p><strong>sigma_x</strong> (<em>np.ndarray</em>) – Pauli spin-matrix in <span class="math notranslate nohighlight">\(x\)</span>-direction.</p></li>
-<li><p><strong>sigma_y</strong> (<em>np.ndarray</em>) – Pauli spin-matrix in <span class="math notranslate nohighlight">\(y\)</span>-direction.</p></li>
-<li><p><strong>sigma_z</strong> (<em>np.ndarray</em>) – Pauli spin-matrix in <span class="math notranslate nohighlight">\(z\)</span>-direction.</p></li>
+<li><p><strong>spin_x</strong> (<em>np.ndarray</em>) – Spin-matrix in <span class="math notranslate nohighlight">\(x\)</span>-direction including orbital overlap.</p></li>
+<li><p><strong>spin_y</strong> (<em>np.ndarray</em>) – Spin-matrix in <span class="math notranslate nohighlight">\(y\)</span>-direction including orbital overlap.</p></li>
+<li><p><strong>spin_z</strong> (<em>np.ndarray</em>) – Spin-matrix in <span class="math notranslate nohighlight">\(z\)</span>-direction including orbital overlap.</p></li>
+<li><p><strong>overlap</strong> (<em>np.ndarray</em>) – The overlap matrix elements between the spin-orbitals.</p></li>
 <li><p><strong>np</strong> (<em>module</em>) – An appropriate array and linalg module.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The spin-squared operator as an array on the form <code class="docutils literal notranslate"><span class="pre">(l,</span> <span class="pre">l,</span> <span class="pre">l,</span> <span class="pre">l)</span></code>,
-where <code class="docutils literal notranslate"><span class="pre">l</span></code> is the number of spin-orbitals.</p>
+<dd class="field-even"><p>The spin-squared operator as two arrays on the form <code class="docutils literal notranslate"><span class="pre">(l,</span> <span class="pre">l)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">(l,</span> <span class="pre">l,</span> <span class="pre">l,</span> <span class="pre">l)</span></code>, where <code class="docutils literal notranslate"><span class="pre">l</span></code> is the number of spin-orbitals. The
+former corresponds to the one-body part of the spin-squared
+operator whereas the latter is the two-body part.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>(np.ndarray, np.ndarray)</p>
 </dd>
 </dl>
 </dd></dl>
