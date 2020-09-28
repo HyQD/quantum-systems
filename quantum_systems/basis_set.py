@@ -618,6 +618,9 @@ class BasisSet:
             The three Pauli matrices in the order :math:`\sigma_x, \sigma_y,
             \sigma_z`.
 
+        Example
+        -------
+
         >>> import numpy as np
         >>> a = np.array([1, 0]).reshape(-1, 1)
         >>> b = np.array([0, 1]).reshape(-1, 1)

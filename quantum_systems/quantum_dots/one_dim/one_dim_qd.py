@@ -70,6 +70,9 @@ class ODHO(BasisSet):
     """Create matrix elements and grid representation associated with the harmonic
     oscillator basis.
 
+    Example
+    -------
+
     >>> odho = ODHO(20, 11, 201, omega=1)
     >>> odho.l == 20
     True
@@ -198,6 +201,9 @@ class ODQD(BasisSet):
         is also possible to use double well potentials.
     construct_dipole_moment()
         Constructs dipole moment. This method is called by setup_basis().
+
+    Example
+    -------
 
     >>> odqd = ODQD(20, 11, 201, potential=ODQD.HOPotential(omega=1))
     >>> odqd.l == 20
