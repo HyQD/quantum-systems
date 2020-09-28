@@ -224,31 +224,14 @@ is also possible to use double well potentials.</p>
 <dd><p>Constructs dipole moment. This method is called by setup_basis().</p>
 </dd></dl>
 
-<dl class="py method">
-<dt>
-<code class="sig-name descname">&gt;&gt;&gt; odqd = ODQD(20, 11, 201, potential=ODQD.HOPotential(omega=1))</code></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt>
-<code class="sig-name descname">&gt;&gt;&gt; odqd.l == 20</code></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="quantum_systems.ODQD.True">
-<code class="sig-name descname">True</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.True" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt>
-<code class="sig-name descname">&gt;&gt;&gt; abs(0.5 - odqd.h[0, 0]) # doctest.ELLIPSIS</code></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt>
-<code class="sig-name descname">0.0003...</code></dt>
-<dd></dd></dl>
-
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">odqd</span> <span class="o">=</span> <span class="n">ODQD</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">201</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">ODQD</span><span class="o">.</span><span class="n">HOPotential</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">odqd</span><span class="o">.</span><span class="n">l</span> <span class="o">==</span> <span class="mi">20</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">-</span> <span class="n">odqd</span><span class="o">.</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="c1"># doctest.ELLIPSIS</span>
+<span class="go">0.0003...</span>
+</pre></div>
+</div>
 <dl class="py class">
 <dt id="quantum_systems.ODQD.AsymmetricDWPotential">
 <em class="property">class </em><code class="sig-name descname">AsymmetricDWPotential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">b</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">c</span><span class="o">=</span><span class="default_value">- 2.5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.ODQD.AsymmetricDWPotential" title="Permalink to this definition">¶</a></dt>

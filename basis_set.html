@@ -349,23 +349,29 @@ two basis vectors are assumed to be orthonormal.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><em>tuple</em> – The three Pauli matrices in the order <span class="math notranslate nohighlight">\(\sigma_x, \sigma_y,
-\sigma_z\)</span>.</p></li>
-<li><p><em>&gt;&gt;&gt; import numpy as np</em></p></li>
-<li><p><em>&gt;&gt;&gt; a = np.array([1, 0]).reshape(-1, 1)</em></p></li>
-<li><p><em>&gt;&gt;&gt; b = np.array([0, 1]).reshape(-1, 1)</em></p></li>
-<li><p><em>&gt;&gt;&gt; sigma_x, sigma_y, sigma_z = BasisSet.setup_pauli_matrices(a, b, np)</em></p></li>
-<li><p><em>&gt;&gt;&gt; print(sigma_x)</em></p></li>
-<li><p><em>[[0.+0.j 1.+0.j]</em> – [1.+0.j 0.+0.j]]</p></li>
-<li><p><em>&gt;&gt;&gt; print(sigma_y)</em></p></li>
-<li><p><em>[[0.+0.j 0.-1.j]</em> – [0.+1.j 0.+0.j]]</p></li>
-<li><p><em>&gt;&gt;&gt; print(sigma_z)</em></p></li>
-<li><p><em>[[ 1.+0.j  0.+0.j]</em> – [ 0.+0.j -1.+0.j]]</p></li>
-</ul>
-</p>
+<dd class="field-even"><p>The three Pauli matrices in the order <span class="math notranslate nohighlight">\(\sigma_x, \sigma_y,
+\sigma_z\)</span>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sigma_x</span><span class="p">,</span> <span class="n">sigma_y</span><span class="p">,</span> <span class="n">sigma_z</span> <span class="o">=</span> <span class="n">BasisSet</span><span class="o">.</span><span class="n">setup_pauli_matrices</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">np</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sigma_x</span><span class="p">)</span>
+<span class="go">[[0.+0.j 1.+0.j]</span>
+<span class="go"> [1.+0.j 0.+0.j]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sigma_y</span><span class="p">)</span>
+<span class="go">[[0.+0.j 0.-1.j]</span>
+<span class="go"> [0.+1.j 0.+0.j]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sigma_z</span><span class="p">)</span>
+<span class="go">[[ 1.+0.j  0.+0.j]</span>
+<span class="go"> [ 0.+0.j -1.+0.j]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
