@@ -1,7 +1,10 @@
 import warnings
 import copy
 
-from quantum_systems.system_helper import compute_particle_density
+from quantum_systems.system_helper import (
+    compute_particle_density,
+    compute_two_body_particle_density,
+)
 
 
 class BasisSet:
@@ -470,6 +473,23 @@ class BasisSet:
             bra_spf = self.transform_bra_spf(bra_spf, C_tilde, self.np)
 
         return compute_particle_density(rho_qp, ket_spf, bra_spf, self.np)
+
+    def compute_two_body_particle_density(self, rho_rspq, C=None, C_tilde=None):
+        assert (
+            self._spf is not None
+        ), "Set up single-particle functions prior to calling this function"
+
+        ket_spf = self.spf
+        bra_spf = self.bra_spf
+
+        if C is not None:
+            ket_spf = self.transform_spf(ket_spf, C, self.np)
+            C_tilde = C_tilde if C_tilde is not None else C.conj().T
+            bra_spf = self.transform_bra_spf(bra_spf, C_tilde, self.np)
+
+        return compute_two_body_particle_density(
+            rho_rspq, ket_spf, bra_spf, self.np
+        )
 
     def anti_symmetrize_two_body_elements(self):
         r"""Function making the two-body matrix elements anti-symmetric. This

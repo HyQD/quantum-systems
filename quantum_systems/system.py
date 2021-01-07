@@ -80,6 +80,11 @@ class QuantumSystem(metaclass=abc.ABCMeta):
             rho_qp, C=C, C_tilde=C_tilde
         )
 
+    def compute_two_body_particle_density(self, rho_rspq, C=None, C_tilde=None):
+        return self._basis_set.compute_two_body_particle_density(
+            rho_rspq, C=C, C_tilde=C_tilde
+        )
+
     @property
     def grid(self):
         return self._basis_set.grid
