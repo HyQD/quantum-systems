@@ -17,6 +17,8 @@ def compute_particle_density(rho_qp, ket_spf, bra_spf, np):
 
     rho = np.zeros(ket_spf.shape[1:], dtype=ket_spf.dtype)
 
+    # Note: Is the ordering correct?
+    # I think maybe it should be phi_tilde_q rho[q, p] phi_p instead.
     for p in range(bra_spf.shape[0]):
         phi_tilde_p = bra_spf[p]
 
