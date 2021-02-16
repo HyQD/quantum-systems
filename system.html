@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Quantum System &mdash; Quantum Systems  documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -29,7 +32,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -52,7 +54,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Quantum Systems
+            <a href="index.html" class="icon icon-home"> Quantum Systems
           
 
           
@@ -129,6 +131,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -140,7 +144,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/system.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -161,7 +165,7 @@ construction of custom systems by passing in matrix elements. Alternatively,
 there are subclasses setting up specific systems.</p>
 <dl class="py class">
 <dt id="quantum_systems.QuantumSystem">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">QuantumSystem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">basis_set</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">quantum_systems.</span></code><code class="sig-name descname"><span class="pre">QuantumSystem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract base class defining general methods and data on a quantum
 system. The class is used to further specify a system beyond a general
 <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> by specifying the number of particles in the system.</p>
@@ -176,13 +180,13 @@ states.</p></li>
 </dl>
 <dl class="py method">
 <dt id="quantum_systems.QuantumSystem.bra_spf">
-<em class="property">property </em><code class="sig-name descname">bra_spf</code><a class="headerlink" href="#quantum_systems.QuantumSystem.bra_spf" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">bra_spf</span></code><a class="headerlink" href="#quantum_systems.QuantumSystem.bra_spf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the conjugate single particle functions.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="quantum_systems.QuantumSystem.change_module">
-<code class="sig-name descname">change_module</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">np</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.change_module" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">change_module</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">np</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.change_module" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function converting between modules.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -193,7 +197,7 @@ states.</p></li>
 
 <dl class="py method">
 <dt id="quantum_systems.QuantumSystem.copy_system">
-<code class="sig-name descname">copy_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.copy_system" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">copy_system</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.copy_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function creating a deep copy of the current system. This function
 is a hack as we have to temporarily remove the stored module before
 using Python’s <code class="docutils literal notranslate"><span class="pre">copy.deepcopy</span></code>-function.</p>
@@ -209,25 +213,43 @@ using Python’s <code class="docutils literal notranslate"><span class="pre">co
 
 <dl class="py method">
 <dt id="quantum_systems.QuantumSystem.dipole_moment">
-<em class="property">property </em><code class="sig-name descname">dipole_moment</code><a class="headerlink" href="#quantum_systems.QuantumSystem.dipole_moment" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">dipole_moment</span></code><a class="headerlink" href="#quantum_systems.QuantumSystem.dipole_moment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the dipole moment elements.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="quantum_systems.QuantumSystem.h">
-<em class="property">property </em><code class="sig-name descname">h</code><a class="headerlink" href="#quantum_systems.QuantumSystem.h" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">h</span></code><a class="headerlink" href="#quantum_systems.QuantumSystem.h" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the one-body Hamiltonian.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="quantum_systems.QuantumSystem.nuclear_repulsion_energy">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">nuclear_repulsion_energy</span></code><a class="headerlink" href="#quantum_systems.QuantumSystem.nuclear_repulsion_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter returning the nuclear repulsion energy.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="quantum_systems.QuantumSystem.particle_charge">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">particle_charge</span></code><a class="headerlink" href="#quantum_systems.QuantumSystem.particle_charge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter returning the electronic charge of the particles.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="quantum_systems.QuantumSystem.position">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">position</span></code><a class="headerlink" href="#quantum_systems.QuantumSystem.position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter retuning the position matrix.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="quantum_systems.QuantumSystem.s">
-<em class="property">property </em><code class="sig-name descname">s</code><a class="headerlink" href="#quantum_systems.QuantumSystem.s" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">s</span></code><a class="headerlink" href="#quantum_systems.QuantumSystem.s" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the overlap matrix.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="quantum_systems.QuantumSystem.set_system_size">
-<code class="sig-name descname">set_system_size</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">l</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.set_system_size" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_system_size</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.set_system_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function setting the system size. Note that <code class="docutils literal notranslate"><span class="pre">l</span></code> should
 correspond to the length of each axis of the matrix elements.</p>
 <dl class="field-list simple">
@@ -242,13 +264,13 @@ correspond to the length of each axis of the matrix elements.</p>
 
 <dl class="py method">
 <dt id="quantum_systems.QuantumSystem.spf">
-<em class="property">property </em><code class="sig-name descname">spf</code><a class="headerlink" href="#quantum_systems.QuantumSystem.spf" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">spf</span></code><a class="headerlink" href="#quantum_systems.QuantumSystem.spf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the single particle functions.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="quantum_systems.QuantumSystem.u">
-<em class="property">property </em><code class="sig-name descname">u</code><a class="headerlink" href="#quantum_systems.QuantumSystem.u" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">u</span></code><a class="headerlink" href="#quantum_systems.QuantumSystem.u" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the two-body Hamiltonian.</p>
 </dd></dl>
 
@@ -256,7 +278,7 @@ correspond to the length of each axis of the matrix elements.</p>
 
 <dl class="py class">
 <dt id="quantum_systems.SpatialOrbitalSystem">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">SpatialOrbitalSystem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">basis_set</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">quantum_systems.</span></code><code class="sig-name descname"><span class="pre">SpatialOrbitalSystem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_set</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quantum system containing orbital matrix elements, i.e., we only keep
 the spatial orbitals as they are degenerate in each spin direction. We have</p>
 <div class="math notranslate nohighlight">
@@ -278,7 +300,7 @@ below.</p></li>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#quantum_systems.QuantumSystem" title="quantum_systems.QuantumSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantumSystem</span></code></a></p>
+<p><a class="reference internal" href="#quantum_systems.QuantumSystem" title="quantum_systems.QuantumSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QuantumSystem</span></code></a></p>
 </div>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># Four particles</span>
@@ -292,7 +314,7 @@ below.</p></li>
 </div>
 <dl class="py method">
 <dt id="quantum_systems.SpatialOrbitalSystem.compute_reference_energy">
-<code class="sig-name descname">compute_reference_energy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.compute_reference_energy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">compute_reference_energy</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.compute_reference_energy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function computing the reference energy in an orbital system.
 This is given by</p>
 <div class="math notranslate nohighlight">
@@ -312,7 +334,7 @@ This is given by</p>
 
 <dl class="py method">
 <dt id="quantum_systems.SpatialOrbitalSystem.construct_fock_matrix">
-<code class="sig-name descname">construct_fock_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">f</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.construct_fock_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">construct_fock_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.construct_fock_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function setting up the restricted Fock matrix in a closed-shell
 orbital basis.</p>
 <p>In an orbital basis we compute:</p>
@@ -342,7 +364,7 @@ new matrix.</p></li>
 
 <dl class="py method">
 <dt id="quantum_systems.SpatialOrbitalSystem.construct_general_orbital_system">
-<code class="sig-name descname">construct_general_orbital_system</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">[1, 0]</span></em>, <em class="sig-param"><span class="n">b</span><span class="o">=</span><span class="default_value">[0, 1]</span></em>, <em class="sig-param"><span class="n">anti_symmetrize</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.construct_general_orbital_system" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">construct_general_orbital_system</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anti_symmetrize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.SpatialOrbitalSystem.construct_general_orbital_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function constructing a <code class="docutils literal notranslate"><span class="pre">GeneralOrbitalSystem</span></code> by
 duplicating every basis element of current system. That is,</p>
 <div class="math notranslate nohighlight">
@@ -372,7 +394,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="basis_set.html#quantum_systems.BasisSet.change_to_general_orbital_basis" title="quantum_systems.BasisSet.change_to_general_orbital_basis"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BasisSet.change_to_general_orbital_basis()</span></code></a></p>
+<p><a class="reference internal" href="basis_set.html#quantum_systems.BasisSet.change_to_general_orbital_basis" title="quantum_systems.BasisSet.change_to_general_orbital_basis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BasisSet.change_to_general_orbital_basis</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -380,7 +402,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
 
 <dl class="py class">
 <dt id="quantum_systems.GeneralOrbitalSystem">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">GeneralOrbitalSystem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">basis_set</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">[1, 0]</span></em>, <em class="sig-param"><span class="n">b</span><span class="o">=</span><span class="default_value">[0, 1]</span></em>, <em class="sig-param"><span class="n">anti_symmetrize</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">quantum_systems.</span></code><code class="sig-name descname"><span class="pre">GeneralOrbitalSystem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anti_symmetrize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quantum system containing matrix elements represented as general
 spin-orbitals, i.e.,</p>
 <div class="math notranslate nohighlight">
@@ -410,13 +432,13 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference internal" href="#quantum_systems.QuantumSystem" title="quantum_systems.QuantumSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantumSystem</span></code></a></dt><dd><p>Parent class with constructor and main interface functions.</p>
+<dt><a class="reference internal" href="#quantum_systems.QuantumSystem" title="quantum_systems.QuantumSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QuantumSystem</span></code></a></dt><dd><p>Parent class with constructor and main interface functions.</p>
 </dd>
 </dl>
 </div>
 <dl class="py method">
 <dt id="quantum_systems.GeneralOrbitalSystem.compute_reference_energy">
-<code class="sig-name descname">compute_reference_energy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem.compute_reference_energy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">compute_reference_energy</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem.compute_reference_energy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function computing the reference energy in a general spin-orbital
 system.  This is given by</p>
 <div class="math notranslate nohighlight">
@@ -436,7 +458,7 @@ system.  This is given by</p>
 
 <dl class="py method">
 <dt id="quantum_systems.GeneralOrbitalSystem.construct_fock_matrix">
-<code class="sig-name descname">construct_fock_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">f</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem.construct_fock_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">construct_fock_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.GeneralOrbitalSystem.construct_fock_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function setting up the Fock matrix, that is, the normal-ordered
 one-body elements, in a general spin-orbital basis. This function
 assumes that the two-body elements are anti-symmetrized.</p>
@@ -473,37 +495,29 @@ allocate a new matrix.</p></li>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="quantum_dots.html" class="btn btn-neutral float-right" title="Quantum Dots" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="basis_set.html" class="btn btn-neutral float-left" title="Basis set" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="quantum_dots.html" class="btn btn-neutral float-right" title="Quantum Dots" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="basis_set.html" class="btn btn-neutral float-left" title="Basis set" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2019, Schoyen, gregwinther
+        &#169; Copyright 2019, Schoyen, gregwinther.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Basis set &mdash; Quantum Systems  documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -29,7 +32,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -52,7 +54,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Quantum Systems
+            <a href="index.html" class="icon icon-home"> Quantum Systems
           
 
           
@@ -129,6 +131,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -140,7 +144,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/basis_set.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -159,7 +163,7 @@
 <p>A basis set is the collection of matrix elements and associated functions.</p>
 <dl class="py class">
 <dt id="quantum_systems.BasisSet">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_systems.</code><code class="sig-name descname">BasisSet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l</span></em>, <em class="sig-param"><span class="n">dim</span></em>, <em class="sig-param"><span class="n">np</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">includes_spin</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">anti_symmetrized_u</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">quantum_systems.</span></code><code class="sig-name descname"><span class="pre">BasisSet</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">np</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includes_spin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anti_symmetrized_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class serving as a container for matrix elements for various systems. The
 purpose of <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> after a set has been constructed is to be passed to
 a subclass of <code class="docutils literal notranslate"><span class="pre">QuantumSystem</span></code>. From there on the <code class="docutils literal notranslate"><span class="pre">QuantumSystem</span></code> takes
@@ -182,7 +186,7 @@ anti_symmetrized. By default we assume that this is not the case.</p></li>
 </dl>
 <dl class="py method">
 <dt id="quantum_systems.BasisSet.anti_symmetrize_two_body_elements">
-<code class="sig-name descname">anti_symmetrize_two_body_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.anti_symmetrize_two_body_elements" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">anti_symmetrize_two_body_elements</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.anti_symmetrize_two_body_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function making the two-body matrix elements anti-symmetric. This
 corresponds to</p>
 <div class="math notranslate nohighlight">
@@ -196,14 +200,14 @@ corresponds to</p>
 
 <dl class="py method">
 <dt id="quantum_systems.BasisSet.cast_to_complex">
-<code class="sig-name descname">cast_to_complex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.cast_to_complex" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">cast_to_complex</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.cast_to_complex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function converting all matrix elements to <code class="docutils literal notranslate"><span class="pre">np.complex128</span></code>, where
 <code class="docutils literal notranslate"><span class="pre">np</span></code> is the member array module.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="quantum_systems.BasisSet.change_basis">
-<code class="sig-name descname">change_basis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">C</span></em>, <em class="sig-param"><span class="n">C_tilde</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_basis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">change_basis</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_tilde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function using coefficient matrices to change basis of the matrix
 elements and the single-particle functions. This function also supports
 rectangular coefficient matrices meaning that the number of basis
@@ -239,7 +243,7 @@ and the dual states are the Hermitian adjoint of one another.</p>
 
 <dl class="py method">
 <dt id="quantum_systems.BasisSet.change_module">
-<code class="sig-name descname">change_module</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">np</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_module" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">change_module</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">np</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_module" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function converting all matrix elements to a new module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -250,7 +254,7 @@ and the dual states are the Hermitian adjoint of one another.</p>
 
 <dl class="py method">
 <dt id="quantum_systems.BasisSet.change_to_general_orbital_basis">
-<code class="sig-name descname">change_to_general_orbital_basis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">[1, 0]</span></em>, <em class="sig-param"><span class="n">b</span><span class="o">=</span><span class="default_value">[0, 1]</span></em>, <em class="sig-param"><span class="n">anti_symmetrize</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_to_general_orbital_basis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">change_to_general_orbital_basis</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anti_symmetrize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.change_to_general_orbital_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function converting a spatial orbital basis set to a general orbital
 basis. That is, the function duplicates every element by adding a
 spin-function to each spatial orbital. This leads to an
@@ -280,7 +284,7 @@ Hamiltonian. By default we perform an anti-symmetrization.</p></li>
 
 <dl class="py method">
 <dt id="quantum_systems.BasisSet.compute_particle_density">
-<code class="sig-name descname">compute_particle_density</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rho_qp</span></em>, <em class="sig-param"><span class="n">C</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">C_tilde</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.compute_particle_density" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">compute_particle_density</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_qp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_tilde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.compute_particle_density" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function computing the particle density for a given one-body
 density matrix. This function (optionally) changes the basis of the
 single-particle states for given coefficient matrices. The one-body
@@ -314,7 +318,7 @@ occurs.</p></li>
 
 <dl class="py method">
 <dt id="quantum_systems.BasisSet.copy_basis">
-<code class="sig-name descname">copy_basis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.copy_basis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">copy_basis</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.copy_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function creating a deep copy of the current basis. This function
 is a hack as we have to temporarily remove the stored module before
 using Python’s <code class="docutils literal notranslate"><span class="pre">copy.deepcopy</span></code>-function.</p>
@@ -330,7 +334,7 @@ using Python’s <code class="docutils literal notranslate"><span class="pre">co
 
 <dl class="py method">
 <dt id="quantum_systems.BasisSet.setup_pauli_matrices">
-<em class="property">static </em><code class="sig-name descname">setup_pauli_matrices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">np</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.setup_pauli_matrices" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">setup_pauli_matrices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">np</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.setup_pauli_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Static method computing matrix elements of the Pauli spin-matrices
 in a given orthonormal basis of spin functions <span class="math notranslate nohighlight">\(\{\alpha,
 \beta\}\)</span>.</p>
@@ -376,7 +380,7 @@ two basis vectors are assumed to be orthonormal.</p></li>
 
 <dl class="py method">
 <dt id="quantum_systems.BasisSet.setup_spin_squared_operator">
-<em class="property">static </em><code class="sig-name descname">setup_spin_squared_operator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spin_x</span></em>, <em class="sig-param"><span class="n">spin_y</span></em>, <em class="sig-param"><span class="n">spin_z</span></em>, <em class="sig-param"><span class="n">overlap</span></em>, <em class="sig-param"><span class="n">np</span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.setup_spin_squared_operator" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">setup_spin_squared_operator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spin_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">np</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.BasisSet.setup_spin_squared_operator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Static method computing the matrix elements of the one- and
 two-body spin squared operator, <span class="math notranslate nohighlight">\(\hat{S}^2\)</span>. The operator is
 computed by</p>
@@ -422,37 +426,29 @@ operator whereas the latter is the two-body part.</p>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="system.html" class="btn btn-neutral float-right" title="Quantum System" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="get_started.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="system.html" class="btn btn-neutral float-right" title="Quantum System" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="get_started.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2019, Schoyen, gregwinther
+        &#169; Copyright 2019, Schoyen, gregwinther.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
