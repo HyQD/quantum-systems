@@ -45,7 +45,7 @@ class BasisSet:
         self._h = None
         self._u = None
         self._s = None
-        self._dipole_moment = None
+        self._position = None
 
         self._sigma_x = None
         self._sigma_y = None
@@ -61,6 +61,8 @@ class BasisSet:
         self._bra_spf = None
 
         self._nuclear_repulsion_energy = 0
+        # We assume negative charge by default, i.e., electrons
+        self.particle_charge = -1
 
         self._includes_spin = includes_spin
         self._anti_symmetrized_u = anti_symmetrized_u
@@ -112,17 +114,21 @@ class BasisSet:
         self._s = s
 
     @property
-    def dipole_moment(self):
-        return self._dipole_moment
+    def position(self):
+        return self._position
 
-    @dipole_moment.setter
-    def dipole_moment(self, dipole_moment):
-        assert len(dipole_moment) == self.dim
+    @position.setter
+    def position(self, position):
+        assert len(position) == self.dim
 
         for i in range(self.dim):
-            assert all(self.check_axis_lengths(dipole_moment[i], self.l))
+            assert all(self.check_axis_lengths(position[i], self.l))
 
-        self._dipole_moment = dipole_moment
+        self._position = position
+
+    @property
+    def dipole_moment(self):
+        return self.particle_charge * self.position
 
     @property
     def spin_x(self):
@@ -265,7 +271,7 @@ class BasisSet:
             ("_u", self.u),
             ("_spf", self.spf),
             ("_bra_spf", self.bra_spf),
-            ("_dipole_moment", self.dipole_moment),
+            ("_position", self.position),
             ("_spin_x", self.spin_x),
             ("_spin_y", self.spin_y),
             ("_spin_z", self.spin_z),
@@ -286,7 +292,7 @@ class BasisSet:
             ("_u", self.u),
             ("_spf", self.spf),
             ("_bra_spf", self.bra_spf),
-            ("_dipole_moment", self.dipole_moment),
+            ("_position", self.position),
             ("_spin_x", self.spin_x),
             ("_spin_y", self.spin_y),
             ("_spin_z", self.spin_z),
@@ -359,17 +365,17 @@ class BasisSet:
                 self.spin_2_tb, C, np=self.np, C_tilde=C_tilde
             )
 
-    def _change_basis_dipole_moment(self, C, C_tilde):
-        dipole_moment = []
+    def _change_basis_position_elements(self, C, C_tilde):
+        position = []
 
-        for i in range(self.dipole_moment.shape[0]):
-            dipole_moment.append(
+        for i in range(self.position.shape[0]):
+            position.append(
                 self.transform_one_body_elements(
-                    self.dipole_moment[i], C, np=self.np, C_tilde=C_tilde
+                    self.position[i], C, np=self.np, C_tilde=C_tilde
                 )
             )
 
-        self.dipole_moment = self.np.asarray(dipole_moment)
+        self.position = self.np.asarray(position)
 
     def _change_basis_spf(self, C, C_tilde):
         self.bra_spf = self.transform_bra_spf(self.bra_spf, C_tilde, self.np)
@@ -420,8 +426,8 @@ class BasisSet:
         self._change_basis_one_body_elements(C, C_tilde)
         self._change_basis_two_body_elements(C, C_tilde)
 
-        if self.dipole_moment is not None:
-            self._change_basis_dipole_moment(C, C_tilde)
+        if self.position is not None:
+            self._change_basis_position_elements(C, C_tilde)
 
         if self.spf is not None:
             self._change_basis_spf(C, C_tilde)
@@ -568,13 +574,13 @@ class BasisSet:
         if anti_symmetrize:
             self.anti_symmetrize_two_body_elements()
 
-        if not self.dipole_moment is None:
-            dipole_moment = [
-                self.add_spin_one_body(self.dipole_moment[i], np=self.np)
-                for i in range(len(self.dipole_moment))
+        if not self.position is None:
+            position = [
+                self.add_spin_one_body(self.position[i], np=self.np)
+                for i in range(len(self.position))
             ]
 
-            self.dipole_moment = self.np.array(dipole_moment)
+            self.position = self.np.array(position)
 
         if not self.spf is None:
             self.spf = self.add_spin_spf(self.spf, self.np)

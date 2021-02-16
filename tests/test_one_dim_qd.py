@@ -118,7 +118,7 @@ def test_odho(get_odho):
     odho = get_odho
 
     dip = np.load(os.path.join("tests", "dat", "odho_dipole_moment.npy"))
-    np.testing.assert_allclose(dip, odho.dipole_moment, atol=1e-10)
+    np.testing.assert_allclose(dip, odho.position, atol=1e-10)
 
     h = np.load(os.path.join("tests", "dat", "odho_h.npy"))
     np.testing.assert_allclose(h, odho.h, atol=1e-10)
@@ -134,7 +134,7 @@ def test_oddw(get_oddw):
     oddw = get_oddw
 
     dip = np.load(os.path.join("tests", "dat", "oddw_dipole_moment.npy"))
-    np.testing.assert_allclose(dip, oddw.dipole_moment, atol=1e-10)
+    np.testing.assert_allclose(dip, oddw.position, atol=1e-10)
 
     h = np.load(os.path.join("tests", "dat", "oddw_h.npy"))
     np.testing.assert_allclose(h, oddw.h, atol=1e-10)
@@ -150,7 +150,7 @@ def test_odgauss(get_odgauss):
     odgauss = get_odgauss
 
     dip = np.load(os.path.join("tests", "dat", "odgauss_dipole_moment.npy"))
-    np.testing.assert_allclose(dip, odgauss.dipole_moment, atol=1e-10)
+    np.testing.assert_allclose(dip, odgauss.position, atol=1e-10)
 
     h = np.load(os.path.join("tests", "dat", "odgauss_h.npy"))
     np.testing.assert_allclose(h, odgauss.h, atol=1e-10)
@@ -166,7 +166,7 @@ def test_oddw_smooth(get_oddw_smooth):
     oddw_smooth = get_oddw_smooth
 
     dip = np.load(os.path.join("tests", "dat", "oddw_smooth_dipole_moment.npy"))
-    np.testing.assert_allclose(dip, oddw_smooth.dipole_moment, atol=1e-10)
+    np.testing.assert_allclose(dip, oddw_smooth.position, atol=1e-10)
 
     h = np.load(os.path.join("tests", "dat", "oddw_smooth_h.npy"))
     np.testing.assert_allclose(h, oddw_smooth.h, atol=1e-10)

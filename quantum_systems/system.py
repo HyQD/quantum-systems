@@ -100,23 +100,34 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         return self._basis_set.s
 
     @property
+    def position(self):
+        """Getter retuning the position matrix."""
+        return self._basis_set.position
+
+    @property
     def dipole_moment(self):
         """Getter returning the dipole moment elements."""
         return self._basis_set.dipole_moment
 
     @property
     def spf(self):
-        """Getter returning the single particle functions.  """
+        """Getter returning the single particle functions."""
         return self._basis_set.spf
 
     @property
     def bra_spf(self):
-        """Getter returning the conjugate single particle functions.  """
+        """Getter returning the conjugate single particle functions."""
         return self._basis_set.bra_spf
 
     @property
     def nuclear_repulsion_energy(self):
+        """Getter returning the nuclear repulsion energy."""
         return self._basis_set.nuclear_repulsion_energy
+
+    @property
+    def particle_charge(self):
+        """Getter returning the electronic charge of the particles."""
+        return self._basis_set.particle_charge
 
     def set_time_evolution_operator(self, time_evolution_operator):
         # TODO: Support list of time-evolution operators

@@ -76,9 +76,40 @@ class TimeEvolutionOperator(metaclass=abc.ABCMeta):
         return self._system.u
 
 
-class LaserField(TimeEvolutionOperator):
-    def __init__(self, laser_pulse, polarization_vector=None):
-        self._laser_pulse = laser_pulse
+class DipoleFieldInteraction(TimeEvolutionOperator):
+    r"""Semi-classical time-dependent interaction between particles and an
+    electric field in the dipole approximation. The contribution to the
+    Hamiltonian is on the form:
+
+    .. math:: \hat{h}_I(t) = -\hat{\mathbf{d}} \cdot \mathbf{E}(t),
+
+    where :math:`\hat{\mathbf{d}}` is the dipole moment operator, and
+    :math:`\mathbf{E}(t)` is the time-dependent electric field. Note that this
+    is a time-dependent one-body operator as the dipole moment is a one-body
+    operator. The electric field is given by
+
+    .. math:: \mathbf{E}(t) = \boldsymbol{\epsilon}(t)E(t),
+
+    where :math:`\boldsymbol{\epsilon}(t)` is the polarization of the electric
+    field, and :math:`E(t)` is the electric field strength. This function
+    includes potential envelope functions.
+
+    Parameters
+    ----------
+    electric_field_strength : callable, float
+        Function describing the electric field strength at a given specific time
+        ``current_time``. This function should accept a single parameter as the
+        current time. A constant electric field is supported as well.
+    polarization_vector : np.array
+        Vector specifying the polarization axis of the electric field. This can
+        also be provided as a time-dependent function returning a polarization
+        axis as a function of ``current_time``. Default is ``None`` which gives
+        a constant polarization along the first axis of the dipole moment
+        integrals.
+    """
+
+    def __init__(self, electric_field_strength, polarization_vector=None):
+        self._electric_field_strength = laser_pulse
         self._polarization = polarization_vector
 
     @property
@@ -88,9 +119,9 @@ class LaserField(TimeEvolutionOperator):
     def h_t(self, current_time):
         np = self._system.np
 
-        if not callable(self._laser_pulse):
-            tmp = self._laser_pulse
-            self._laser_pulse = lambda t: tmp
+        if not callable(self._electric_field_strength):
+            tmp = self._electric_field_strength
+            self._electric_field_strength = lambda t: tmp
 
         if self._polarization is None:
             # Set default polarization along x-axis
@@ -101,7 +132,9 @@ class LaserField(TimeEvolutionOperator):
             tmp = self._polarization
             self._polarization = lambda t: tmp
 
-        return self._system.h + self._laser_pulse(current_time) * np.tensordot(
+        return self._system.h - self._electric_field_strength(
+            current_time
+        ) * np.tensordot(
             self._polarization(current_time),
             self._system.dipole_moment,
             axes=(0, 0),
