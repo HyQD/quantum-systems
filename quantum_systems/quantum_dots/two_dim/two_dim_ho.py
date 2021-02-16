@@ -53,8 +53,8 @@ class TwoDimensionalHarmonicOscillator(BasisSet):
     setup_spf()
         Constructs single-particle functions. This method is called
         by setup_basis().
-    construct_dipole_moment()
-        Constructs dipole moment. This method is called by
+    construct_position_integrals()
+        Constructs position integrals. This method is called by
         setup_basis().
     """
 
@@ -89,7 +89,7 @@ class TwoDimensionalHarmonicOscillator(BasisSet):
         self._s = np.eye(self.l)
 
         self.setup_spf()
-        self.construct_dipole_moment()
+        self.construct_position_integrals()
 
         if self.np is not np:
             self.change_module(self.np)
@@ -110,10 +110,8 @@ class TwoDimensionalHarmonicOscillator(BasisSet):
     def get_indices_nm(self, p):
         return get_indices_nm(p)
 
-    def construct_dipole_moment(self):
-        self._dipole_moment = np.zeros(
-            (2, self.l, self.l), dtype=self._spf.dtype
-        )
+    def construct_position_integrals(self):
+        self._position = np.zeros((2, self.l, self.l), dtype=self._spf.dtype)
 
         for p in range(self.l):
             n_p, m_p = self.get_indices_nm(p)
@@ -136,9 +134,9 @@ class TwoDimensionalHarmonicOscillator(BasisSet):
                 I_theta_2 = theta_2_integral(m_p, m_q)
 
                 # x-direction
-                self._dipole_moment[0, p, q] = norm * I_r * I_theta_1
+                self._position[0, p, q] = norm * I_r * I_theta_1
                 # y-direction
-                self._dipole_moment[1, p, q] = norm * I_r * I_theta_2
+                self._position[1, p, q] = norm * I_r * I_theta_2
 
 
 class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
@@ -173,8 +171,8 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
 
     def setup_basis(self):
         """Function setting up the one- and two-body elements, the
-        single-particle functions, dipole moments and other quantities used by
-        second quantization methods.
+        single-particle functions, position integrals and other quantities used
+        by second quantization methods.
         """
 
         super().setup_basis()
@@ -192,17 +190,10 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
 
 
 class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
-    def __init__(self, *args, a=2, b=2, l_ho_factor=1, **kwargs):
+    def __init__(self, *args, a=2, b=2, **kwargs):
 
-        assert l_ho_factor >= 1, (
-            "Ensure number of harmonic oscillator functions are higher than"
-            + " the number of double-well basis functions"
-        )
-
-        l_ho = math.floor(l * l_ho_factor)
         super().__init__(*args, **kwargs)
 
-        self.l_dw = l
         self.a = a
         self.b = b
 
@@ -211,7 +202,7 @@ class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
 
         super().setup_basis()
 
-        h_dw = get_smooth_double_well_one_body_elements(
+        self._h = get_smooth_double_well_one_body_elements(
             self.l,
             self.omega,
             self.mass,
@@ -219,20 +210,6 @@ class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
             b=self.b,
             dtype=np.complex128,
         )
-
-        self.epsilon, C = np.linalg.eigh(h_dw)
-        self._h = np.diagflat(self.epsilon[: self.l_dw])
-        self._s = np.eye(self.l_dw)
-        C_dw = C[:, : self.l_dw]
-
-        self.change_basis_two_body_elements(C_dw)
-        self.change_basis_dipole_moment(C_dw)
-        self.change_basis_spf(C_dw)
-
-        self.set_system_size(self.n, self.l_dw)
-
-        self.cast_to_complex()
-        self.change_module(self.np)
 
 
 class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
@@ -268,8 +245,8 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
     -------
     setup_basis()
         Must be called to set up quantum system.
-    construct_dipole_moment()
-        Constructs dipole moment. This method is called by
+    construct_position_integrals()
+        Constructs position integrals. This method is called by
         setup_basis().
     """
 
@@ -295,7 +272,7 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
         )
 
         self.setup_spf()  # This is maybe not wrong.
-        self.construct_dipole_moment()
+        self.construct_position_integrals()
         self.cast_to_complex()
         self.change_module(self.np)
 

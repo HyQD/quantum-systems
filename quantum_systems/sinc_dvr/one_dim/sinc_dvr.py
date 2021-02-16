@@ -120,7 +120,7 @@ class ODSincDVR(BasisSet):
 
         self.u = self.construct_coulomb_elements(u_repr)
 
-        self.construct_dipole_moment()
+        self.construct_position_integrals()
         self.cast_to_complex()
 
     def set_u_repr(self, new_repr):
@@ -147,9 +147,9 @@ class ODSincDVR(BasisSet):
         x = self.grid
         return 1 / np.sqrt(self.dx) * np.sinc((x - x[:, None]) / self.dx)
 
-    def construct_dipole_moment(self):
-        self.dipole_moment = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
-        self.dipole_moment[0] = np.diag(self.grid + self.beta * self.grid ** 2)
+    def construct_position_integrals(self):
+        self.position = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
+        self.position[0] = np.diag(self.grid + self.beta * self.grid ** 2)
 
     def construct_coulomb_elements(self, u_repr="4d"):
         """Computes Sinc-DVR matrix elements of onebody operator h and two-body

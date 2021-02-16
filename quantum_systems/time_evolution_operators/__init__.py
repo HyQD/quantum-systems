@@ -1,6 +1,6 @@
 from .operator import (
     TimeEvolutionOperator,
-    LaserField,
+    DipoleFieldInteraction,
     AdiabaticSwitching,
     CustomOneBodyOperator,
 )
