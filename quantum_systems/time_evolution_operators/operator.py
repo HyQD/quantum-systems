@@ -109,7 +109,7 @@ class DipoleFieldInteraction(TimeEvolutionOperator):
     """
 
     def __init__(self, electric_field_strength, polarization_vector=None):
-        self._electric_field_strength = laser_pulse
+        self._electric_field_strength = electric_field_strength
         self._polarization = polarization_vector
 
     @property
