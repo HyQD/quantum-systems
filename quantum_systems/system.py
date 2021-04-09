@@ -81,6 +81,10 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         )
 
     @property
+    def dim(self):
+        return self._basis_set.dim
+
+    @property
     def grid(self):
         return self._basis_set.grid
 
