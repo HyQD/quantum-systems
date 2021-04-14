@@ -126,6 +126,7 @@ class SpatialOrbitalSystem(QuantumSystem):
             + 2
             * self.np.trace(self.np.trace(self.u[o, o, o, o], axis1=1, axis2=3))
             - self.np.trace(self.np.trace(self.u[o, o, o, o], axis1=1, axis2=2))
+            + self.nuclear_repulsion_energy
         )
 
     def construct_fock_matrix(self, h, u, f=None):

@@ -91,8 +91,11 @@ class GeneralOrbitalSystem(QuantumSystem):
 
         o, v = self.o, self.v
 
-        return self.np.trace(self.h[o, o]) + 0.5 * self.np.trace(
-            self.np.trace(self.u[o, o, o, o], axis1=1, axis2=3)
+        return (
+            self.np.trace(self.h[o, o])
+            + 0.5
+            * self.np.trace(self.np.trace(self.u[o, o, o, o], axis1=1, axis2=3))
+            + self.nuclear_repulsion_energy
         )
 
     def construct_fock_matrix(self, h, u, f=None):
