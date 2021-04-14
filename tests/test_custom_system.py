@@ -89,9 +89,15 @@ def test_change_of_basis():
 
 
 def test_reference_energy():
-    system = construct_pyscf_system_rhf("he", basis="cc-pvdz")
+    gos_system = construct_pyscf_system_rhf(
+        "li 0.0 0.0 0.0; h 0.0 0.0 3.08", basis="cc-pvdz"
+    )
+    spas_system = construct_pyscf_system_rhf(
+        "li 0.0 0.0 0.0; h 0.0 0.0 3.08", basis="cc-pvdz", add_spin=False
+    )
 
     # This energy is found from PySCF's RHF solver
-    he_energy = -2.85516047724274
+    lih_energy = -7.98367215457454
 
-    assert abs(system.compute_reference_energy() - he_energy) < 1e-8
+    assert abs(gos_system.compute_reference_energy() - lih_energy) < 1e-8
+    assert abs(spas_system.compute_reference_energy() - lih_energy) < 1e-8
