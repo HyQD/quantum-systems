@@ -139,6 +139,26 @@ class QuantumSystem(metaclass=abc.ABCMeta):
     def set_time_evolution_operator(
         self, time_evolution_operator, add_h_0=True, add_u_0=True
     ):
+        """Function adding time-dependent terms to the Hamiltonian.
+
+        Parameters
+        ----------
+        time_evolution_operator : TimeEvolutionOperator, list
+            Either a list or a single instance of ``TimeEvolutionOperator``.
+        add_h_0 : bool
+            When ``True`` includes the time-independent part of the one-body
+            Hamiltonian when calling ``QuantumSystem.h_t``. Default is
+            ``True``.
+        add_u_0 : bool
+            When ``True`` includes the time-independent part of the two-body
+            Hamiltonian when calling ``QuantumSystem.u_t``. Default is
+            ``True``.
+
+        See Also
+        --------
+        TimeEvolutionOperator
+        """
+
         if not isinstance(time_evolution_operator, typing.Iterable):
             time_evolution_operator = [time_evolution_operator]
 
