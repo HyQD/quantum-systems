@@ -35,9 +35,16 @@ class TimeEvolutionOperator(metaclass=abc.ABCMeta):
         ----------
         system : QuantumSystem
             A QuantumSystem instance to apply the time-evolution operator to.
+
+        Returns
+        -------
+        self
+            The ``TimeEvolutionOperator``-instance.
         """
 
         self._system = system
+
+        return self
 
     def h_t(self, current_time):
         """Function computing the one-body part of the Hamiltonian for a
