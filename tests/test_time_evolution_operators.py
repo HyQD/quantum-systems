@@ -12,6 +12,42 @@ from quantum_systems.time_evolution_operators import (
 )
 
 
+def test_no_operators():
+    n = 4
+    l = 10
+    dim = 3
+
+    spas = SpatialOrbitalSystem(n, RandomBasisSet(l, dim))
+    gos = GeneralOrbitalSystem(n, RandomBasisSet(l, dim))
+
+    assert not spas.has_one_body_time_evolution_operator
+    assert not gos.has_one_body_time_evolution_operator
+    assert not spas.has_two_body_time_evolution_operator
+    assert not gos.has_two_body_time_evolution_operator
+
+    np.testing.assert_allclose(spas.h_t(10), spas.h)
+    np.testing.assert_allclose(spas.u_t(10), spas.u)
+    np.testing.assert_allclose(gos.h_t(10), gos.h)
+    np.testing.assert_allclose(gos.u_t(10), gos.u)
+
+    spas.set_time_evolution_operator(
+        [],
+        add_h_0=False,
+        add_u_0=False,
+    )
+    gos.set_time_evolution_operator([], add_h_0=False, add_u_0=False)
+
+    assert not spas.has_one_body_time_evolution_operator
+    assert not gos.has_one_body_time_evolution_operator
+    assert not spas.has_two_body_time_evolution_operator
+    assert not gos.has_two_body_time_evolution_operator
+
+    np.testing.assert_allclose(spas.h_t(0), np.zeros_like(spas.h))
+    np.testing.assert_allclose(spas.u_t(0), np.zeros_like(spas.u))
+    np.testing.assert_allclose(gos.h_t(0), np.zeros_like(gos.h))
+    np.testing.assert_allclose(gos.u_t(0), np.zeros_like(gos.u))
+
+
 def test_single_time_evolution_operator():
     n = 4
     l = 10
