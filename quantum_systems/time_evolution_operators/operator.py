@@ -62,7 +62,7 @@ class TimeEvolutionOperator(metaclass=abc.ABCMeta):
             time-point.
         """
 
-        return self._system.h
+        return 0
 
     def u_t(self, current_time):
         """Function computing the two-body part of the Hamiltonian for a
@@ -80,7 +80,7 @@ class TimeEvolutionOperator(metaclass=abc.ABCMeta):
             time-point.
         """
 
-        return self._system.u
+        return 0
 
 
 class DipoleFieldInteraction(TimeEvolutionOperator):
@@ -139,9 +139,7 @@ class DipoleFieldInteraction(TimeEvolutionOperator):
             tmp = self._polarization
             self._polarization = lambda t: tmp
 
-        return self._system.h - self._electric_field_strength(
-            current_time
-        ) * np.tensordot(
+        return -self._electric_field_strength(current_time) * np.tensordot(
             self._polarization(current_time),
             self._system.dipole_moment,
             axes=(0, 0),
@@ -181,4 +179,4 @@ class CustomOneBodyOperator(TimeEvolutionOperator):
             tmp = self._weight
             self._weight = lambda t: tmp
 
-        return self._system.h + self._weight(current_time) * self._operator
+        return self._weight(current_time) * self._operator
