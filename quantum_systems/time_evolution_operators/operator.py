@@ -34,7 +34,8 @@ class TimeEvolutionOperator(metaclass=abc.ABCMeta):
         Parameters
         ----------
         system : QuantumSystem
-            A QuantumSystem instance to apply the time-evolution operator to.
+            An instance of ``QuantumSystem`` to apply the time-evolution
+            operator to.
 
         Returns
         -------
