@@ -75,7 +75,6 @@ class TimeEvolutionOperator(metaclass=abc.ABCMeta):
 
         return self._system.u
 
-
 class DipoleFieldInteraction(TimeEvolutionOperator):
     r"""Semi-classical time-dependent interaction between particles and an
     electric field in the dipole approximation. The contribution to the
@@ -106,10 +105,18 @@ class DipoleFieldInteraction(TimeEvolutionOperator):
         axis as a function of ``current_time``. Default is ``None`` which gives
         a constant polarization along the first axis of the dipole moment
         integrals.
+    gauge : str
+        String specifying the gauge choice. 'length' (Default) or 'velocity'.
+    quadratic_term : bool
+        Specifying whether to include quadratic vector potential term. Only 
+        relevant for velocity gauge.
     """
 
-    def __init__(self, electric_field_strength, polarization_vector=None):
-        self._electric_field_strength = electric_field_strength
+    def __init__(self, field_strength, polarization_vector=None, gauge='length', quadratic_term=True):
+        assert gauge in ['length','velocity'], 'gauge must be either length or velocity.'
+        self._length_gauge = True if gauge == 'length' else False
+        self._quadratic_term = quadratic_term
+        self._field_strength = field_strength
         self._polarization = polarization_vector
 
     @property
@@ -119,9 +126,9 @@ class DipoleFieldInteraction(TimeEvolutionOperator):
     def h_t(self, current_time):
         np = self._system.np
 
-        if not callable(self._electric_field_strength):
-            tmp = self._electric_field_strength
-            self._electric_field_strength = lambda t: tmp
+        if not callable(self._field_strength):
+            tmp = self._field_strength
+            self._field_strength = lambda t: tmp
 
         if self._polarization is None:
             # Set default polarization along x-axis
@@ -132,13 +139,22 @@ class DipoleFieldInteraction(TimeEvolutionOperator):
             tmp = self._polarization
             self._polarization = lambda t: tmp
 
-        return self._system.h - self._electric_field_strength(
-            current_time
-        ) * np.tensordot(
+        if self._length_gauge:
+            H_t = -self._field_strength(current_time) * np.tensordot(
             self._polarization(current_time),
             self._system.dipole_moment,
             axes=(0, 0),
-        )
+            )
+        else:
+            H_t = self._field_strength(current_time) * np.tensordot(
+            self._polarization(current_time),
+            self._system.momentum,
+            axes=(0, 0),
+            )
+            if self._quadratic_term:
+                H_t += 0.5*self._field_strength(current_time)**2*np.eye(self._system.l)
+
+        return self._system.h + H_t
 
 
 class AdiabaticSwitching(TimeEvolutionOperator):
