@@ -75,6 +75,7 @@ class TimeEvolutionOperator(metaclass=abc.ABCMeta):
 
         return self._system.u
 
+
 class DipoleFieldInteraction(TimeEvolutionOperator):
     r"""Semi-classical time-dependent interaction between particles and an
     electric field in the dipole approximation. The contribution to the
@@ -108,13 +109,22 @@ class DipoleFieldInteraction(TimeEvolutionOperator):
     gauge : str
         String specifying the gauge choice. 'length' (Default) or 'velocity'.
     quadratic_term : bool
-        Specifying whether to include quadratic vector potential term. Only 
+        Specifying whether to include quadratic vector potential term. Only
         relevant for velocity gauge.
     """
 
-    def __init__(self, field_strength, polarization_vector=None, gauge='length', quadratic_term=True):
-        assert gauge in ['length','velocity'], 'gauge must be either length or velocity.'
-        self._length_gauge = True if gauge == 'length' else False
+    def __init__(
+        self,
+        field_strength,
+        polarization_vector=None,
+        gauge="length",
+        quadratic_term=True,
+    ):
+        assert gauge in [
+            "length",
+            "velocity",
+        ], "gauge must be either length or velocity."
+        self._length_gauge = True if gauge == "length" else False
         self._quadratic_term = quadratic_term
         self._field_strength = field_strength
         self._polarization = polarization_vector
@@ -141,18 +151,22 @@ class DipoleFieldInteraction(TimeEvolutionOperator):
 
         if self._length_gauge:
             H_t = -self._field_strength(current_time) * np.tensordot(
-            self._polarization(current_time),
-            self._system.dipole_moment,
-            axes=(0, 0),
+                self._polarization(current_time),
+                self._system.dipole_moment,
+                axes=(0, 0),
             )
         else:
             H_t = self._field_strength(current_time) * np.tensordot(
-            self._polarization(current_time),
-            self._system.momentum,
-            axes=(0, 0),
+                self._polarization(current_time),
+                self._system.momentum,
+                axes=(0, 0),
             )
             if self._quadratic_term:
-                H_t += 0.5*self._field_strength(current_time)**2*np.eye(self._system.l)
+                H_t += (
+                    0.5
+                    * self._field_strength(current_time) ** 2
+                    * np.eye(self._system.l)
+                )
 
         return self._system.h + H_t
 
