@@ -1,5 +1,6 @@
 import abc
 import copy
+import typing
 
 
 class QuantumSystem(metaclass=abc.ABCMeta):
@@ -24,7 +25,9 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         self.np = self._basis_set.np
         self.set_system_size(n, self._basis_set.l)
 
-        self._time_evolution_operator = None
+        self._time_evolution_operator = []
+        self._add_h_0 = True
+        self._add_u_0 = True
 
     def set_system_size(self, n, l):
         """Function setting the system size. Note that ``l`` should
@@ -133,37 +136,78 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         """Getter returning the electronic charge of the particles."""
         return self._basis_set.particle_charge
 
-    def set_time_evolution_operator(self, time_evolution_operator):
-        # TODO: Support list of time-evolution operators
-        self._time_evolution_operator = time_evolution_operator
-        if not self._time_evolution_operator is None:
-            self._time_evolution_operator.set_system(self)
+    def set_time_evolution_operator(
+        self, time_evolution_operator, add_h_0=True, add_u_0=True
+    ):
+        """Function adding time-dependent terms to the Hamiltonian.
+
+        Parameters
+        ----------
+        time_evolution_operator : TimeEvolutionOperator, list
+            Either a list or a single instance of ``TimeEvolutionOperator``.
+        add_h_0 : bool
+            When ``True`` includes the time-independent part of the one-body
+            Hamiltonian when calling ``QuantumSystem.h_t``. Default is
+            ``True``.
+        add_u_0 : bool
+            When ``True`` includes the time-independent part of the two-body
+            Hamiltonian when calling ``QuantumSystem.u_t``. Default is
+            ``True``.
+
+        See Also
+        --------
+        TimeEvolutionOperator
+        """
+
+        if not isinstance(time_evolution_operator, typing.Iterable):
+            time_evolution_operator = [time_evolution_operator]
+
+        self._add_h_0 = add_h_0
+        self._add_u_0 = add_u_0
+
+        self._time_evolution_operator = [
+            op.set_system(self) for op in time_evolution_operator
+        ]
 
     @property
     def has_one_body_time_evolution_operator(self):
-        if self._time_evolution_operator is None:
-            return False
-
-        return self._time_evolution_operator.is_one_body_operator
+        return any(
+            op.is_one_body_operator for op in self._time_evolution_operator
+        )
 
     @property
     def has_two_body_time_evolution_operator(self):
-        if self._time_evolution_operator is None:
-            return False
-
-        return self._time_evolution_operator.is_two_body_operator
+        return any(
+            op.is_two_body_operator for op in self._time_evolution_operator
+        )
 
     def h_t(self, current_time):
-        if self._time_evolution_operator is None:
-            return self._basis_set.h
+        h_0 = (
+            self._basis_set.h
+            if self._add_h_0
+            else self.np.zeros_like(self._basis_set.h)
+        )
 
-        return self._time_evolution_operator.h_t(current_time)
+        if not self.has_one_body_time_evolution_operator:
+            return h_0
+
+        return h_0 + sum(
+            op.h_t(current_time) for op in self._time_evolution_operator
+        )
 
     def u_t(self, current_time):
-        if self._time_evolution_operator is None:
-            return self._basis_set.u
+        u_0 = (
+            self._basis_set.u
+            if self._add_u_0
+            else self.np.zeros_like(self._basis_set.u)
+        )
 
-        return self._time_evolution_operator.u_t(current_time)
+        if not self.has_two_body_time_evolution_operator:
+            return u_0
+
+        return u_0 + sum(
+            op.u_t(current_time) for op in self._time_evolution_operator
+        )
 
     def transform_one_body_elements(self, h, C, C_tilde=None):
         return self._basis_set.transform_one_body_elements(
