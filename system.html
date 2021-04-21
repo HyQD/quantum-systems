@@ -263,6 +263,29 @@ correspond to the length of each axis of the matrix elements.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="quantum_systems.QuantumSystem.set_time_evolution_operator">
+<code class="sig-name descname"><span class="pre">set_time_evolution_operator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_evolution_operator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_h_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_u_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantum_systems.QuantumSystem.set_time_evolution_operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function adding time-dependent terms to the Hamiltonian.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_evolution_operator</strong> (<em>TimeEvolutionOperator</em><em>, </em><em>list</em>) – Either a list or a single instance of <code class="docutils literal notranslate"><span class="pre">TimeEvolutionOperator</span></code>.</p></li>
+<li><p><strong>add_h_0</strong> (<em>bool</em>) – When <code class="docutils literal notranslate"><span class="pre">True</span></code> includes the time-independent part of the one-body
+Hamiltonian when calling <code class="docutils literal notranslate"><span class="pre">QuantumSystem.h_t</span></code>. Default is
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>add_u_0</strong> (<em>bool</em>) – When <code class="docutils literal notranslate"><span class="pre">True</span></code> includes the time-independent part of the two-body
+Hamiltonian when calling <code class="docutils literal notranslate"><span class="pre">QuantumSystem.u_t</span></code>. Default is
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeEvolutionOperator</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt id="quantum_systems.QuantumSystem.spf">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">spf</span></code><a class="headerlink" href="#quantum_systems.QuantumSystem.spf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter returning the single particle functions.</p>
