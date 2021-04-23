@@ -46,6 +46,7 @@ class BasisSet:
         self._u = None
         self._s = None
         self._position = None
+        self._momentum = None
 
         self._sigma_x = None
         self._sigma_y = None
@@ -129,6 +130,19 @@ class BasisSet:
     @property
     def dipole_moment(self):
         return self.particle_charge * self.position
+
+    @property
+    def momentum(self):
+        return self._momentum
+
+    @momentum.setter
+    def momentum(self, momentum):
+        assert len(momentum) == self.dim
+
+        for i in range(self.dim):
+            assert all(self.check_axis_lengths(momentum[i], self.l))
+
+        self._momentum = momentum
 
     @property
     def spin_x(self):
@@ -272,6 +286,7 @@ class BasisSet:
             ("_spf", self.spf),
             ("_bra_spf", self.bra_spf),
             ("_position", self.position),
+            ("_momentum", self.momentum),
             ("_spin_x", self.spin_x),
             ("_spin_y", self.spin_y),
             ("_spin_z", self.spin_z),
@@ -293,6 +308,7 @@ class BasisSet:
             ("_spf", self.spf),
             ("_bra_spf", self.bra_spf),
             ("_position", self.position),
+            ("_momentum", self.momentum),
             ("_spin_x", self.spin_x),
             ("_spin_y", self.spin_y),
             ("_spin_z", self.spin_z),
@@ -377,6 +393,18 @@ class BasisSet:
 
         self.position = self.np.asarray(position)
 
+    def _change_basis_momentum_elements(self, C, C_tilde):
+        momentum = []
+
+        for i in range(self.momentum.shape[0]):
+            momentum.append(
+                self.transform_one_body_elements(
+                    self.momentum[i], C, np=self.np, C_tilde=C_tilde
+                )
+            )
+
+        self.momentum = self.np.asarray(momentum)
+
     def _change_basis_spf(self, C, C_tilde):
         self.bra_spf = self.transform_bra_spf(self.bra_spf, C_tilde, self.np)
 
@@ -428,6 +456,9 @@ class BasisSet:
 
         if self.position is not None:
             self._change_basis_position_elements(C, C_tilde)
+
+        if self.momentum is not None:
+            self._change_basis_momentum_elements(C, C_tilde)
 
         if self.spf is not None:
             self._change_basis_spf(C, C_tilde)
@@ -581,6 +612,14 @@ class BasisSet:
             ]
 
             self.position = self.np.array(position)
+
+        if not self.momentum is None:
+            momentum = [
+                self.add_spin_one_body(self.momentum[i], np=self.np)
+                for i in range(len(self.momentum))
+            ]
+
+            self.momentum = self.np.array(momentum)
 
         if not self.spf is None:
             self.spf = self.add_spin_spf(self.spf, self.np)

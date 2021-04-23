@@ -112,6 +112,11 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         return self._basis_set.position
 
     @property
+    def momentum(self):
+        """Getter returning the momentum matrix."""
+        return self._basis_set.momentum
+
+    @property
     def dipole_moment(self):
         """Getter returning the dipole moment elements."""
         return self._basis_set.dipole_moment
