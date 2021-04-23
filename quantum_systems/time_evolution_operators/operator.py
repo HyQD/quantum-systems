@@ -34,10 +34,18 @@ class TimeEvolutionOperator(metaclass=abc.ABCMeta):
         Parameters
         ----------
         system : QuantumSystem
-            A QuantumSystem instance to apply the time-evolution operator to.
+            An instance of ``QuantumSystem`` to apply the time-evolution
+            operator to.
+
+        Returns
+        -------
+        self
+            The ``TimeEvolutionOperator``-instance.
         """
 
         self._system = system
+
+        return self
 
     def h_t(self, current_time):
         """Function computing the one-body part of the Hamiltonian for a
@@ -55,7 +63,7 @@ class TimeEvolutionOperator(metaclass=abc.ABCMeta):
             time-point.
         """
 
-        return self._system.h
+        return 0
 
     def u_t(self, current_time):
         """Function computing the two-body part of the Hamiltonian for a
@@ -73,7 +81,7 @@ class TimeEvolutionOperator(metaclass=abc.ABCMeta):
             time-point.
         """
 
-        return self._system.u
+        return 0
 
 
 class DipoleFieldInteraction(TimeEvolutionOperator):
@@ -168,7 +176,7 @@ class DipoleFieldInteraction(TimeEvolutionOperator):
                     * np.eye(self._system.l)
                 )
 
-        return self._system.h + H_t
+        return H_t
 
 
 class AdiabaticSwitching(TimeEvolutionOperator):
@@ -204,4 +212,4 @@ class CustomOneBodyOperator(TimeEvolutionOperator):
             tmp = self._weight
             self._weight = lambda t: tmp
 
-        return self._system.h + self._weight(current_time) * self._operator
+        return self._weight(current_time) * self._operator
