@@ -37,13 +37,14 @@ def _shielded_coulomb(x_1, x_2, alpha, a):
 @numba.njit(cache=True)
 def _compute_inner_integral(spf, l, num_grid_points, grid, alpha, a):
     inner_integral = np.zeros((l, l, num_grid_points), dtype=np.complex128)
-
-    for q in range(l):
-        for s in range(l):
-            for i in range(num_grid_points):
+    
+    for i in range(num_grid_points):
+        coulomb = _shielded_coulomb(grid[i], grid, alpha, a)
+        for q in range(l):
+            for s in range(l):
                 inner_integral[q, s, i] = _trapz(
                     np.conjugate(spf[q])
-                    * _shielded_coulomb(grid[i], grid, alpha, a)
+                    * coulomb
                     * spf[s],
                     grid,
                 )
