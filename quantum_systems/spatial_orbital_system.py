@@ -119,7 +119,7 @@ class SpatialOrbitalSystem(QuantumSystem):
             The reference energy.
         """
 
-        o, v = self.o, self.v
+        o, v = slice(0, self.n), self.v
 
         return (
             2 * self.np.trace(self.h[o, o])
@@ -158,7 +158,7 @@ class SpatialOrbitalSystem(QuantumSystem):
             The filled Fock matrix.
         """
         np = self.np
-        o, v = (self.o, self.v)
+        o, v = (slice(0, self.n), self.v)
 
         if f is None:
             f = np.zeros_like(h)

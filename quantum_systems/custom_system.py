@@ -112,6 +112,8 @@ def construct_pyscf_system_rhf(
     verbose=False,
     charge=0,
     cart=False,
+    nfrozen=0,
+    conv_tol=1e-10,
     **kwargs,
 ):
     """Convenience function setting up a closed-shell atom or a molecule from
@@ -188,6 +190,7 @@ def construct_pyscf_system_rhf(
     l = mol.nao
 
     hf = pyscf.scf.RHF(mol)
+    hf.conv_tol=conv_tol
     hf_energy = hf.kernel()
 
     if not hf.converged:
@@ -217,7 +220,7 @@ def construct_pyscf_system_rhf(
     bs.position = position
     bs.change_module(np=np)
 
-    system = SpatialOrbitalSystem(n, bs)
+    system = SpatialOrbitalSystem(n, bs, nfrozen=nfrozen)
     system.change_basis(C)
 
     return (
