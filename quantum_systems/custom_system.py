@@ -227,6 +227,10 @@ def construct_pyscf_system_rhf(
     )
 
 
+def construct_custom_system(n, l, h, u, s, nuclear_repulsion_energy):
+    pass
+
+
 # def construct_pyscf_system(
 #     molecule, basis="cc-pvdz", anti_symmetrize=True, np=None, verbose=False
 # ):
