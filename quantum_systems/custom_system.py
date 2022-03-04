@@ -8,6 +8,95 @@ from quantum_systems import (
 )
 
 
+def setup_basis_set(
+    n,
+    l,
+    s,
+    h,
+    u,
+    dim=3,
+    particle_charge=-1,
+    np=None,
+    includes_spin=False,
+    anti_symmetrized_u=False,
+    **kwargs,
+):
+
+    if np is None:
+        import numpy as np
+
+    bs = BasisSet(
+        l,
+        dim=dim,
+        np=np,
+        includes_spin=includes_spin,
+        anti_symmetrized_u=anti_symmetrized_u,
+    )
+
+    bs.h = h
+    bs.u = u
+    bs.s = s
+    bs.particle_charge = particle_charge
+
+    if "position" in kwargs.keys():
+        bs.position = kwargs["position"]
+
+    if "momentum" in kwargs.keys():
+        bs.momentum = kwargs["momentum"]
+
+    if "nuclear_repulsion_energy" in kwargs.keys():
+        bs.nuclear_repulsion_energy = kwargs["nuclear_repulsion_energy"]
+
+    return bs
+
+
+def construct_custom_system(
+    n,
+    l,
+    s,
+    h,
+    u,
+    dim=3,
+    particle_charge=-1,
+    np=None,
+    includes_spin=False,
+    anti_symmetrized_u=False,
+    system_type="general",
+    **kwargs,
+):
+
+    if np is None:
+        import numpy as np
+
+    bs = setup_basis_set(
+        n,
+        l,
+        s,
+        h,
+        u,
+        dim,
+        particle_charge,
+        np,
+        includes_spin,
+        anti_symmetrized_u,
+        **kwargs,
+    )
+
+    if system_type.lower() == "general":
+        system = GeneralOrbitalSystem(n, bs)
+    elif system_type.lower() == "spatial":
+        system = SpatialOrbitalSystem(n, bs)
+    else:
+        raise NotImplementedError(
+            f"System type: {system_type} is not supported!"
+        )
+
+    if "C" in kwargs.keys():
+        system.change_basis(kwargs["C"])
+
+    return system
+
+
 def construct_pyscf_system_ao(
     molecule,
     basis="cc-pvdz",
@@ -225,10 +314,6 @@ def construct_pyscf_system_rhf(
         if add_spin
         else system
     )
-
-
-def construct_custom_system(n, l, h, u, s, nuclear_repulsion_energy):
-    pass
 
 
 # def construct_pyscf_system(
