@@ -192,7 +192,6 @@ class AdiabaticSwitching(TimeEvolutionOperator):
 
     def u_t(self, current_time):
         np = self._system.np
-
         return self._switching_function(current_time) * self._system.u
 
 
