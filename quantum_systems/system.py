@@ -210,7 +210,9 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         if not self.has_two_body_time_evolution_operator:
             return u_0
 
-        return sum(op.u_t(current_time) for op in self._time_evolution_operator)
+        return u_0 + sum(
+            op.u_t(current_time) for op in self._time_evolution_operator
+        )
 
     def transform_one_body_elements(self, h, C, C_tilde=None):
         return self._basis_set.transform_one_body_elements(
