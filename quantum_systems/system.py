@@ -200,6 +200,9 @@ class QuantumSystem(metaclass=abc.ABCMeta):
             op.h_t(current_time) for op in self._time_evolution_operator
         )
 
+    def v_t(self, current_time):
+        return sum(op.h_t(current_time) for op in self._time_evolution_operator)
+
     def u_t(self, current_time):
         u_0 = (
             self._basis_set.u
