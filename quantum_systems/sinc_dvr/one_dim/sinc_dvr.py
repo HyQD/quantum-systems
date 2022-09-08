@@ -109,10 +109,10 @@ class ODSincDVR(BasisSet):
         mask = np.ones(self.h.shape, dtype=bool)
         np.fill_diagonal(mask, 0)
         self.h[mask] = (-1.0) ** diff_grid[mask] / (
-            self.dx ** 2 * diff_grid[mask] ** 2
+            self.dx**2 * diff_grid[mask] ** 2
         )
         # fill diagonal
-        self.h[ind, ind] = np.pi ** 2 / (6 * self.dx ** 2)
+        self.h[ind, ind] = np.pi**2 / (6 * self.dx**2)
         self.h[ind, ind] += self.potential(self.grid)
 
         self.s = self.construct_s()
@@ -125,8 +125,8 @@ class ODSincDVR(BasisSet):
 
     def set_u_repr(self, new_repr):
         """Switches representation of coloumb matrix elements between 2d and 4d"""
-        coords0 = np.arange(self.l ** 2) % self.l
-        coords1 = np.arange(self.l ** 2) // self.l
+        coords0 = np.arange(self.l**2) % self.l
+        coords1 = np.arange(self.l**2) // self.l
 
         if new_repr == self.u_repr:
             print("u repr is already {}, doing nothing".format(new_repr))
@@ -149,7 +149,7 @@ class ODSincDVR(BasisSet):
 
     def construct_position_integrals(self):
         self.position = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
-        self.position[0] = np.diag(self.grid + self.beta * self.grid ** 2)
+        self.position[0] = np.diag(self.grid + self.beta * self.grid**2)
 
     def construct_coulomb_elements(self, u_repr="4d"):
         """Computes Sinc-DVR matrix elements of onebody operator h and two-body
