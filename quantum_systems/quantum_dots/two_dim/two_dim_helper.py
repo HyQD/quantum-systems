@@ -44,8 +44,8 @@ def spf_theta(theta, m):
 def spf_radial(r, n, m, mass, omega):
     a = bohr_radius(mass, omega)
 
-    laguerre = scipy.special.assoc_laguerre(a ** 2 * r ** 2, n, abs(m))
-    radial_dep = np.exp(-(a ** 2) * r ** 2 / 2.0)
+    laguerre = scipy.special.assoc_laguerre(a**2 * r**2, n, abs(m))
+    radial_dep = np.exp(-(a**2) * r**2 / 2.0)
 
     return (a * r) ** abs(m) * laguerre * radial_dep
 
@@ -55,8 +55,8 @@ def spf_radial_function(n, m, mass, omega):
 
     radial_function = (
         lambda r: (a * r) ** abs(m)
-        * sympy.assoc_laguerre(n, abs(m), a ** 2 * r ** 2)
-        * sympy.exp(-(a ** 2) * r ** 2 / 2.0)
+        * sympy.assoc_laguerre(n, abs(m), a**2 * r**2)
+        * sympy.exp(-(a**2) * r**2 / 2.0)
     )
 
     return radial_function
@@ -66,7 +66,7 @@ def radial_integral(r_p, r_q, order=1):
     r = sympy.Symbol("r")
 
     return sympy.integrate(
-        r * r ** order * r_p(r).conjugate() * r_q(r), (r, 0, sympy.oo)
+        r * r**order * r_p(r).conjugate() * r_q(r), (r, 0, sympy.oo)
     )
 
 
@@ -315,7 +315,7 @@ def get_double_well_one_body_elements(
 
         h[p, p] += (
             omega * get_shell_energy(n_p, m_p)
-            + omega ** 2 * barrier_strength ** 2 / 8.0
+            + omega**2 * barrier_strength**2 / 8.0
         )
 
         for q in range(num_orbitals):
@@ -327,7 +327,7 @@ def get_double_well_one_body_elements(
 
             h[p, q] -= (
                 0.5
-                * omega ** 2
+                * omega**2
                 * barrier_strength
                 * spf_norm(n_p, m_p, mass, omega)
                 * spf_norm(n_q, m_q, mass, omega)
@@ -347,13 +347,13 @@ def get_smooth_double_well_one_body_elements(
 ):
     h = np.zeros((num_orbitals, num_orbitals), dtype=dtype)
 
-    prefactor = omega ** 2 / 4
+    prefactor = omega**2 / 4
 
     for p in range(num_orbitals):
         n_p, m_p = get_indices_nm(p)
         r_p = spf_radial_function(n_p, m_p, mass, omega)
 
-        h[p, p] += omega * get_shell_energy(n_p, m_p) + omega ** 2 * a ** 2 / 64
+        h[p, p] += omega * get_shell_energy(n_p, m_p) + omega**2 * a**2 / 64
 
         for q in range(num_orbitals):
             n_q, m_q = get_indices_nm(q)
@@ -361,7 +361,7 @@ def get_smooth_double_well_one_body_elements(
 
             h[p, q] += (
                 prefactor
-                * (1 / a ** 2)
+                * (1 / a**2)
                 * spf_norm(n_p, m_p, mass, omega)
                 * spf_norm(n_q, m_q, mass, omega)
                 * radial_integral(r_p, r_q, order=4)

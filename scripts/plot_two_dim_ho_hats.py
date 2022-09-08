@@ -21,7 +21,7 @@ fig.suptitle(r"Probability density $\langle \phi_p \vert \phi_p \rangle$")
 
 for p in range(l // 2):
     ax = fig.add_subplot(3, 5, p + 1, polar=True)
-    ax.set_title(fr"$p = {p}$", loc="left")
+    ax.set_title(rf"$p = {p}$", loc="left")
     plt.contourf(
         tdho.T, tdho.R, np.abs(tdho.spf[2 * p] * tdho.spf[2 * p].conj())
     )
@@ -32,7 +32,7 @@ fig.suptitle(r"$\Re(\phi_p(\mathbf{r}))^2$")
 
 for p in range(l // 2):
     ax = fig.add_subplot(3, 5, p + 1, polar=True)
-    ax.set_title(fr"$p = {p}$", loc="left")
+    ax.set_title(rf"$p = {p}$", loc="left")
     plt.contourf(tdho.T, tdho.R, (tdho.spf[2 * p] * tdho.spf[2 * p]).real)
 
 
@@ -41,7 +41,7 @@ fig.suptitle(r"$\Im(\phi_p(\mathbf{r}))$")
 
 for p in range(l // 2):
     ax = fig.add_subplot(3, 5, p + 1, polar=True)
-    ax.set_title(fr"$p = {p}$", loc="left")
+    ax.set_title(rf"$p = {p}$", loc="left")
     plt.contourf(tdho.T, tdho.R, (tdho.spf[2 * p] * tdho.spf[2 * p]).imag)
 
 plt.show()

@@ -16,10 +16,10 @@ class HOPotential(OneDimPotential):
         self.omega = omega
 
     def __call__(self, x):
-        return 0.5 * self.omega ** 2 * x ** 2
+        return 0.5 * self.omega**2 * x**2
 
     def derivative(self, x):
-        return self.omega ** 2 * x
+        return self.omega**2 * x
 
 
 class DWPotential(HOPotential):
@@ -28,8 +28,8 @@ class DWPotential(HOPotential):
         self.l = l
 
     def __call__(self, x):
-        return super().__call__(x) + 0.5 * self.omega ** 2 * (
-            0.25 * self.l ** 2 - self.l * abs(x)
+        return super().__call__(x) + 0.5 * self.omega**2 * (
+            0.25 * self.l**2 - self.l * abs(x)
         )
 
     def derivative(self, x):
@@ -37,7 +37,7 @@ class DWPotential(HOPotential):
         Uses Heaviside function to avoid division by zero. Is ill defined in x=0
         anyways
         """
-        return super().derivative(x) - self.l * self.omega ** 2 * (
+        return super().derivative(x) - self.l * self.omega**2 * (
             np.heaviside(x, 0.5) - 0.5
         )
 
@@ -53,7 +53,7 @@ class DWPotentialSmooth(OneDimPotential):
 
     def __call__(self, x):
         return (
-            (1.0 / (2 * self.a ** 2))
+            (1.0 / (2 * self.a**2))
             * (x + 0.5 * self.a) ** 2
             * (x - 0.5 * self.a) ** 2
         )
@@ -62,7 +62,7 @@ class DWPotentialSmooth(OneDimPotential):
         a = self.a
         return (
             1
-            / a ** 2
+            / a**2
             * (
                 (x + 0.5 * a) * (x - 0.5 * a) ** 2
                 + (x - 0.5 * a) * (x + 0.5 * a) ** 2
@@ -82,10 +82,10 @@ class SymmetricDWPotential(OneDimPotential):
         self.c = c
 
     def __call__(self, x):
-        return self.a * x ** 6 + self.b * x ** 4 + self.c * x ** 2
+        return self.a * x**6 + self.b * x**4 + self.c * x**2
 
     def derivative(self, x):
-        return 6 * self.a * x ** 5 + 3 * self.b * x ** 3 + 2 * self.c * x
+        return 6 * self.a * x**5 + 3 * self.b * x**3 + 2 * self.c * x
 
 
 class AsymmetricDWPotential(OneDimPotential):
@@ -100,10 +100,10 @@ class AsymmetricDWPotential(OneDimPotential):
         self.c = c
 
     def __call__(self, x):
-        return self.a * x ** 4 + self.b * x ** 3 + self.c * x ** 2
+        return self.a * x**4 + self.b * x**3 + self.c * x**2
 
     def derivative(self, x):
-        return 4 * self.a * x ** 3 + 3 * self.b * x ** 2 + 2 * self.c * x
+        return 4 * self.a * x**3 + 3 * self.b * x**2 + 2 * self.c * x
 
 
 class GaussianPotential(OneDimPotential):
@@ -115,11 +115,11 @@ class GaussianPotential(OneDimPotential):
 
     def __call__(self, x):
         return -self.weight * self.np.exp(
-            -((x - self.center) ** 2) / (2.0 * self.deviation ** 2)
+            -((x - self.center) ** 2) / (2.0 * self.deviation**2)
         )
 
     def derivative(self, x):
-        return -(x - self.center) / self.deviation ** 2 * self(x)
+        return -(x - self.center) / self.deviation**2 * self(x)
 
 
 class GaussianPotentialHardWall(OneDimPotential):
@@ -143,7 +143,7 @@ class GaussianPotentialHardWall(OneDimPotential):
 
         return (
             -self.weight
-            * np.exp(-((x - self.center) ** 2) / (2.0 * self.deviation ** 2))
+            * np.exp(-((x - self.center) ** 2) / (2.0 * self.deviation**2))
             + wall
         )
 
@@ -154,7 +154,7 @@ class AtomicPotential(OneDimPotential):
         self.c = c
 
     def __call__(self, x):
-        return -self.Za / np.sqrt(x ** 2 + self.c)
+        return -self.Za / np.sqrt(x**2 + self.c)
 
     def derivative(self, x):
-        return self.Za * x / (x ** 2 + self.c) ** (3 / 2)
+        return self.Za * x / (x**2 + self.c) ** (3 / 2)

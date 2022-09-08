@@ -31,7 +31,7 @@ def _trapz(f, x):
 
 @numba.njit(cache=True)
 def _shielded_coulomb(x_1, x_2, alpha, a):
-    return alpha / np.sqrt((x_1 - x_2) ** 2 + a ** 2)
+    return alpha / np.sqrt((x_1 - x_2) ** 2 + a**2)
 
 
 @numba.njit(cache=True)
@@ -134,14 +134,14 @@ class ODHO(BasisSet):
     def ho_function(self, x, n):
         return (
             self.normalization(n)
-            * np.exp(-0.5 * self.omega * x ** 2)
+            * np.exp(-0.5 * self.omega * x**2)
             * spec.hermite(n)(np.sqrt(self.omega) * x)
         )
 
     def normalization(self, n):
         return (
             1.0
-            / np.sqrt(2 ** n * spec.factorial(n))
+            / np.sqrt(2**n * spec.factorial(n))
             * (self.omega / np.pi) ** 0.25
         )
 
@@ -156,7 +156,7 @@ class ODHO(BasisSet):
                 * Nn_up
                 * (n + 1)
                 * np.sqrt(np.pi)
-                * 2 ** n
+                * 2**n
                 * spec.factorial(n)
                 / self.omega
             )
@@ -257,8 +257,8 @@ class ODQD(BasisSet):
     def setup_basis(self):
         dx = self.grid[1] - self.grid[0]
 
-        h_diag = 1.0 / (dx ** 2) + self.potential(self.grid[1:-1])
-        h_off_diag = -1.0 / (2 * dx ** 2) * np.ones(self.num_grid_points - 3)
+        h_diag = 1.0 / (dx**2) + self.potential(self.grid[1:-1])
+        h_off_diag = -1.0 / (2 * dx**2) * np.ones(self.num_grid_points - 3)
 
         h = (
             np.diag(h_diag)
@@ -299,7 +299,7 @@ class ODQD(BasisSet):
             for q in range(self.l):
                 self.position[0, p, q] = np.trapz(
                     self.spf[p].conj()
-                    * (self.grid + self.beta * self.grid ** 2)
+                    * (self.grid + self.beta * self.grid**2)
                     * self.spf[q],
                     self.grid,
                 )

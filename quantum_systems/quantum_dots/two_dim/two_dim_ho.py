@@ -256,7 +256,7 @@ class TwoDimHarmonicOscB(TwoDimensionalHarmonicOscillator):
         super().__init__(*args, **kwargs)
 
     def setup_basis(self):
-        self.omega = np.sqrt(self.omega ** 2 + self.omega_c ** 2 / 4)
+        self.omega = np.sqrt(self.omega**2 + self.omega_c**2 / 4)
 
         num_orbitals = self.l
         n_array = np.arange(num_orbitals)
