@@ -103,15 +103,31 @@ class SpatialOrbitalSystem(QuantumSystem):
 
         return gos
 
-    def compute_reference_energy(self):
+    def compute_reference_energy(self, h=None, u=None):
         r"""Function computing the reference energy in an orbital system.
         This is given by
 
         .. math:: E_0 = \langle \Phi_0 \rvert \hat{H} \lvert \Phi_0 \rangle
-            = 2 h^{i}_{i} + 2 u^{ij}_{ij} - u^{ij}_{ji},
+            = 2 h^{i}_{i} + 2 u^{ij}_{ij} - u^{ij}_{ji} + E_n,
 
-        where :math:`\lvert \Phi_0 \rangle` is the reference determinant, and
-        :math:`i, j` are occupied indices.
+        where :math:`\lvert \Phi_0 \rangle` is the reference determinant,
+        :math:`i, j` are occupied indices, :math:`h^{i}_{j}` the matrix
+        elements of the one-body Hamiltonian, :math:`u^{ij}_{kl}` the matrix
+        elements of the two-body Hamiltonian, and :math:`E_n` the nuclear
+        repulsion energy, i.e., the constant term in the Hamiltonian.
+
+        Parameters
+        ----------
+        h : np.ndarray
+            The one-body matrix elements. When `h=None` `self.h` is used.
+            If a custom `h` is passed in, the function assumes that `h` is at
+            least a `(n, n)`-array, where `n` is the number of occupied
+            indices. Default is `h=None`.
+        u : np.ndarray
+            The two-body matrix elements. When `u=None` `self.u` is used.
+            If a custom `u` is passed in, the function assumes that `u` is at
+            least a `(n, n, n, n)`-array, where `n` is the number of occupied
+            indices. Default is `u=None`.
 
         Returns
         -------
@@ -121,11 +137,13 @@ class SpatialOrbitalSystem(QuantumSystem):
 
         o, v = self.o, self.v
 
+        h = self.h if h is None else h
+        u = self.u if u is None else u
+
         return (
-            2 * self.np.trace(self.h[o, o])
-            + 2
-            * self.np.trace(self.np.trace(self.u[o, o, o, o], axis1=1, axis2=3))
-            - self.np.trace(self.np.trace(self.u[o, o, o, o], axis1=1, axis2=2))
+            2 * self.np.trace(h[o, o])
+            + 2 * self.np.trace(self.np.trace(u[o, o, o, o], axis1=1, axis2=3))
+            - self.np.trace(self.np.trace(u[o, o, o, o], axis1=1, axis2=2))
             + self.nuclear_repulsion_energy
         )
 

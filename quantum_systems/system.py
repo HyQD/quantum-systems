@@ -75,7 +75,7 @@ class QuantumSystem(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def compute_reference_energy(self):
+    def compute_reference_energy(self, h=None, u=None):
         pass
 
     def compute_particle_density(self, rho_qp, C=None, C_tilde=None):
