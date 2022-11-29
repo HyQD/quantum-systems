@@ -17,7 +17,7 @@ from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
 )
 
 
-@numba.njit(cache=True)
+@numba.njit
 def _trapz(f, x):
     n = len(x)
     delta_x = x[1] - x[0]
@@ -29,12 +29,12 @@ def _trapz(f, x):
     return 0.5 * val * delta_x
 
 
-@numba.njit(cache=True)
+@numba.njit
 def _shielded_coulomb(x_1, x_2, alpha, a):
     return alpha / np.sqrt((x_1 - x_2) ** 2 + a**2)
 
 
-@numba.njit(cache=True)
+@numba.njit
 def _compute_inner_integral(spf, l, num_grid_points, grid, alpha, a):
     inner_integral = np.zeros((l, l, num_grid_points), dtype=np.complex128)
 
@@ -50,7 +50,7 @@ def _compute_inner_integral(spf, l, num_grid_points, grid, alpha, a):
     return inner_integral
 
 
-@numba.njit(cache=True)
+@numba.njit
 def _compute_orbital_integrals(spf, l, inner_integral, grid):
     u = np.zeros((l, l, l, l), dtype=np.complex128)
     for p in range(l):

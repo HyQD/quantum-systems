@@ -3,7 +3,7 @@ import math
 import numba
 
 
-@numba.njit(fastmath=True, cache=True, nogil=True)
+@numba.njit(fastmath=True, nogil=True)
 def coulomb_ho(n_i, m_i, n_j, m_j, n_l, m_l, n_k, m_k):
     """Implementation of two-body matrix elements for the two-dimensional
     quantum dots.
@@ -92,7 +92,7 @@ def coulomb_ho(n_i, m_i, n_j, m_j, n_l, m_l, n_k, m_k):
     return element
 
 
-@numba.njit(fastmath=True, cache=True, nogil=True)
+@numba.njit(fastmath=True, nogil=True)
 def log_factorial(n):
     fac = 0
 
@@ -102,7 +102,7 @@ def log_factorial(n):
     return fac
 
 
-@numba.njit(fastmath=True, cache=True, nogil=True)
+@numba.njit(fastmath=True, nogil=True)
 def log_ratio_1(n_arr):
     ratio = 0
 
@@ -112,12 +112,12 @@ def log_ratio_1(n_arr):
     return ratio
 
 
-@numba.njit(fastmath=True, cache=True, nogil=True)
+@numba.njit(fastmath=True, nogil=True)
 def log_ratio_2(G):
     return -0.5 * (G + 1) * np.log(2)
 
 
-@numba.njit(fastmath=True, cache=True, nogil=True)
+@numba.njit(fastmath=True, nogil=True)
 def log_product_1(n, m):
     prod = 0
 
@@ -128,7 +128,7 @@ def log_product_1(n, m):
     return np.exp(0.5 * prod)
 
 
-@numba.njit(fastmath=True, cache=True, nogil=True)
+@numba.njit(fastmath=True, nogil=True)
 def log_product_2(n, m, j):
     prod = 0
 
@@ -140,7 +140,7 @@ def log_product_2(n, m, j):
     return prod
 
 
-@numba.njit(fastmath=True, cache=True, nogil=True)
+@numba.njit(fastmath=True, nogil=True)
 def log_product_3(l, g):
     prod = 0
 

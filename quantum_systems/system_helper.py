@@ -1,12 +1,12 @@
 import numba
 
 
-@numba.njit(cache=True)
+@numba.njit
 def delta(p, q):
     return p == q
 
 
-@numba.njit(cache=True)
+@numba.njit
 def spin_delta(p, q):
     return ((p & 0x1) ^ (q & 0x1)) ^ 0x1
 

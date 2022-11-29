@@ -110,7 +110,7 @@ def theta_2_tilde_integral(m_p, m_q):
     return 4 / (1 - (m_p - m_q) ** 2)
 
 
-@numba.njit(cache=True, nogil=True)
+@numba.njit(nogil=True)
 def get_index_p(n, m):
     num_shells = 2 * n + abs(m) + 1
 
@@ -135,7 +135,7 @@ def get_index_p(n, m):
         return current_shell - (n + 1)
 
 
-@numba.njit(cache=True, nogil=True)
+@numba.njit(nogil=True)
 def get_indices_nm(p):
     n, m = 0, 0
     previous_shell = 0
@@ -168,12 +168,12 @@ def get_indices_nm(p):
     return n, m
 
 
-@numba.njit(cache=True, nogil=True)
+@numba.njit(nogil=True)
 def get_shell_energy(n, m):
     return 2 * n + abs(m) + 1
 
 
-@numba.njit(cache=True, nogil=True)
+@numba.njit(nogil=True)
 def get_one_body_elements(num_orbitals):
     h = np.zeros((num_orbitals, num_orbitals))
 
