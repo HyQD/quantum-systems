@@ -1,8 +1,7 @@
 import numba
 import numpy as np
-import scipy.sparse as sps
-import scipy.sparse.linalg as spsl
-import scipy.special as spec
+import scipy.special
+import scipy.linalg
 
 from quantum_systems import BasisSet
 
@@ -134,13 +133,13 @@ class ODHO(BasisSet):
         return (
             self.normalization(n)
             * np.exp(-0.5 * self.omega * x**2)
-            * spec.hermite(n)(np.sqrt(self.omega) * x)
+            * scipy.special.hermite(n)(np.sqrt(self.omega) * x)
         )
 
     def normalization(self, n):
         return (
             1.0
-            / np.sqrt(2**n * spec.factorial(n))
+            / np.sqrt(2**n * scipy.special.factorial(n))
             * (self.omega / np.pi) ** 0.25
         )
 
@@ -156,7 +155,7 @@ class ODHO(BasisSet):
                 * (n + 1)
                 * np.sqrt(np.pi)
                 * 2**n
-                * spec.factorial(n)
+                * scipy.special.factorial(n)
                 / self.omega
             )
             self.position[0, n, n + 1] = pos
