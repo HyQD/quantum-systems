@@ -257,46 +257,29 @@ class ODQD(BasisSet):
         h_diag = 1.0 / (dx**2) + self.potential(self.grid[1:-1])
         h_off_diag = -1.0 / (2 * dx**2) * np.ones(self.num_grid_points - 3)
 
-        h = (
-            np.diag(h_diag)
-            + np.diag(h_off_diag, k=-1)
-            + np.diag(h_off_diag, k=1)
+        eps, C = scipy.linalg.eigh_tridiagonal(
+            h_diag, h_off_diag, select="i", select_range=(0, self.l - 1)
         )
-
-        eigen_energies, eigen_states = np.linalg.eigh(h)
-        eigen_energies = eigen_energies[: self.l]
-        eigen_states = eigen_states[:, : self.l]
 
         self.spf = np.zeros((self.l, self.num_grid_points), dtype=np.complex128)
-        self.spf[:, 1:-1] = eigen_states.T / np.sqrt(dx)
-        self.eigen_energies = eigen_energies
+        self.spf[:, 1:-1] = C.T / np.sqrt(dx)
+        self.eigen_energies = eps
 
-        self.h = np.diag(eigen_energies).astype(np.complex128)
+        self.h = np.diag(eps).astype(np.complex128)
         self.s = np.eye(self.l)
 
-        inner_integral = _compute_inner_integral(
-            self.spf,
-            self.l,
-            self.num_grid_points,
-            self.grid,
-            self.alpha,
-            self.a,
+        u = _shielded_coulomb(
+            self.grid[None, 1:-1], self.grid[1:-1, None], self.alpha, self.a
+        )
+        self.u = np.einsum(
+            "pa, qb, pc, qd, pq -> abcd", C, C, C, C, u, optimize=True
         )
 
-        self.u = _compute_orbital_integrals(
-            self.spf, self.l, inner_integral, self.grid
-        )
-
-        self.construct_position_integrals()
-
-    def construct_position_integrals(self):
         self.position = np.zeros((1, self.l, self.l), dtype=self.spf.dtype)
-
-        for p in range(self.l):
-            for q in range(self.l):
-                self.position[0, p, q] = np.trapz(
-                    self.spf[p].conj()
-                    * (self.grid + self.beta * self.grid**2)
-                    * self.spf[q],
-                    self.grid,
-                )
+        self.position[0] = np.einsum(
+            "pa, p, pb -> ab",
+            C,
+            self.grid[1:-1] + self.beta * self.grid[1:-1] ** 2,
+            C,
+            optimize=True,
+        )
