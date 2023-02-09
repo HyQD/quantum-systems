@@ -191,7 +191,6 @@ class TwoDimensionalDoubleWell(TwoDimensionalHarmonicOscillator):
 
 class TwoDimSmoothDoubleWell(TwoDimensionalHarmonicOscillator):
     def __init__(self, *args, a=2, b=2, **kwargs):
-
         super().__init__(*args, **kwargs)
 
         self.a = a

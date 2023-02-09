@@ -71,12 +71,10 @@ def radial_integral(r_p, r_q, order=1):
 
 
 def smooth_theta_integral_1(m_p, m_q):
-
     return (-1) ** (abs(m_p - m_q) % 2) * (3 * np.pi / 4)
 
 
 def smooth_theta_integral_2(m_p, m_q):
-
     return (-1) ** (abs(m_p - m_q) % 2) * np.pi
 
 
@@ -251,7 +249,6 @@ def get_coulomb_elements(num_orbitals, verbose=False):
 
 @numba.njit(fastmath=True, nogil=True, parallel=True)
 def _get_coulomb_elements(num_orbitals):
-
     shape = (num_orbitals, num_orbitals, num_orbitals, num_orbitals)
     u = np.zeros(shape)
 

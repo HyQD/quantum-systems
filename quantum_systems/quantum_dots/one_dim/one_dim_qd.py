@@ -90,7 +90,6 @@ class ODHO(BasisSet):
         beta=0,
         **kwargs,
     ):
-
         super().__init__(l, dim=1, **kwargs)
 
         self.omega = omega
@@ -231,7 +230,6 @@ class ODQD(BasisSet):
         potential=None,
         **kwargs,
     ):
-
         super().__init__(l, dim=1, **kwargs)
 
         self.a = a

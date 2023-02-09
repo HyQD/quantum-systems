@@ -135,7 +135,6 @@ class GaussianPotentialHardWall(OneDimPotential):
         self.x_wall = x_wall
 
     def __call__(self, x):
-
         wall = np.zeros(len(x))
         for i in range(len(x)):
             if abs(x[i]) > self.x_wall:

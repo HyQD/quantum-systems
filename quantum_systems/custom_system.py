@@ -21,7 +21,6 @@ def setup_basis_set(
     anti_symmetrized_u=False,
     **kwargs,
 ):
-
     if np is None:
         import numpy as np
 
@@ -64,7 +63,6 @@ def construct_custom_system(
     system_type="general",
     **kwargs,
 ):
-
     if np is None:
         import numpy as np
 

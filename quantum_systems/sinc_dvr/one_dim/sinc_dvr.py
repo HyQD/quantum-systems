@@ -190,7 +190,6 @@ class ODSincDVR(BasisSet):
 
     def change_module(self, np):
         if self.sparse_repr:
-
             self.np = np
             warnings.warn(
                 "change_module not implemented for sparse u, doing nothing"
@@ -220,7 +219,8 @@ class ODSincDVR(BasisSet):
     ):
         """Class method overwriting the static method of BasisSet. Returns a 4d
         u_prime in numpy format, and allows for direct antisymmetrization of transformed
-        elements, to compensate for lack of antisymmetrization in 2d representation of u."""
+        elements, to compensate for lack of antisymmetrization in 2d representation of u.
+        """
         if self.u_repr == "2d":
             if C_tilde is None:
                 C_tilde = C.conj().T
