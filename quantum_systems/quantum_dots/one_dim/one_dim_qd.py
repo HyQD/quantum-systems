@@ -17,7 +17,7 @@ from quantum_systems.quantum_dots.one_dim.one_dim_potentials import (
 
 
 @numba.njit
-def trapz_prep(vec, dx):
+def _trapz_prep(vec, dx):
     # The trapezoidal method applied to a vector can be implemented as multiplying it by dx, halving the ends, and taking the sum.
     # Since we are applying the trapezoidal method to a product of 3 vectors,
     # we can first perform the first two steps on this vector, which is reused, to greatly speed up the calculation.
