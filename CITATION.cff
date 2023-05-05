@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Sigmundson Schøyen"
+  given-names: "Øyvind"
+  orcid: "https://orcid.org/0000-0002-2049-3696"
+- family-names: "Kristiansen"
+  given-names: "Håkon Emil"
+  orcid: "https://orcid.org/0000-0001-9884-1024"
+- family-names: "Winther-Larsen"
+  given-names: "Sebastian Gregorius"
+  orcid: "https://orcid.org/0000-0001-8955-5018"
+- family-names: "Sutterud"
+  given-names: "Halvard"
+  orcid: "https://orcid.org/0000-0003-1635-1668"
+- family-names: "Fredly"
+  given-names: "Karl Henrik"
+- family-names: "Aurbakken"
+  given-names: "Einar"
+  orcid: "https://orcid.org/0009-0000-4571-032X"
+title: "HyQD: Quantum Systems"
+version: 0.2.7
+date-released: 2021-04-21
+url: "https://github.com/HyQD/quantum-systems"
