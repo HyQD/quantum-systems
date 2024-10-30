@@ -690,9 +690,9 @@ class BasisSet:
 
         for i, s in enumerate([a, b]):
             for j, t in enumerate([a, b]):
-                sigma_x[i, j] = np.dot(s.conj().T, np.dot(sigma_x_mat, t))
-                sigma_y[i, j] = np.dot(s.conj().T, np.dot(sigma_y_mat, t))
-                sigma_z[i, j] = np.dot(s.conj().T, np.dot(sigma_z_mat, t))
+                sigma_x[i, j] = np.dot(s.conj().T, np.dot(sigma_x_mat, t))[0, 0]
+                sigma_y[i, j] = np.dot(s.conj().T, np.dot(sigma_y_mat, t))[0, 0]
+                sigma_z[i, j] = np.dot(s.conj().T, np.dot(sigma_z_mat, t))[0, 0]
 
         return sigma_x, sigma_y, sigma_z
 
