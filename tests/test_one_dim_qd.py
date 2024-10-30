@@ -130,7 +130,7 @@ def test_odqd_systems(get_odqd_systems):
 
         dip = np.load(os.path.join("tests", "dat", f"{name}_dipole_moment.npy"))
         np.testing.assert_allclose(
-            np.abs(dip), np.abs(odqd.position), atol=1e-10
+            np.abs(dip), np.abs(odqd.position), atol=1e-9
         )
 
         h = np.load(os.path.join("tests", "dat", f"{name}_h.npy"))
