@@ -78,7 +78,7 @@ class ODHO(BasisSet):
     >>> odho = ODHO(20, 11, 201, omega=1)
     >>> odho.l == 20
     True
-    >>> abs(0.5 - odho.h[0, 0]) # doctest.ELLIPSIS
+    >>> float(abs(0.5 - odho.h[0, 0])) # doctest.ELLIPSIS
     0.0
     """
 
@@ -210,7 +210,7 @@ class ODQD(BasisSet):
     >>> odqd = ODQD(20, 11, 201, potential=ODQD.HOPotential(omega=1))
     >>> odqd.l == 20
     True
-    >>> abs(0.5 - odqd.h[0, 0]) # doctest.ELLIPSIS
+    >>> float(abs(0.5 - odqd.h[0, 0])) # doctest.ELLIPSIS
     0.0003...
     """
 
